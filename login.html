@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Operator access to a Sovereign cockpit. There is no central login — every Sovereign lives on its owner's own infrastructure.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9875;</text></svg>">
+<title>Operator login — Handspike</title>
+<style>
+  :root{
+    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
+    --ink-3:#6f767e; --rule:#262d36; --brass:#c9a24b; --brass-dim:#8a7134;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+           --ink-3:#787f86; --rule:#d9dbd6; --brass:#8a6a1f; --brass-dim:#b08c3e; }
+  }
+  :root[data-theme="dark"]{
+    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
+    --ink-3:#6f767e; --rule:#262d36; --brass:#c9a24b; --brass-dim:#8a7134;
+  }
+  :root[data-theme="light"]{
+    --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+    --ink-3:#787f86; --rule:#d9dbd6; --brass:#8a6a1f; --brass-dim:#b08c3e;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:Georgia,"Iowan Old Style",serif; font-size:17px; line-height:1.6;
+    min-height:100vh; display:grid; place-items:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  .gate{ max-width:26rem; padding:2rem 1.5rem; }
+  .plate{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--brass); margin:0 0 1rem;
+  }
+  h1{ font-size:1.6rem; font-weight:400; margin:0 0 1rem; line-height:1.25; }
+  p{ color:var(--ink-2); font-family:"Segoe UI",system-ui,sans-serif; font-size:.93rem; }
+  a{ color:var(--brass); text-decoration-color:var(--brass-dim); text-underline-offset:3px; }
+  .enter{
+    display:block; text-align:center; margin:1.6rem 0 .8rem;
+    background:var(--panel); border:1px solid var(--brass-dim); border-radius:5px;
+    padding:.85em 1em; color:var(--brass); text-decoration:none;
+    font-family:ui-monospace,Consolas,monospace; font-size:.8rem;
+    letter-spacing:.14em; text-transform:uppercase;
+  }
+  .enter:hover{ border-color:var(--brass); background:var(--ground); }
+  .alt{ text-align:center; font-size:.78rem; color:var(--ink-3); margin:0 0 1.8rem; }
+  .fine{ font-size:.8rem; color:var(--ink-3); border-top:1px solid var(--rule); padding-top:1.1rem; }
+  .back{ font-size:.78rem; margin-top:1.4rem; }
+</style>
+</head>
+<body>
+<main class="gate">
+  <p class="plate">Handspike · Operator access</p>
+  <h1>This gate only opens from inside your own network.</h1>
+  <p>A Sovereign cockpit lives on its owner's infrastructure, reachable only over the owner's
+  private network (Tailscale), behind its own PIN. If you are the operator on one of your
+  devices, you are one tap away.</p>
+
+  <a class="enter" href="https://handspike.tail4c4c80.ts.net/">Enter the cockpit</a>
+  <p class="alt">This address only resolves on the owner's private network. Anywhere else it
+  simply doesn't exist — that's the design, not an outage.</p>
+
+  <p class="fine"><strong>Not the operator?</strong> Then the closed door is the product working.
+  There is no central login, no customer database, and no vault of other people's keys —
+  deliberately. Every Sovereign answers only to its owner.
+  <a href="/">Read what Sovereign is&nbsp;&rarr;</a></p>
+  <p class="back"><a href="/">&larr; handspike.dev</a></p>
+</main>
+</body>
+</html>

@@ -3,51 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Eleven real production failures from ten weeks running an autonomous LLM agent with real money, and the deterministic control that now catches each.">
+<meta name="description" content="Handspike builds Sovereign: an autonomous trading harness where the customer owns everything — their broker, their AI model, their server, their keys. Your money never answers to us.">
 <meta name="author" content="Rick Winnett">
-<meta property="og:title" content="Eleven ways my autonomous agent failed in production">
-<meta property="og:description" content="Nobody attacked my agent. It was blinded by a billing lapse, fed by a data pipe dead for weeks, and reported its own costs 3x too high for months.">
-<meta property="og:type" content="article">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9888;</text></svg>">
-<title>Eleven ways my autonomous agent failed in production</title>
+<meta property="og:title" content="Handspike — Sovereign, the autonomous trading harness">
+<meta property="og:description" content="Your money never answers to us. Bring your own broker, bring your own model. Optimized for the Claude family.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9875;</text></svg>">
+<title>Handspike — Sovereign, the autonomous trading harness</title>
 <style>
   :root{
-    --ground:#f4f5f3;
-    --panel:#fbfbfa;
-    --ink:#16191c;
-    --ink-2:#4a5057;
-    --ink-3:#787f86;
-    --rule:#d9dbd6;
-    --rule-2:#e9eae6;
-    --signal:#a35d00;
-    --signal-dim:#c98a2e;
-    --mono-bg:#eceee9;
+    --ground:#10141a;
+    --panel:#151b23;
+    --ink:#e7e4da;
+    --ink-2:#a9adb0;
+    --ink-3:#6f767e;
+    --rule:#262d36;
+    --rule-2:#1c222b;
+    --brass:#c9a24b;
+    --brass-dim:#8a7134;
+    --mono-bg:#1a212a;
     --measure:34rem;
   }
-  @media (prefers-color-scheme: dark){
+  @media (prefers-color-scheme: light){
     :root{
-      --ground:#131619;
-      --panel:#191d21;
-      --ink:#e4e7e4;
-      --ink-2:#a8afb5;
-      --ink-3:#767d84;
-      --rule:#2a2f34;
-      --rule-2:#22262a;
-      --signal:#e2a044;
-      --signal-dim:#b7822f;
-      --mono-bg:#20252a;
+      --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+      --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
+      --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
     }
   }
   :root[data-theme="dark"]{
-    --ground:#131619; --panel:#191d21; --ink:#e4e7e4; --ink-2:#a8afb5;
-    --ink-3:#767d84; --rule:#2a2f34; --rule-2:#22262a;
-    --signal:#e2a044; --signal-dim:#b7822f; --mono-bg:#20252a;
+    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
+    --ink-3:#6f767e; --rule:#262d36; --rule-2:#1c222b;
+    --brass:#c9a24b; --brass-dim:#8a7134; --mono-bg:#1a212a;
   }
   :root[data-theme="light"]{
-    --ground:#f4f5f3; --panel:#fbfbfa; --ink:#16191c; --ink-2:#4a5057;
+    --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
     --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
-    --signal:#a35d00; --signal-dim:#c98a2e; --mono-bg:#eceee9;
+    --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
   }
 
   *{ box-sizing:border-box; }
@@ -57,245 +50,198 @@
     font-size:17px; line-height:1.62;
     -webkit-font-smoothing:antialiased;
   }
-  .shell{ max-width:46rem; margin:0 auto; padding:3.5rem 1.5rem 5rem; }
+  .shell{ max-width:46rem; margin:0 auto; padding:2.4rem 1.5rem 5rem; }
   p,li{ max-width:var(--measure); }
+  a{ color:var(--brass); text-decoration-color:var(--brass-dim); text-underline-offset:3px; }
+  a:hover{ text-decoration-thickness:2px; }
 
   /* ---- masthead ---- */
-  .plate{
-    display:flex; align-items:center; gap:.6rem;
+  header.mast{
+    display:flex; align-items:baseline; gap:1rem; margin:0 0 3.4rem;
     font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
     font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--signal); margin:0 0 1.4rem;
   }
-  .plate .bar{ flex:1; height:1px; background:var(--rule); }
-  h1{
-    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
-    font-size:clamp(1.85rem,5vw,2.7rem); line-height:1.1;
-    letter-spacing:-.024em; font-weight:700; margin:0 0 1rem;
-    text-wrap:balance; max-width:22ch;
-  }
-  .standfirst{
-    font-family:"Segoe UI",system-ui,sans-serif; font-size:.95rem;
-    color:var(--ink-2); line-height:1.5; margin:0 0 1.1rem; max-width:32rem;
-  }
-  .byline{
-    font-family:ui-monospace,Consolas,monospace; font-size:.72rem;
-    letter-spacing:.09em; color:var(--ink-3); text-transform:uppercase;
-    padding-bottom:2rem; border-bottom:2px solid var(--ink); margin-bottom:2.2rem;
-  }
+  .mark{ color:var(--ink); font-weight:700; letter-spacing:.22em; }
+  .mast .bar{ flex:1; height:1px; background:var(--rule); align-self:center; }
+  .mast nav{ display:flex; gap:1.2rem; }
+  .mast a{ color:var(--ink-3); text-decoration:none; }
+  .mast a:hover{ color:var(--brass); }
+  .mast a.op{ color:var(--brass); border:1px solid var(--rule); padding:.35em .8em; border-radius:3px; }
+  .mast a.op:hover{ border-color:var(--brass-dim); }
 
-  .lede{ font-size:1.12rem; line-height:1.55; }
-  p{ margin:0 0 1.05rem; }
-  strong{ font-weight:700; }
-  code{
+  /* ---- hero ---- */
+  .plate{
     font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
-    font-size:.84em; background:var(--mono-bg); padding:.1em .34em;
-    border-radius:3px; overflow-wrap:anywhere;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); margin:0 0 1.2rem;
+  }
+  h1{
+    font-size:clamp(2.1rem,6vw,3.2rem); line-height:1.08;
+    letter-spacing:-.015em; font-weight:400; margin:0 0 1.3rem;
+    text-wrap:balance; max-width:19ch;
+  }
+  h1 em{ font-style:italic; color:var(--brass); }
+  .standfirst{
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    font-size:1rem; color:var(--ink-2); line-height:1.55; margin:0 0 .8rem; max-width:33rem;
+  }
+  .lede{ font-size:1.06rem; color:var(--ink); max-width:33rem; }
+
+  /* ---- sections ---- */
+  section{ margin:3.6rem 0 0; }
+  h2{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--brass); font-weight:600; margin:0 0 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  h2::after{ content:""; flex:1; height:1px; background:var(--rule); }
+  .big{
+    font-size:clamp(1.3rem,3.4vw,1.75rem); line-height:1.3; font-weight:400;
+    max-width:26ch; margin:0 0 1rem; text-wrap:balance;
   }
 
-  h2.eyebrow{
-    font-family:"Segoe UI",system-ui,sans-serif;
-    font-size:.76rem; font-weight:700; text-transform:uppercase;
-    letter-spacing:.14em; color:var(--signal);
-    margin:3rem 0 1rem; padding-bottom:.5rem; border-bottom:1px solid var(--rule);
+  ul.rails{ list-style:none; padding:0; margin:1.4rem 0 0; }
+  ul.rails li{
+    padding:.68em 0 .68em 1.5em; border-bottom:1px solid var(--rule-2); position:relative;
+    font-family:"Segoe UI",system-ui,sans-serif; font-size:.94rem; color:var(--ink-2);
+  }
+  ul.rails li::before{ content:"—"; position:absolute; left:0; color:var(--brass-dim); }
+  ul.rails li strong{ color:var(--ink); font-weight:600; }
+
+  .card{
+    background:var(--panel); border:1px solid var(--rule); border-radius:6px;
+    padding:1.5rem 1.6rem; margin:1.6rem 0 0;
+  }
+  .card p:last-child{ margin-bottom:0; }
+  .stat{
+    font-family:ui-monospace,Consolas,monospace; color:var(--brass);
+    font-size:.85rem; letter-spacing:.04em;
   }
 
-  /* ---- the layer stack ---- */
-  .stack{ display:flex; flex-direction:column; gap:.7rem; margin:0 0 1.3rem; max-width:var(--measure); }
-  .layer{
-    background:var(--panel); border:1px solid var(--rule-2);
-    border-left:3px solid var(--signal); padding:.85rem 1rem; border-radius:2px;
-    font-size:.97rem; line-height:1.55;
-  }
-  .layer b{ display:block; font-family:"Segoe UI",system-ui,sans-serif; font-size:.82rem;
-    letter-spacing:.04em; text-transform:uppercase; color:var(--signal); margin-bottom:.25rem; }
+  .own{ display:grid; grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr)); gap:1px;
+        background:var(--rule); border:1px solid var(--rule); border-radius:6px;
+        overflow:hidden; margin:1.5rem 0 0; }
+  .own > div{ background:var(--panel); padding:1.1rem 1.2rem; }
+  .own .k{ font-family:ui-monospace,Consolas,monospace; font-size:.66rem;
+           letter-spacing:.14em; text-transform:uppercase; color:var(--brass-dim); margin:0 0 .35rem; }
+  .own .v{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.92rem; color:var(--ink); margin:0; }
 
-  /* ---- incident items ---- */
-  .item{ margin:2.6rem 0; }
-  .item-head{ display:flex; gap:.85rem; align-items:baseline; margin:0 0 .75rem; }
-  .tag{
-    flex:0 0 auto; font-family:ui-monospace,Consolas,monospace;
-    font-size:.7rem; font-weight:700; letter-spacing:.06em;
-    color:var(--ground); background:var(--signal);
-    padding:.22rem .42rem; border-radius:2px; line-height:1;
-    position:relative; top:-.15rem;
-  }
-  .item-head h3{
-    margin:0; font-family:"Segoe UI",system-ui,sans-serif;
-    font-size:1.22rem; line-height:1.25; letter-spacing:-.014em; font-weight:700;
-    text-wrap:balance;
-  }
-  .control{
-    border-left:2px solid var(--rule); padding:.15rem 0 .15rem .95rem;
-    color:var(--ink-2); font-size:.97rem; margin:0;
-  }
-  .control strong{ color:var(--ink); }
-  blockquote{
-    margin:0 0 1.05rem; padding-left:.95rem; border-left:2px solid var(--signal-dim);
-    font-style:italic; color:var(--ink-2); max-width:var(--measure);
-  }
+  /* ---- footer ---- */
+  footer{ margin:4.5rem 0 0; padding-top:1.6rem; border-top:1px solid var(--rule);
+          font-family:"Segoe UI",system-ui,sans-serif; font-size:.85rem; color:var(--ink-3); }
+  footer p{ max-width:none; }
+  .fine{ font-size:.78rem; line-height:1.6; }
 
-  ol.questions{ counter-reset:q; list-style:none; padding:0; margin:0 0 1.2rem; max-width:var(--measure); }
-  ol.questions > li{
-    counter-increment:q; position:relative; padding-left:2.1rem; margin:0 0 1rem;
-  }
-  ol.questions > li::before{
-    content:counter(q); position:absolute; left:0; top:.22em;
-    font-family:ui-monospace,Consolas,monospace; font-size:.74rem; font-weight:700;
-    color:var(--signal); border:1px solid var(--signal); border-radius:2px;
-    width:1.45rem; height:1.45rem; display:grid; place-items:center; line-height:1;
-  }
-
-  .closer{
-    margin-top:3rem; padding-top:1.2rem; border-top:2px solid var(--ink);
-    font-family:"Segoe UI",system-ui,sans-serif; font-size:.92rem;
-    color:var(--ink-2); line-height:1.55; max-width:32rem;
-  }
-  hr.sep{ border:0; border-top:1px solid var(--rule); margin:2.4rem 0; }
-  @media (max-width:520px){
-    .shell{ padding:2.25rem 1.15rem 3.5rem; }
-    body{ font-size:16px; }
-    .item-head{ gap:.6rem; }
+  @media (max-width:600px){
+    .mast nav{ gap:.8rem; }
+    .shell{ padding-top:1.6rem; }
   }
 </style>
 </head>
 <body>
-
 <div class="shell">
 
-  <div class="plate"><span>Field notes</span><span class="bar"></span><span>Agent reliability</span></div>
+<header class="mast">
+  <span class="mark">HANDSPIKE</span>
+  <span class="bar"></span>
+  <nav>
+    <a href="/eleven-failures.html">The memo</a>
+    <a class="op" href="/login.html">Operator&nbsp;login</a>
+  </nav>
+</header>
 
-  <h1>Eleven ways my autonomous agent failed in production, and what now catches each</h1>
-  <p class="standfirst">Written for engineers who are about to give an agent write access to something they cannot undo.</p>
-  <div class="byline">Rick Winnett &nbsp;·&nbsp; September 2026</div>
+<p class="plate">The harness</p>
+<h1>Sovereign. <em>Your money never answers to us.</em></h1>
+<p class="standfirst">An autonomous trading harness. You bring the broker account, the AI model,
+and the server. Sovereign brings the rails, the watchdogs, and a memory that learns from its own
+trades. Optimized for the Claude family of models.</p>
+<p class="lede">A <strong>handspike</strong> was the lever bar of the age of sail — worked at the
+capstan to haul the anchor, and at the gun carriage to lay the cannon on target. One person moving
+something far too heavy by hand, with precision. That is the whole company in one tool: leverage
+<em>and</em> aim.</p>
 
-  <p class="lede">For about ten weeks I have run an LLM agent unattended, 24/7, on a Linux box, taking irreversible actions with real money — placing real orders against three separate venues. Not a demo, not a chatbot with a sandbox. A production agent with a wallet and no human in the loop.</p>
+<section id="why">
+  <h2>Why a harness</h2>
+  <p class="big">Handed real money, every frontier model in a public study lost it.</p>
+  <p>In a 57-day public study, six frontier models were each given $10,000 of real capital on a
+  live market venue. <span class="stat">All six lost money — down between 16.0% and 30.8%</span> —
+  and the amount of research they did had no correlation with their results. Our reading of that
+  result: the mind alone is not the product. The mind alone is an accident waiting to happen.</p>
+  <p>Sovereign is the machinery built to stand between an intelligent model and an expensive
+  mistake: limits enforced outside the model's control, watchdogs that assume the model is down
+  until proven otherwise, and accounting built not to flatter itself.</p>
+  <ul class="rails">
+    <li><strong>Missile covers</strong> — hard software gates modeled on the covers over a launch
+        switch; nothing trades live until a human deliberately arms it, and every cover is
+        designed to fail closed.</li>
+    <li><strong>Deterministic risk rails</strong> — per-class position caps, rules that never
+        permit an uncovered position or a position without a stop, and a drawdown backstop that
+        halts trading at a preset loss threshold.</li>
+    <li><strong>Watchdogs that don't use AI</strong> — a no-LLM enforcer on a timer and an
+        independent last-resort sentinel, both built on the assumption that the mind can go dark
+        mid-position.</li>
+    <li><strong>Truth accounting</strong> — P&amp;L measured so your own deposits can never be
+        mistaken for gains, append-only ledgers, trades recorded at real prices with real fees.
+        A book that flatters itself is worse than no book.</li>
+    <li><strong>A memory system</strong> — every scar, every lesson, every ledger entry accrues on
+        your machine, from your own trades. Your Sovereign becomes yours.</li>
+  </ul>
+</section>
 
-  <p>It has not lost me much. It has not made me much either. That is not what this is about.</p>
-
-  <p>What I actually got out of it is an inventory of the ways an autonomous agent fails in production — and almost none of them are the ways the literature says it will. The published threat models for agentic AI are overwhelmingly <em>adversarial</em>: prompt injection, memory poisoning, tool abuse, identity spoofing. Those are real. They are also not what happened to me. I ran a text search across OWASP's <em>Agentic AI – Threats and Mitigations</em> v1.1, which defines seventeen threats across six playbooks. Occurrences of <code>fail-closed</code>: zero. <code>watchdog</code>: zero. <code>dead-man</code>: zero. <code>heartbeat</code>: zero. <code>idempotency</code>: zero. <code>circuit breaker</code>: zero. <code>kill switch</code>: zero. <code>staleness</code>: zero. <code>outage</code>: zero. NIST AI 600-1 has twelve risk categories and not one of them is operational failure.</p>
-
-  <p><strong>Nobody attacked my agent.</strong> My agent was blinded by a billing lapse, fed by a data pipe that had been silently dead for weeks, and reported its own costs three times too high for months. None of that is in a threat model. All of it is in a production incident.</p>
-
-  <p>Here are eleven, with the control that now catches each. Every one is from my own logs.</p>
-
-  <h2 class="eyebrow">The shape of the answer, before the failures</h2>
-
-  <p>Three layers, and the ordering is the whole point.</p>
-
-  <div class="stack">
-    <div class="layer"><b>Layer 1 — the agent</b>The LLM, its prompt, its tools. Smart, expensive, non-deterministic, and it will be unavailable at the worst possible moment. Treat it as the least reliable component you own.</div>
-    <div class="layer"><b>Layer 2 — a deterministic enforcer</b>No model calls. Arithmetic against a limit the agent already committed to in writing, on its own timer, in its own process. It runs <em>outside</em> the agent's control loop, so it keeps working when the agent is rate-limited, looping, hallucinating or dead.</div>
-    <div class="layer"><b>Layer 3 — a watchdog over layer 2</b>Deliberately dumber than everything above it: verify the enforcer's heartbeat is fresh, verify true state directly against the external system, restore protection where it can, and escalate loudly where it cannot.</div>
+<section id="sovereignty">
+  <h2>What sovereignty means here</h2>
+  <p class="big">Every part that matters is owned by you.</p>
+  <div class="own">
+    <div><p class="k">Your broker</p><p class="v">Your own account at a supported API broker. We never hold funds, keys, or orders.</p></div>
+    <div><p class="k">Your model</p><p class="v">Your own AI subscription or API key. Any frontier model; optimized for the Claude family.</p></div>
+    <div><p class="k">Your server</p><p class="v">Deploys into your own cloud. Your credentials live there. You can revoke us in one click.</p></div>
+    <div><p class="k">Your memory</p><p class="v">The experience your trader accumulates is yours. A copied harness is a newborn; yours is a veteran.</p></div>
   </div>
+  <p style="margin-top:1.4rem;">There is no hosted platform, no central login, no customer key
+  vault — deliberately. A vendor who cannot touch your money is a vendor you never have to
+  trust with it.</p>
+</section>
 
-  <p>This is not a novel architecture. It is <strong>Layers of Protection Analysis</strong>, and process-safety engineering has used it for twenty-plus years under IEC 61511. Layer 2 is a <em>Safety Instrumented Function</em> acting as an <em>Independent Protection Layer</em> — independent of the basic process control system, which in our world is the LLM. The reason to borrow the vocabulary is that the discipline already knows the failure everyone else is about to rediscover: <strong>a protection layer that shares a dependency with the thing it protects against is not a protection layer.</strong></p>
-
-  <p>Which brings me to the thing that made all of this concrete.</p>
-
-  <hr class="sep">
-
-  <div class="item">
-    <div class="item-head"><span class="tag">01</span><h3>The agent went blind because a subscription lapsed</h3></div>
-    <p>My model provider access was interrupted. Every rung of the chain — primary model, fallback model, degraded-effort retry — failed identically within about six seconds, because they all share one transport and one identity. Three consecutive decision cycles produced no decision at all, with real positions open.</p>
-    <p>The generalisable form: <strong>your model provider is a single point of failure, and your fallbacks probably aren't.</strong> Fallback across models is not fallback if they share an auth path, a quota pool, or a vendor. Mine looked like three layers of redundancy and was one.</p>
-    <p class="control"><strong>The control:</strong> the deterministic enforcer makes no model calls at all, so it kept running through the entire outage and kept every position guarded. That is the whole argument for layer 2 in one incident. It is also why "add a retry" is not an answer — a retry shares the dependency.</p>
+<section id="proof">
+  <h2>Built in the open, scars first</h2>
+  <p>Sovereign has been running live — with the founder's own capital, on the founder's own
+  infrastructure — since mid-2026. We publish the failures, because the failures are the reason
+  the rails exist.</p>
+  <div class="card">
+    <p class="stat">FIELD REPORT</p>
+    <p><a href="/eleven-failures.html">Eleven ways my autonomous agent failed in production</a> —
+    ten weeks of live operation with real money at stake, eleven real failures, and the
+    deterministic control that now catches each one. Nobody attacked the agent. It was blinded by
+    a billing lapse, fed by a data pipe that had been dead for weeks, and reported its own costs
+    3&times; too high for months.</p>
   </div>
+</section>
 
-  <div class="item">
-    <div class="item-head"><span class="tag">02</span><h3>The emergency fallback timed out about half the time</h3></div>
-    <p>When the subscription path died, a metered API rung was supposed to take over. It had a 420-second wall-clock limit. Measured across four firings on identical work: one success at <strong>337s</strong>, and three timeouts at <strong>427s, 466s and 472s</strong>.</p>
-    <p>Nothing hung. The job takes 340–470 seconds and I had given it 420. <strong>I had drawn the timeout through the middle of the work's own variance distribution</strong>, so it failed roughly half the time by construction.</p>
-    <p class="control"><strong>The control:</strong> measure the distribution before you set the bound. A timeout is a claim about a latency distribution you have probably never plotted.</p>
-  </div>
+<section id="status">
+  <h2>Status</h2>
+  <p><strong>Sovereign is not for sale yet.</strong> It is in live trials on founder capital, and
+  it stays there until its own ledgers earn the next step. When it ships, it ships the way it runs:
+  paper first, graduation gates before real money, capital floors published with the fee math on
+  the page.</p>
+  <p>If you want to be told when that day comes — or you run autonomous agents with real-world
+  blast radius and want the safety engineering sooner — write to
+  <a href="mailto:rick@handspike.dev">rick@handspike.dev</a>.</p>
+</section>
 
-  <div class="item">
-    <div class="item-head"><span class="tag">03</span><h3>A failed call cost the same as a successful one, and I never saw it</h3></div>
-    <p>Worse than the last one: an aborted stream still bills for every token generated before the kill. Those three timeouts each cost roughly what a success costs and produced nothing. My books showed only the one call that finished.</p>
-    <p>The abort path logged no usage record — so failed calls were free in the accounting <em>and</em> invisible to the daily spend cap that was supposed to bound a runaway night. The cap could be exceeded indefinitely by failing.</p>
-    <p class="control"><strong>The control:</strong> log usage on the <strong>failure</strong> path, and count failures against the cap. If your telemetry only fires on success, your cost ceiling is decorative. This is the single most transferable finding here: <strong>every metering system I have looked at since has the same hole.</strong></p>
-  </div>
-
-  <div class="item">
-    <div class="item-head"><span class="tag">04</span><h3>My cost reporting was 3× too high for months</h3></div>
-    <p>The rate table was a generation out of date — it priced my model at $15/$75 per million tokens against a real $5/$25. Every cost figure the system ever reported was overstated by exactly 3×.</p>
-    <p>It never broke anything, which is precisely why it survived. Overstating spend is the safe direction: no alert fires, no budget is blown, nothing crashes. It was simply wrong, in the one place the system reported money.</p>
-    <p class="control"><strong>The control:</strong> pin published rates in a test that fails when they drift, and date-stamp the table with the day it was verified. Treat "our own cost number" as a measurement with an error bar, not a constant.</p>
-  </div>
-
-  <div class="item">
-    <div class="item-head"><span class="tag">05</span><h3>The agent was silent on two-thirds of its cycles and it looked like caution</h3></div>
-    <p>Of the <strong>299</strong> decision cycles up to a fixed date, <strong>196 produced no decision at all — 66%.</strong> Cause: quota exhaustion plus a decide-step timeout that a grown prompt had quietly started brushing against. After the fixes, the same measurement over the following <strong>555</strong> cycles: <strong>79 silent, 14%.</strong></p>
-    <p>The reason it went unnoticed is the ugly part: <strong>a cycle where the agent could not think looks exactly like a cycle where it thought and chose to do nothing.</strong> Both emit no action. From the outside, an agent that is broken two-thirds of the time is indistinguishable from an agent that is being selective — and the second reading is the flattering one, so it is the one you will reach for.</p>
-    <p>A second trap sits inside the first, and I hit it while re-deriving this number: the journal has a <code>decided</code> field, and it reads <code>False</code> on <strong>96%</strong> of all cycles — because it means "decided to <em>act</em>," not "produced a decision." Had I trusted the obviously-named field I would have reported a catastrophe. The signal that actually meant "the mind produced nothing" was an empty thesis string. <strong>Check what your health field counts before you build an alarm on it.</strong></p>
-    <p class="control"><strong>The control:</strong> the ledger must distinguish <em>declined</em> from <em>could not decide</em>. They are different events and only one of them is your system working. If you cannot query "how many times did the agent fail to produce an answer today," you do not know whether your agent is running.</p>
-  </div>
-
-  <div class="item">
-    <div class="item-head"><span class="tag">06</span><h3>A data feed was dead for weeks and returned success</h3></div>
-    <p>One of my inputs was reading from a path that no longer existed. It returned an empty result, cleanly, with no error. Empty is a completely legitimate answer for that feed — most days genuinely have nothing — so it read as normal for weeks.</p>
-    <p class="control"><strong>The control: a feed that returns empty must prove it was reachable.</strong> Separate "queried successfully, no results" from "could not query." Assert freshness explicitly — a timestamp on the last <em>successful contact</em>, not the last non-empty payload. Silence is not data.</p>
-  </div>
-
-  <div class="item">
-    <div class="item-head"><span class="tag">07</span><h3>A data provider silently degraded to a worse one</h3></div>
-    <p>An API key got flagged into sandbox mode. The system fell back to a free public data source and kept running, with materially worse data feeding real decisions, for about a day. Everything downstream reported healthy — data was arriving.</p>
-    <p class="control"><strong>The control:</strong> assert the <em>provider identity</em>, not just the presence of data. "I got numbers" is not a health check. Health is "I got numbers <strong>from the source I intended</strong>." Any degradation to a fallback must be a loud, visible state, not a quiet one.</p>
-  </div>
-
-  <div class="item">
-    <div class="item-head"><span class="tag">08</span><h3>A capability was mechanically impossible and failed silently</h3></div>
-    <p>A whole class of actions could never succeed, because the venue enforced a minimum balance my account sat below. Orders were submitted and simply never filled. No error, no refusal, no log line — requests went out and nothing came back.</p>
-    <p class="control"><strong>The control:</strong> encode venue and platform preconditions as <strong>explicit local refusals</strong> with a stated reason, checked before the request goes out. A precondition you have not encoded is one you will discover as a silence. "It stopped working and nothing complained" is the signature of an unencoded precondition.</p>
-  </div>
-
-  <div class="item">
-    <div class="item-head"><span class="tag">09</span><h3>Turning a component off did not turn off its consequences</h3></div>
-    <p>I decommissioned two subsystems by stopping their processes. Their open positions stayed open. The snapshot taken the next morning shows <strong>five open positions across the two accounts worth $1,579.23</strong> — unmanaged, for four days. And because those positions kept moving, they continued rewriting the very performance records the decommissioning was meant to freeze.</p>
-    <p>The remediation script I later wrote states the lesson better than I can, in its own header:</p>
-    <blockquote>"Stopping a box does not stop its positions: four days later both accounts still held open trades, quietly rewriting the final records those boxes are judged on."</blockquote>
-    <p>It also records the second-order failure — the first cleanup attempt ran outside market hours and closed only five of six legs, because equity orders queue but options are rejected outright. <strong>A cleanup that can only run in a window is not a cleanup you can leave to someone remembering.</strong> It had to become a timer.</p>
-    <p class="control"><strong>The control: teardown must include state, not just process.</strong> For any agent that creates external side effects, "stop the service" is step one of a procedure, and the procedure is not complete until the side effects are reconciled and closed. Write the teardown runbook before you write the launch runbook.</p>
-  </div>
-
-  <div class="item">
-    <div class="item-head"><span class="tag">10</span><h3>Protective controls outlived the things they protected</h3></div>
-    <p>Protective orders resting against positions that no longer existed. Harmless-looking, until one fires against a position you have since re-entered in the other direction — and now your protection is an attack.</p>
-    <p class="control"><strong>The control:</strong> an orphan sweep that reconciles protections against actual current state on a timer, and an invariant that exposure and protection are created and destroyed together. The general rule: <strong>every control needs a reconciler, because controls drift out of sync with the world exactly as readily as data does.</strong></p>
-  </div>
-
-  <div class="item">
-    <div class="item-head"><span class="tag">11</span><h3>My own performance numbers flattered me</h3></div>
-    <p>I moved money into the account. The system counted the transfer as a gain. The number was wrong in the most seductive possible direction, and I had no reason to look at it because it agreed with what I wanted to believe.</p>
-    <p class="control"><strong>The control:</strong> deposit-neutral accounting — detect flows in and out and exclude them from performance, permanently, with no way to switch it off. Generalised: <strong>the metric that tells you whether the agent is working must be constructed so that it cannot be improved by anything other than the agent working.</strong> If money moving in makes the number go up, the number is not measuring the agent.</p>
-  </div>
-
-  <h2 class="eyebrow">The honest line about results</h2>
-
-  <p>The agent is roughly flat. Down about 7% on a small account over ten weeks — which on a sub-$1,000 book is a loss of about fifty dollars, over six and a half weeks of head-to-head running.</p>
-
-  <p>That is not a track record. It is statistically indistinguishable from noise, and it licenses no conclusion in either direction: anyone claiming it proves LLM agents can't trade is doing bad statistics, and so is anyone — including me at 2am — claiming the edge is there and just needs time.</p>
-
-  <p>I am telling you this because the eleven items above are worth something and the P&amp;L is not, and because a document like this that quietly omitted the returns would deserve your suspicion. <strong>The value here is the failure inventory, not the strategy.</strong> Every one of these eleven is domain-agnostic: replace "position" with "provisioned instance," "order" with "deploy," "stop" with "spend cap," and every single one still lands.</p>
-
-  <h2 class="eyebrow">What I would ask about your agent</h2>
-
-  <p>If your agent has write access to something you cannot undo — cloud provisioning, deploys, a production database, refunds — these are the questions I would want answered, in this order:</p>
-
-  <ol class="questions">
-    <li>What is the complete list of actions it can take that you cannot reverse? Not the ones it <em>does</em> take. The ones its credentials and tool schemas <em>permit</em>.</li>
-    <li>For each one, what is the worst case per hour if nobody notices?</li>
-    <li>Which of those are behind a control that keeps working when the agent is dead or rate-limited — and which are behind a control that shares a dependency with the agent?</li>
-    <li><strong>If your guard is unavailable, does the action proceed or halt?</strong> The newest standard in this space — OWASP's Agent Control Standard, §6.4, normative — defaults to <code>proceed</code>, "so that a slow, erroring, or unreachable Guardian does not halt production." Its own text names the cost: <em>"Fail-open trades enforcement for availability under disruption: an adversary who can disrupt the channel converts control into audit."</em> To be fair to the spec, it also offers <code>on_decision_failure: deny</code> and requires every bypassed step to be audited. But <strong>defaults are what ships</strong>, and a control you have to remember to switch on is not a control. Go and read which setting your deployment is actually running. Then ask the second question: the Guardian is itself an agent — what happens when <em>it</em> is the thing that's rate-limited?</li>
-    <li>Can you distinguish, in your logs, an action the agent declined from an action it failed to consider?</li>
-    <li>Does anything reconcile what the agent <em>believes</em> it did against what the outside system says actually happened?</li>
-  </ol>
-
-  <p>I got all six of those wrong at least once, on a system I built specifically to be careful. The questions are cheap. The incidents are not.</p>
-
-  <p class="closer">I do this as fixed-scope work: an inventory of your agent's irreversible actions with a number on each, and the deterministic controls to bound them. Deliberately outside financial markets — that domain has its own regulator, and this is an engineering practice, not an advisory one.</p>
+<footer>
+  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;·&nbsp; Hendersonville, North Carolina</p>
+  <p class="fine">Handspike is a software and engineering company. It is not an investment adviser,
+  broker-dealer, or fiduciary, and nothing on this site is investment advice or an offer of
+  advisory services. Sovereign is trading-infrastructure software and is not available for
+  purchase. No performance results are claimed for Sovereign as a product; any figures in the
+  field report are historical, unaudited, describe a small founder-funded account, and are not
+  indicative of future results. The third-party model study cited above (arXiv:2604.07355) is
+  unaffiliated with Handspike, and its results imply nothing about any result Sovereign may
+  achieve. Autonomous trading involves substantial risk of loss, and no software can eliminate
+  it.</p>
+</footer>
 
 </div>
-
 </body>
 </html>
