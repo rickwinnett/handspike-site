@@ -10,46 +10,44 @@
 <meta property="og:type" content="article">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9888;</text></svg>">
+<meta name="theme-color" content="#000000">
 <title>Eleven ways my autonomous agent failed in production</title>
 <style>
+  /* ---------------------------------------------------------------------------
+     THE GROUND IS BLACK -- one palette, no light variant, no prefers-color-scheme
+     flip. This site used to carry a cream light theme that fired off the READER'S
+     OS setting, which meant the owner's own machine served him a cream page while
+     the cockpit, the screenshots and every design decision were dark. There is now
+     exactly one look. `color-scheme:dark` is load-bearing, not decoration: without
+     it a light-mode browser paints a WHITE scrollbar track and light form-control
+     internals down the side of a pure-black page.
+
+     These values are tuned FOR #000, not carried over from the old #10141a ground.
+     The old --ink-3 (#6f767e) and --brass-dim (#8a7134) measured ~4.0:1 on that
+     ground -- already under AA -- and dropping the ground to black without lifting
+     them would have buried the footer, the smallprint and every uppercase label.
+     Everything below clears 4.5:1 on black; --ink-2 clears 10:1.
+
+     --panel is the COCKPIT's own ground (#0e1117) on purpose: a card on this site
+     is the colour of the instrument it describes, and on the demo pages the
+     embedded cockpit now sits flush with the chrome around it instead of floating
+     on a different dark.
+     --------------------------------------------------------------------------- */
   :root{
-    --ground:#f4f5f3;
-    --panel:#fbfbfa;
-    --ink:#16191c;
-    --ink-2:#4a5057;
-    --ink-3:#787f86;
-    --rule:#d9dbd6;
-    --rule-2:#e9eae6;
-    --signal:#a35d00;
-    --signal-dim:#c98a2e;
-    --mono-bg:#eceee9;
+    color-scheme:dark;
+    --ground:#000000;
+    --panel:#0e1117;
+    --ink:#ece9e0;
+    --ink-2:#b2b6ba;
+    --ink-3:#7e858c;
+    --rule:#31383f;
+    --rule-2:#1d2229;
+    --signal:#e6a94e;
+    --signal-dim:#b08a3f;
+    --mono-bg:#151a21;
     --measure:34rem;
   }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --ground:#131619;
-      --panel:#191d21;
-      --ink:#e4e7e4;
-      --ink-2:#a8afb5;
-      --ink-3:#767d84;
-      --rule:#2a2f34;
-      --rule-2:#22262a;
-      --signal:#e2a044;
-      --signal-dim:#b7822f;
-      --mono-bg:#20252a;
-    }
-  }
-  :root[data-theme="dark"]{
-    --ground:#131619; --panel:#191d21; --ink:#e4e7e4; --ink-2:#a8afb5;
-    --ink-3:#767d84; --rule:#2a2f34; --rule-2:#22262a;
-    --signal:#e2a044; --signal-dim:#b7822f; --mono-bg:#20252a;
-  }
-  :root[data-theme="light"]{
-    --ground:#f4f5f3; --panel:#fbfbfa; --ink:#16191c; --ink-2:#4a5057;
-    --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
-    --signal:#a35d00; --signal-dim:#c98a2e; --mono-bg:#eceee9;
-  }
-
+  ::selection{ background:var(--signal); color:#000; }
   *{ box-sizing:border-box; }
   body{
     margin:0; background:var(--ground); color:var(--ink);

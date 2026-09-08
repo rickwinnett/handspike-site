@@ -10,39 +10,44 @@
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9875;</text></svg>">
+<meta name="theme-color" content="#000000">
 <title>Handspike — Contact</title>
 <style>
+  /* ---------------------------------------------------------------------------
+     THE GROUND IS BLACK -- one palette, no light variant, no prefers-color-scheme
+     flip. This site used to carry a cream light theme that fired off the READER'S
+     OS setting, which meant the owner's own machine served him a cream page while
+     the cockpit, the screenshots and every design decision were dark. There is now
+     exactly one look. `color-scheme:dark` is load-bearing, not decoration: without
+     it a light-mode browser paints a WHITE scrollbar track and light form-control
+     internals down the side of a pure-black page.
+
+     These values are tuned FOR #000, not carried over from the old #10141a ground.
+     The old --ink-3 (#6f767e) and --brass-dim (#8a7134) measured ~4.0:1 on that
+     ground -- already under AA -- and dropping the ground to black without lifting
+     them would have buried the footer, the smallprint and every uppercase label.
+     Everything below clears 4.5:1 on black; --ink-2 clears 10:1.
+
+     --panel is the COCKPIT's own ground (#0e1117) on purpose: a card on this site
+     is the colour of the instrument it describes, and on the demo pages the
+     embedded cockpit now sits flush with the chrome around it instead of floating
+     on a different dark.
+     --------------------------------------------------------------------------- */
   :root{
-    --ground:#10141a;
-    --panel:#151b23;
-    --ink:#e7e4da;
-    --ink-2:#a9adb0;
-    --ink-3:#6f767e;
-    --rule:#262d36;
-    --rule-2:#1c222b;
-    --brass:#c9a24b;
-    --brass-dim:#8a7134;
-    --mono-bg:#1a212a;
+    color-scheme:dark;
+    --ground:#000000;
+    --panel:#0e1117;
+    --ink:#ece9e0;
+    --ink-2:#b2b6ba;
+    --ink-3:#7e858c;
+    --rule:#31383f;
+    --rule-2:#1d2229;
+    --brass:#d4ac55;
+    --brass-dim:#9a7e3c;
+    --mono-bg:#151a21;
     --measure:34rem;
   }
-  @media (prefers-color-scheme: light){
-    :root{
-      --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
-      --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
-      --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
-    }
-  }
-  :root[data-theme="dark"]{
-    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
-    --ink-3:#6f767e; --rule:#262d36; --rule-2:#1c222b;
-    --brass:#c9a24b; --brass-dim:#8a7134; --mono-bg:#1a212a;
-  }
-  :root[data-theme="light"]{
-    --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
-    --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
-    --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
-  }
-
+  ::selection{ background:var(--brass); color:#000; }
   *{ box-sizing:border-box; }
   body{
     margin:0; background:var(--ground); color:var(--ink);
@@ -122,8 +127,27 @@
     font-family:"Segoe UI",system-ui,-apple-system,sans-serif; font-size:.95rem;
     padding:.65em .8em; line-height:1.5;
   }
+  /* Focus had to get louder. On the old #10141a ground a --brass-dim border was a
+     legible state change; against black a single dim hairline is close to nothing,
+     and this is the one control on the page a keyboard user has to be able to find. */
   input[type="email"]:focus, textarea:focus{
-    outline:none; border-color:var(--brass-dim);
+    outline:none; border-color:var(--brass);
+    box-shadow:0 0 0 2px rgba(212,172,85,.22);
+  }
+  /* Never left to the browser. Chrome derives the placeholder from the input's own
+     colour at roughly half alpha -- on #151a21 that lands near 2.5:1 and the hint
+     reads as a smudge. Pinned to the same tertiary ink the rest of the page uses. */
+  input::placeholder, textarea::placeholder{ color:var(--ink-3); opacity:1; }
+  /* Autofill is the loudest thing a black form can do: Chrome hard-paints a filled
+     field pale blue (#e8f0fe) with black text and ignores `background`, so a saved
+     email address detonates a white block in the middle of the page. Only an inset
+     shadow overrides it. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus{
+    -webkit-text-fill-color:var(--ink);
+    -webkit-box-shadow:0 0 0 100px var(--mono-bg) inset;
+    caret-color:var(--ink);
   }
   textarea{ min-height:7.5em; resize:vertical; }
   button[type="submit"]{
