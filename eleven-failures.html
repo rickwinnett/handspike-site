@@ -157,11 +157,47 @@
     body{ font-size:16px; }
     .item-head{ gap:.6rem; }
   }
+
+  /* ---- masthead (site-wide, identical on every page) ---- */
+  header.mast{ display:flex; align-items:baseline; gap:1rem; margin:0 0 3.4rem;
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; }
+  header.mast .markwrap{ text-decoration:none; }
+  header.mast .mark{ color:var(--ink); font-weight:700; letter-spacing:.22em; }
+  header.mast .bar{ flex:1; height:1px; background:var(--rule); align-self:center; }
+  header.mast nav{ display:flex; gap:1.2rem; flex-wrap:wrap; }
+  header.mast nav a{ color:var(--ink-3); text-decoration:none; }
+  header.mast nav a:hover{ color:var(--brass); }
+  header.mast nav a.op{ color:var(--brass); border:1px solid var(--rule);
+    padding:.35em .8em; border-radius:3px; }
+  header.mast nav a.op:hover{ border-color:var(--brass-dim); }
+  /* The current page stays IN the nav, marked rather than removed — a link that vanishes is what
+     makes a header feel unstable. */
+  header.mast nav a.cur{ color:var(--brass); cursor:default; }
+  @media (max-width:600px){ header.mast{ flex-wrap:wrap; gap:.6rem; }
+    header.mast nav{ gap:.75rem; } }
 </style>
 </head>
 <body>
 
 <div class="shell">
+
+  <header class="mast">
+  <a href="/" class="markwrap"><span class="mark">HANDSPIKE</span></a>
+  <span class="bar"></span>
+  <nav>
+    <a href="/">Sovereign</a>
+    <a href="/demo/cockpit.html">Cockpit</a>
+    <a href="/demo/dossier.html">Dossier</a>
+    <a href="/demo/memory.html">Memory</a>
+    <a href="/eleven-failures.html" aria-current="page" class="cur">The memo</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a class="op" href="/login.html">Operator&nbsp;login</a>
+  </nav>
+</header>
+
+
 
   <div class="plate"><span>Field notes</span><span class="bar"></span><span>Agent reliability</span></div>
 
