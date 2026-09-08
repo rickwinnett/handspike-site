@@ -377,13 +377,18 @@ something far too heavy by hand, with precision. That is the whole company in on
       // THE WINDOW, BESIDE THE NUMBER. `days_elapsed` is how long the CURRENT measurement has run —
       // NOT how long Sovereign has been live. Upstream those are two different quantities
       // (reads.py: the measurement re-bases at an era boundary; the system does not restart), which
-      // is why this stays a bare day count sitting against the percentage rather than a claim about
-      // the operation. Do not relabel it "N days active" — this page describes the live operation in
-      // weeks elsewhere, and the two would contradict each other.
+      // is why this describes the MEASUREMENT and not the operation. Do not relabel it "N days
+      // active" — this page describes the live operation in weeks elsewhere, and the two would
+      // contradict each other.
+      //
+      // "DAY N" IS THE HOUSE CONVENTION, ON EVERY SURFACE: days_elapsed + 1, exactly as the cockpit's
+      // TOTAL RETURN tile renders it ("day 11 of 125"). Printing the raw elapsed count here made the
+      // public banner say "10 days" while the cockpit said "day 11" about the same instant — both
+      // true, and indistinguishable from a bug to anyone who looked at both.
       var n = d.days_elapsed;
       var de = document.getElementById('liveDays');
       if (typeof n === 'number' && n >= 0) {
-        de.textContent = '· ' + n + (n === 1 ? ' day' : ' days');
+        de.textContent = '· day ' + (n + 1);
         de.hidden = false;
       }
       // The badge itself is just the number and its window. The rest of the context that keeps it
