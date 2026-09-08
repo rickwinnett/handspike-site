@@ -363,14 +363,15 @@ something far too heavy by hand, with precision. That is the whole company in on
         'updated ' + Math.round(ageH / 24) + ' days ago';
       if (ageH !== null && ageH > 6) el.classList.add('stale');
       // THE WINDOW, BESIDE THE NUMBER. `days_elapsed` is how long the CURRENT measurement has run —
-      // it is not how long Sovereign has been live, and the two are different quantities upstream
-      // (the measurement re-bases at an era boundary; the system does not restart). So this reads
-      // "over N days", which is true of the percentage it sits next to, rather than "N days active",
-      // which would understate an operation this page elsewhere describes in weeks.
+      // NOT how long Sovereign has been live. Upstream those are two different quantities
+      // (reads.py: the measurement re-bases at an era boundary; the system does not restart), which
+      // is why this stays a bare day count sitting against the percentage rather than a claim about
+      // the operation. Do not relabel it "N days active" — this page describes the live operation in
+      // weeks elsewhere, and the two would contradict each other.
       var n = d.days_elapsed;
       var de = document.getElementById('liveDays');
       if (typeof n === 'number' && n >= 0) {
-        de.textContent = '· over ' + n + (n === 1 ? ' day' : ' days');
+        de.textContent = '· ' + n + (n === 1 ? ' day' : ' days');
         de.hidden = false;
       }
       // The badge itself is just the number and its window. The rest of the context that keeps it
