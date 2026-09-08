@@ -1,6 +1,29 @@
 {
- "as_of": "2026-09-08T18:25:03+00:00",
+ "as_of": "2026-09-08T18:45:03+00:00",
  "forecasts": [
+  {
+   "ticker": "KXIPHONERELEASE-IPHONE18PRO-26OCT01",
+   "title": "Will Apple Inc. release iPhone 18 Pro before Oct 1, 2026?",
+   "ts": "2026-09-08T18:41:07",
+   "policy": "hunt",
+   "prob": 0.99,
+   "market_price": 0.94,
+   "side": "yes",
+   "side_price": 0.95,
+   "confidence": "high",
+   "acted": false,
+   "reason": "hunt chose YES but its own numbers refuse it: side price 0.95, own edge +4.0pt vs fee 0.3pt \u2014 The one market whose outcome is verifiable against a hard, already-scheduled corporate event date rather than a probabilistic forecast, and research resolves the one genuine uncertainty (Apple's split-launch rumor) decisively in favor of YES.",
+   "dossier": "BASE RATE: Apple has released new flagship iPhones in September every year since 2012 (except the pandemic-shifted iPhone 12 in Oct 2020), and once an event is officially announced with a date, the product ships within ~10 days essentially 100% of the time. The only real uncertainty this cycle was the widely-reported plan to SPLIT the iPhone 18 lineup across two seasons. Research resolves it in favor of YES: Bloomberg-sourced reporting (MacRumors, 9to5Mac, Forbes, AppleInsider) confirms the SPLIT delays only the standard iPhone 18, 18e, and iPhone Air 2 to spring 2027, while the higher-margin iPhone 18 Pro and Pro Max launch this fall to protect holiday-quarter ASPs. Apple officially announced its 'Surprise and shine' event for Wednesday, September 9, 2026 at Apple Park; multiple outlets report preorders begin Saturday Sept 12 and units go on sale Friday Sept 18 \u2014 all before the Oct 1 cutoff. The event is literally tomorrow (today is Sept 8, 2026). CROWD NARRATIVE: The market sits at 0.94, likely still discounting lingering 'iPhone 18 delayed to 2027' headlines that actually referred only to the non-Pro models \u2014 a classic misread that distorts the price downward. This is precisely the underconfidence/compression-toward-50 bias the policy exploits: a near-certain favorite priced too cheap. WHO IS ON THE OTHER SIDE: NO holders are betting on a last-minute event cancellation or a resolution-definition quibble (e.g., 'release' meaning something other than on-sale date). Given the event invitation is already public and press embargoes are set, that is a fraction-of-a-percent tail. WHAT WOULD PROVE ME WRONG: Apple abruptly cancels or postpones the Sept 9 keynote (force majeure), or the Pro models are unveiled but pushed to on-sale after Oct 1 \u2014 neither of which any current supply-chain or press reporting supports. Honest probability 0.99.",
+   "sources": [
+    "https://www.macrumors.com/2026/08/27/apple-event-announced-six-new-products/",
+    "https://9to5mac.com/2026/08/26/apple-officially-announces-iphone-18-pro-foldable-event/",
+    "https://www.forbes.com/sites/davidphelan/2026/09/06/apple-iphone-18-pro-release-date-schedule-your-complete-september-countdown/",
+    "https://www.macrumors.com/guide/iphone-18-release-schedule/",
+    "https://appleinsider.com/articles/26/08/26/what-to-expect-from-apples-surprise-and-shine-iphone-18-pro-event-on-september-9"
+   ],
+   "outcome": null,
+   "correct": null
+  },
   {
    "ticker": "KXIPHONERELEASE-IPHONE18PRO-26SEP21",
    "title": "Will Apple Inc. release iPhone 18 Pro before Sep 21, 2026?",
