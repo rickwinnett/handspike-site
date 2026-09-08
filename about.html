@@ -8,6 +8,7 @@
 <meta property="og:title" content="Who's behind this — Handspike">
 <meta property="og:description" content="One builder, his own capital, and a system that publishes its own failures.">
 <meta property="og:type" content="profile">
+<meta property="og:image" content="https://www.handspike.dev/img/rick-winnett.jpg">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9875;</text></svg>">
 <title>Who's behind this — Handspike</title>
@@ -67,23 +68,25 @@
   }
   h1 em{ font-style:italic; color:var(--brass); }
 
-  /* ---- the portrait ---- */
-  .who{ display:flex; gap:1.8rem; align-items:flex-start; flex-wrap:wrap;
+  /* ---- the portrait ----
+     Mounted like a print in a mat, not dropped in like an avatar: the drawing is a line engraving,
+     and the site's whole visual argument is instrument panel and engraved plate. The paper tone is
+     carried in the JPEG itself (the greyscale ramp was remapped to #1a1d21 -> #f2efe6), so the mat
+     colour here only has to match it. */
+  .who{ display:flex; gap:1.9rem; align-items:flex-start; flex-wrap:wrap;
         margin:0 0 2.4rem; }
   .portrait{
-    flex:0 0 auto; width:9.5rem; height:9.5rem; border-radius:50%;
-    background:var(--panel); border:1px solid var(--rule);
-    display:grid; place-items:center; overflow:hidden; position:relative;
+    flex:0 0 auto; width:11.5rem; margin:0;
+    background:#f2efe6; padding:.5rem .5rem .1rem;
+    border:1px solid var(--rule); border-radius:3px;
   }
-  .portrait svg{ width:100%; height:100%; display:block; }
-  /* The silhouette is INK, so it flips with the theme like everything else — a black shape on a
-     dark ground would vanish exactly when half the visitors arrive. */
-  .portrait .fig{ fill:var(--ink); }
-  .portrait .lift{ fill:var(--panel); }
+  .portrait img{ display:block; width:100%; height:auto; border-radius:1px; }
+  /* The ONE place a hardcoded colour is correct: this text sits on the print's own paper, which does
+     not flip with the theme, so a theme token would make it illegible in one mode or the other. */
   .portrait figcaption{
-    position:absolute; bottom:.45rem; left:0; right:0; text-align:center;
-    font-family:ui-monospace,Consolas,monospace; font-size:.52rem; letter-spacing:.12em;
-    text-transform:uppercase; color:var(--ground); opacity:.62;
+    font-family:ui-monospace,Consolas,monospace; font-size:.53rem; letter-spacing:.1em;
+    text-transform:uppercase; color:#8d8779; text-align:center;
+    padding:.5rem 0 .45rem; line-height:1.4;
   }
   .whotext{ flex:1 1 18rem; min-width:0; }
   .whotext p:first-child{ margin-top:0; }
@@ -173,47 +176,15 @@
 <h1>One builder, <em>his own money</em>, and a system that publishes its failures.</h1>
 
 <div class="who">
-  <!-- Placeholder portrait: a silhouette rather than a stock photograph, because a stranger's face
-       standing in for the founder would be the one dishonest pixel on the site. -->
-  <figure class="portrait" role="img" aria-label="Silhouette portrait placeholder of Rick Winnett">
-    <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <!-- ONE path, because a silhouette only reads through its OUTLINE. The first attempt drew the
-           hair as a separate shape in the same ink over the skull, which merged into a single blob
-           and looked like a bad bob. Here the hair IS the outline: a swept crest that rises well
-           above the crown and breaks forward over the brow. -->
-      <path class="fig" d="
-        M18 160
-        C18 134 40 122 63 118
-        C67 117 69 115 69 112
-        L69 105
-        C60 100 55 92 53 83
-        C50 82 48 78 48 73
-        C48 69 50 67 52 67
-        C50 59 49 52 50 46
-        C51 36 57 28 66 24
-        C74 20 84 19 93 22
-        C99 17 107 16 113 20
-        C120 25 122 34 119 42
-        C122 49 122 57 120 65
-        C119 67 118 68 117 69
-        C119 69 121 72 120 77
-        C119 82 117 85 114 85
-        C112 93 108 100 100 105
-        L100 112
-        C100 115 102 117 106 118
-        C129 122 152 134 152 160
-        Z"/>
-      <!-- The sweep: a lock of hair breaking forward over the brow, in ink so it reads as VOLUME.
-           The first attempt cut this shape out in the ground colour and it looked like a bald
-           patch — the opposite of the brief. -->
-      <path class="fig" d="
-        M50 48
-        C52 37 59 29 69 25
-        C63 33 59 41 58 51
-        C56 57 55 62 55 67
-        C51 62 49 55 50 48 Z"/>
-    </svg>
-    <figcaption>photo pending</figcaption>
+  <!-- The caption is not decoration. It is the provenance disclosure: the delivered file carried a
+       faint "AI-generated content" watermark that the bio crop cuts away, so the disclosure moves
+       here, in words, where a reader will actually see it. On a site whose entire argument is that
+       its numbers are not dressed up, an undisclosed synthetic portrait would be the one dishonest
+       pixel. -->
+  <figure class="portrait">
+    <img src="/img/rick-winnett.jpg" width="900" height="1125" decoding="async"
+         alt="Rick Winnett, as a fine-line pen-and-ink portrait study: short curly hair, a full beard, an open collar under a jacket.">
+    <figcaption>AI line study<br>from a photograph</figcaption>
   </figure>
   <div class="whotext">
     <p class="lede"><strong>Rick Winnett</strong> builds Handspike from western North Carolina,
