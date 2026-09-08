@@ -1,0 +1,48 @@
+{
+ "as_of": "2026-09-08T00:25:27+00:00",
+ "forecasts": [
+  {
+   "ticker": "KXIPHONERELEASE-IPHONE18PRO-26SEP21",
+   "title": "Will Apple Inc. release iPhone 18 Pro before Sep 21, 2026?",
+   "ts": "2026-09-07T22:08:08",
+   "policy": "hunt",
+   "prob": 0.97,
+   "market_price": 0.91,
+   "side": "yes",
+   "side_price": 0.92,
+   "confidence": "high",
+   "acted": true,
+   "reason": "This is a near-deterministic factual event with an already-confirmed Apple event date and on-sale date, where primary-source research resolves nearly all uncertainty\u2014unlike the speculative IPO/M&A/AGI markets.",
+   "dossier": "BASE RATE: Apple has launched its flagship Pro iPhones in September every year for over a decade, with the announcement in the first/second week and on-sale roughly a week later. iPhone 17 (2025): event Sept 9, on sale Sept 19. That base rate alone puts a September 18-19 2026 release near-certain. RESEARCH: Apple has now OFFICIALLY confirmed a keynote titled 'Surprise and shine' for September 9, 2026 (10am PT). Multiple outlets (MacRumors, AppleInsider, Forbes/David Phelan) report pre-orders begin Saturday Sept 12 and the iPhone 18 Pro / 18 Pro Max go on sale Friday, September 18, 2026. Both the announcement (Sept 9) and the on-sale date (Sept 18) fall before the Sept 21 cutoff\u2014so under any reasonable reading of 'release' the market resolves YES. Notably, Apple is splitting its lineup this year: only the Pro/Pro Max/foldable launch in fall, while the base iPhone 18 and 18e slip to spring 2027\u2014but that does NOT affect the Pro, which is the subject of this ticker. CROWD NARRATIVE: The price sits at 0.91, compressed toward 50c. The residual discount likely reflects generic 'delay risk' and thin volume (9 trades). But with the keynote date confirmed by Apple itself and the on-sale date a full three days inside the window, that discount is too large. WHO'S ON THE OTHER SIDE: NO holders are betting on a last-minute delay, a slip of the foldable dragging the whole event, or a technicality in 'release' meaning general availability landing after Sept 21. WHAT WOULD PROVE ME WRONG: Apple postponing the Sept 9 event, or pushing Pro availability past Sept 21 (e.g., a supply-chain or 2nm chip yield disaster). No such signal exists; reporting consistently points to Sept 18 sale. Honest probability ~0.97, small residual for genuine tail-risk of postponement within a 13-day window.",
+   "sources": [
+    "https://www.macrumors.com/2026/08/13/when-is-iphone-18-pro-iphone-ultra-apple-event/",
+    "https://www.macrumors.com/guide/apple-september-2026-what-to-expect/",
+    "https://appleinsider.com/articles/26/08/26/what-to-expect-from-apples-surprise-and-shine-iphone-18-pro-event-on-september-9",
+    "https://www.forbes.com/sites/davidphelan/2026/09/06/apple-iphone-18-pro-release-date-schedule-your-complete-september-countdown/",
+    "https://www.macrumors.com/guide/iphone-18-release-schedule/"
+   ],
+   "outcome": null,
+   "correct": null
+  },
+  {
+   "ticker": "KXCPICOMBO-26AUG-0402",
+   "title": "Will Headline be Exactly 0.4% AND Core be Exactly 0.2% for Aug 2026?",
+   "ts": "2026-09-07T22:06:47",
+   "policy": "select",
+   "prob": 0.3,
+   "market_price": 0.39,
+   "side": "yes",
+   "side_price": null,
+   "confidence": "low",
+   "acted": false,
+   "reason": "The Cleveland Fed nowcast (headline 0.36\u2192rounds 0.4, core 0.20\u2192rounds 0.2) is public information the market already prices, and the headline at 0.36 sits knife-edge close to the 0.35 rounding boundary; I lack any nowcast-error distribution or private data giving me a joint-probability edge over the crowd.",
+   "dossier": "",
+   "sources": [],
+   "outcome": null,
+   "correct": null
+  }
+ ],
+ "n_resolved": 0,
+ "n_correct": 0,
+ "note": "Forecasts are written before resolution and never edited. A handful of resolved calls proves nothing \u2014 calibration needs dozens."
+}
