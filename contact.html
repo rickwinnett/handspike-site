@@ -151,6 +151,36 @@
     .mast nav{ gap:.8rem; }
     .shell{ padding-top:1.6rem; }
   }
+
+  /* ── masthead, canonical (appended 2026-09-07 to end the per-page drift) ────────────────────
+     Sized to FIT: at .62rem with .95rem gaps the eight items measure ~670px inside the 736px
+     reading column, which leaves the rule bar real space instead of collapsing it to zero. */
+  header.mast{ display:flex; align-items:baseline; gap:.9rem; margin:0 0 3.4rem;
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; }
+  header.mast .markwrap{ text-decoration:none; white-space:nowrap; }
+  header.mast .mark{ color:var(--ink); font-weight:700; letter-spacing:.2em; font-size:.68rem; }
+  /* min-width keeps the rule visible even when the row is tight — a bar that vanishes reads as a
+     broken header rather than as a design that ran out of room. */
+  header.mast .bar{ flex:1 1 auto; min-width:1.5rem; height:1px; background:var(--rule);
+    align-self:center; }
+  header.mast nav{ display:flex; gap:.95rem; flex-wrap:wrap; align-items:baseline; }
+  /* nowrap is the fix for "THE / MEMO": a label may drop to the next LINE, but must never break
+     in the middle of itself. */
+  header.mast nav a{ color:var(--ink-3); text-decoration:none; white-space:nowrap; }
+  header.mast nav a:hover{ color:var(--brass); }
+  header.mast nav a.op{ color:var(--brass); border:1px solid var(--rule);
+    padding:.4em .75em; border-radius:3px; }
+  header.mast nav a.op:hover{ border-color:var(--brass-dim); }
+  /* THE CURRENT PAGE STAYS IN THE NAV, MARKED. Both selectors, because some pages carry the class
+     and some carry only the attribute. */
+  header.mast nav a.cur,
+  header.mast nav a[aria-current="page"]{ color:var(--brass); cursor:default; }
+  @media (max-width:640px){
+    header.mast{ flex-wrap:wrap; gap:.5rem; margin-bottom:2.4rem; }
+    header.mast .bar{ display:none; }
+    header.mast nav{ gap:.8rem .85rem; width:100%; }
+  }
 </style>
 </head>
 <body>
@@ -164,7 +194,7 @@
     <a href="/demo/cockpit.html">Cockpit</a>
     <a href="/demo/dossier.html">Dossier</a>
     <a href="/demo/memory.html">Memory</a>
-    <a href="/eleven-failures.html">The memo</a>
+    <a href="/eleven-failures.html">Memo</a>
     <a href="/about.html">About</a>
     <a href="/contact.html" aria-current="page" class="cur">Contact</a>
     <a class="op" href="/login.html">Operator&nbsp;login</a>
