@@ -133,6 +133,30 @@
   footer p{ max-width:none; }
   .fine{ font-size:.78rem; line-height:1.6; }
 
+  /* ---- live status banner ---- */
+  #live{ display:none; margin:0 0 2.2rem; border:1px solid var(--rule); border-radius:6px;
+         background:var(--panel); padding:.9rem 1.1rem;
+         display:none; align-items:baseline; gap:.55rem .9rem; flex-wrap:wrap; }
+  #live.on{ display:flex; }
+  #live .k{ font-family:ui-monospace,Consolas,"Cascadia Mono",monospace; font-size:.62rem;
+            letter-spacing:.16em; text-transform:uppercase; color:var(--brass-dim); }
+  #live .pct{ font-family:ui-monospace,Consolas,monospace; font-size:1.45rem; font-weight:700;
+              font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
+  #live .pct.up{ color:#4fa96a; } #live .pct.down{ color:#c96a5a; }
+  #live .meta{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.78rem; color:var(--ink-3);
+               line-height:1.45; flex:1 1 14rem; min-width:0; }
+  #live.stale{ opacity:.72; }
+
+  .tour{ display:grid; grid-template-columns:repeat(auto-fit,minmax(12rem,1fr)); gap:1px;
+         background:var(--rule); border:1px solid var(--rule); border-radius:6px;
+         overflow:hidden; margin:1.5rem 0 0; }
+  .tour a{ background:var(--panel); padding:1.15rem 1.2rem; text-decoration:none; display:block; }
+  .tour a:hover{ background:var(--ground); }
+  .tour .k{ font-family:ui-monospace,Consolas,monospace; font-size:.64rem; letter-spacing:.14em;
+            text-transform:uppercase; color:var(--brass); margin:0 0 .35rem; }
+  .tour .v{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.88rem; color:var(--ink-2);
+            margin:0; max-width:none; }
+
   @media (max-width:600px){
     .mast nav{ gap:.8rem; }
     .shell{ padding-top:1.6rem; }
@@ -146,10 +170,23 @@
   <span class="mark">HANDSPIKE</span>
   <span class="bar"></span>
   <nav>
+    <a href="/demo/cockpit.html">Cockpit</a>
+    <a href="/demo/dossier.html">Dossier</a>
+    <a href="/demo/memory.html">Memory</a>
     <a href="/eleven-failures.html">The memo</a>
+    <a href="/contact.html">Contact</a>
     <a class="op" href="/login.html">Operator&nbsp;login</a>
   </nav>
 </header>
+
+<!-- Live status: reads a static file the founder's machine pushes outward. There is no API here and
+     no inbound path to the trading machine. If the file is missing, unreadable, or the number was
+     withheld upstream, this banner simply never appears — it can go quiet, but it cannot go wrong. -->
+<div id="live" aria-live="polite">
+  <span class="k">Live · founder's account</span>
+  <span class="pct" id="livePct">—</span>
+  <span class="meta" id="liveMeta"></span>
+</div>
 
 <p class="plate">The harness</p>
 <h1>Sovereign. <em>Your money never answers to us.</em></h1>
@@ -203,6 +240,21 @@ something far too heavy by hand, with precision. That is the whole company in on
   trust with it.</p>
 </section>
 
+<section id="tour">
+  <h2>See it work</h2>
+  <p class="big">Three windows into a running system.</p>
+  <div class="tour">
+    <a href="/demo/cockpit.html"><p class="k">The cockpit</p>
+      <p class="v">What an operator sees: covers, exposure, watchdogs, the event log. Simulated display.</p></a>
+    <a href="/demo/dossier.html"><p class="k">The homework</p>
+      <p class="v">A real research dossier written before a paper position — sources, base rate, and the
+      falsifier it committed to in advance.</p></a>
+    <a href="/demo/memory.html"><p class="k">The saddlebags</p>
+      <p class="v">Real scars from the founder's fleet, and the rule each one produced. This is how a
+      Sovereign gets better without a vendor pushing strategy at it.</p></a>
+  </div>
+</section>
+
 <section id="proof">
   <h2>Built in the open, scars first</h2>
   <p>Sovereign has been running live — with the founder's own capital, on the founder's own
@@ -224,9 +276,10 @@ something far too heavy by hand, with precision. That is the whole company in on
   it stays there until its own ledgers earn the next step. When it ships, it ships the way it runs:
   paper first, graduation gates before real money, capital floors published with the fee math on
   the page.</p>
-  <p>If you want to be told when that day comes — or you run autonomous agents with real-world
-  blast radius and want the safety engineering sooner — write to
-  <a href="mailto:rick@handspike.dev">rick@handspike.dev</a>.</p>
+  <p><a href="/signup.html"><strong>Follow the build</strong></a> — honest updates, failures
+  included, and first word when the gates open. Or write to
+  <a href="/contact.html">us directly</a>; if you run autonomous agents with real-world blast
+  radius and want the safety engineering sooner, that is the work we take on today.</p>
 </section>
 
 <footer>
@@ -234,14 +287,53 @@ something far too heavy by hand, with precision. That is the whole company in on
   <p class="fine">Handspike is a software and engineering company. It is not an investment adviser,
   broker-dealer, or fiduciary, and nothing on this site is investment advice or an offer of
   advisory services. Sovereign is trading-infrastructure software and is not available for
-  purchase. No performance results are claimed for Sovereign as a product; any figures in the
-  field report are historical, unaudited, describe a small founder-funded account, and are not
-  indicative of future results. The third-party model study cited above (arXiv:2604.07355) is
-  unaffiliated with Handspike, and its results imply nothing about any result Sovereign may
-  achieve. Autonomous trading involves substantial risk of loss, and no software can eliminate
-  it.</p>
+  purchase. No performance results are claimed for Sovereign as a product. The live figure above
+  and any figures in the field report or demo pages are the historical, unaudited record of the
+  founder's own small account, are stated deposit-neutral (owner deposits netted out so they cannot
+  read as gains), and are <strong>not indicative of future results</strong> — yours or ours. The
+  third-party model study cited above (arXiv:2604.07355) is unaffiliated with Handspike, and its
+  results imply nothing about any result Sovereign may achieve. Autonomous trading involves
+  substantial risk of loss, and no software can eliminate it.</p>
 </footer>
 
 </div>
+<script>
+// The live banner. Reads a static JSON file the founder's machine pushes outward on a timer — no
+// API, no inbound path to the trading machine. Three deliberate behaviours:
+//   1. ANY failure (missing file, bad JSON, missing number) leaves the banner hidden. A number this
+//      page cannot verify is a number it does not show.
+//   2. Older than 6 hours -> rendered dimmed and explicitly labelled with its age. A stale figure
+//      wearing a fresh face is the one dishonest thing a live badge can do.
+//   3. Losses render exactly like gains. There is no branch here that hides a negative.
+(function () {
+  var el = document.getElementById('live');
+  if (!el) return;
+  fetch('/status.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || typeof d.return_pct !== 'number') return;
+      var pct = d.return_pct;
+      var pe = document.getElementById('livePct');
+      pe.textContent = (pct > 0 ? '+' : '') + pct.toFixed(2) + '%';
+      pe.className = 'pct ' + (pct > 0 ? 'up' : pct < 0 ? 'down' : '');
+      var ageH = null;
+      if (d.as_of) {
+        var t = Date.parse(d.as_of);
+        if (!isNaN(t)) ageH = (Date.now() - t) / 3600000;
+      }
+      var when = ageH === null ? '' :
+        ageH < 1.5 ? 'updated just now' :
+        ageH < 48 ? 'updated ' + Math.round(ageH) + 'h ago' :
+        'updated ' + Math.round(ageH / 24) + ' days ago';
+      if (ageH !== null && ageH > 6) el.classList.add('stale');
+      var days = d.days_elapsed ? d.days_elapsed + ' days in · ' : '';
+      document.getElementById('liveMeta').textContent =
+        days + (d.scale || '') + ' · deposit-neutral (owner deposits netted out, so they cannot ' +
+        'read as gains) · ' + when + ' · historical and unaudited, not indicative of future results';
+      el.classList.add('on');
+    })
+    .catch(function () { /* stay hidden — silence beats a number we cannot stand behind */ });
+})();
+</script>
 </body>
 </html>

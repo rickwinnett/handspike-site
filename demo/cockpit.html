@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A simulated rendition of the Sovereign cockpit — the operator's view of the harness: status strip, missile covers, positions, and the event log. Representative data, not live.">
+<meta name="author" content="Rick Winnett">
+<meta property="og:title" content="Handspike — The operator's view (simulated cockpit)">
+<meta property="og:description" content="A stylized, simulated rendition of Sovereign's cockpit. Nothing trades live until its cover is deliberately lifted by the owner.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9875;</text></svg>">
+<title>Handspike — Cockpit, the operator's view</title>
+<style>
+  :root{
+    --ground:#10141a;
+    --panel:#151b23;
+    --ink:#e7e4da;
+    --ink-2:#a9adb0;
+    --ink-3:#6f767e;
+    --rule:#262d36;
+    --rule-2:#1c222b;
+    --brass:#c9a24b;
+    --brass-dim:#8a7134;
+    --mono-bg:#1a212a;
+    --measure:34rem;
+    --pos:#5aa877;
+    --neg:#c96a58;
+    --alert:#d08a4a;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+      --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
+      --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
+      --pos:#1e7a46; --neg:#b23a2a; --alert:#a05a1c;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
+    --ink-3:#6f767e; --rule:#262d36; --rule-2:#1c222b;
+    --brass:#c9a24b; --brass-dim:#8a7134; --mono-bg:#1a212a;
+    --pos:#5aa877; --neg:#c96a58; --alert:#d08a4a;
+  }
+  :root[data-theme="light"]{
+    --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+    --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
+    --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
+    --pos:#1e7a46; --neg:#b23a2a; --alert:#a05a1c;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+    font-size:17px; line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell{ max-width:46rem; margin:0 auto; padding:2.4rem 1.5rem 5rem; }
+  p,li{ max-width:var(--measure); }
+  a{ color:var(--brass); text-decoration-color:var(--brass-dim); text-underline-offset:3px; }
+  a:hover{ text-decoration-thickness:2px; }
+
+  /* ---- masthead ---- */
+  header.mast{
+    display:flex; align-items:baseline; gap:1rem; margin:0 0 2.8rem;
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+  }
+  .mark{ color:var(--ink); font-weight:700; letter-spacing:.22em; }
+  .mast .bar{ flex:1; height:1px; background:var(--rule); align-self:center; }
+  .mast nav{ display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:flex-end; }
+  .mast a{ color:var(--ink-3); text-decoration:none; }
+  .mast a:hover{ color:var(--brass); }
+  .mast a[aria-current]{ color:var(--brass); }
+  .mast a.op{ color:var(--brass); border:1px solid var(--rule); padding:.35em .8em; border-radius:3px; }
+  .mast a.op:hover{ border-color:var(--brass-dim); }
+
+  /* ---- hero ---- */
+  .plate{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); margin:0 0 1.2rem;
+  }
+  h1{
+    font-size:clamp(2.1rem,6vw,3.2rem); line-height:1.08;
+    letter-spacing:-.015em; font-weight:400; margin:0 0 1.3rem;
+    text-wrap:balance; max-width:19ch;
+  }
+  h1 em{ font-style:italic; color:var(--brass); }
+  .standfirst{
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    font-size:1rem; color:var(--ink-2); line-height:1.55; margin:0 0 .8rem; max-width:33rem;
+  }
+
+  /* ---- simulated banner ---- */
+  .simband{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); border:1px solid var(--brass-dim); border-radius:4px;
+    padding:.6em .9em; margin:1.6rem 0 0;
+    background:
+      linear-gradient(var(--panel),var(--panel)) padding-box,
+      repeating-linear-gradient(45deg,var(--brass-dim) 0 8px,transparent 8px 16px) border-box;
+    display:flex; align-items:center; gap:.7em;
+  }
+  .simband::before{ content:"\26A0"; font-size:.9rem; line-height:1; }
+
+  /* ---- sections ---- */
+  section{ margin:3.2rem 0 0; }
+  h2{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--brass); font-weight:600; margin:0 0 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  h2::after{ content:""; flex:1; height:1px; background:var(--rule); }
+
+  .card{
+    background:var(--panel); border:1px solid var(--rule); border-radius:6px;
+    padding:1.5rem 1.6rem; margin:1.6rem 0 0;
+  }
+  .card p:last-child{ margin-bottom:0; }
+
+  .mono{ font-family:ui-monospace,Consolas,"Cascadia Mono",monospace; }
+  .num{ font-variant-numeric:tabular-nums; }
+  .up{ color:var(--pos); }
+  .down{ color:var(--neg); }
+
+  /* ---- status strip ---- */
+  .strip{ display:flex; flex-wrap:wrap; gap:.55rem; margin:0; padding:0; list-style:none; }
+  .strip li{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.66rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-2); border:1px solid var(--rule); border-radius:999px;
+    background:var(--panel); padding:.42em .95em .42em .8em;
+    display:flex; align-items:center; gap:.55em; white-space:nowrap;
+  }
+  .dot{ width:.5em; height:.5em; border-radius:50%; background:var(--pos);
+        box-shadow:0 0 5px var(--pos); flex:none; }
+  .dot.neutral{ background:var(--ink-3); box-shadow:none; }
+  .strip .val{ color:var(--ink); }
+
+  /* ---- the glance ---- */
+  .glance{ display:grid; grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr)); gap:1px;
+           background:var(--rule); border:1px solid var(--rule); border-radius:6px;
+           overflow:hidden; margin:0; }
+  .glance > div{ background:var(--panel); padding:1.05rem 1.2rem; }
+  .glance .k{ font-family:ui-monospace,Consolas,monospace; font-size:.64rem;
+              letter-spacing:.14em; text-transform:uppercase; color:var(--brass-dim); margin:0 0 .4rem; }
+  .glance .v{ font-family:"Segoe UI",system-ui,sans-serif; font-variant-numeric:tabular-nums;
+              font-size:1.3rem; line-height:1.15; color:var(--ink); margin:0; }
+  .glance .sub{ font-family:ui-monospace,Consolas,monospace; font-size:.66rem;
+                letter-spacing:.08em; color:var(--ink-3); margin:.3rem 0 0; }
+
+  /* ---- missile covers ---- */
+  .covers{ display:grid; grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr)); gap:1px;
+           background:var(--rule); border:1px solid var(--rule); border-radius:6px;
+           overflow:hidden; margin:0 0 1.2rem; }
+  .cover{ background:var(--panel); padding:1.2rem 1rem 1.05rem; text-align:center; }
+  .rig{ position:relative; width:4rem; height:4.9rem; margin:0 auto .85rem;
+        perspective:220px; }
+  .well{
+    position:absolute; left:0; right:0; bottom:0; height:3.1rem;
+    background:var(--mono-bg); border:1px solid var(--rule); border-radius:4px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lid{
+    position:absolute; left:-2px; right:-2px; height:3.1rem; border-radius:4px;
+    border:1px solid var(--brass-dim);
+    background:repeating-linear-gradient(45deg,var(--brass-dim) 0 6px,var(--panel) 6px 13px);
+    box-shadow:0 2px 0 rgba(0,0,0,.35);
+  }
+  .lid::after{ /* latch mark */
+    content:""; position:absolute; left:50%; bottom:.28rem; width:.85rem; height:.16rem;
+    transform:translateX(-50%); background:var(--brass); border-radius:1px; opacity:.85;
+  }
+  .safe .lid{ bottom:0; }
+  .armed .lid{
+    bottom:3.05rem; transform-origin:50% 100%; transform:rotateX(62deg);
+    box-shadow:0 -1px 0 rgba(0,0,0,.3);
+  }
+  .toggle{
+    position:relative; width:.5rem; height:1.7rem; display:none;
+  }
+  .armed .toggle{ display:block; }
+  .toggle::before{ /* lever arm, thrown up */
+    content:""; position:absolute; left:50%; bottom:.5rem; width:.3rem; height:1.25rem;
+    transform:translateX(-50%); background:var(--alert); border-radius:2px 2px 1px 1px;
+    box-shadow:0 0 7px var(--alert);
+  }
+  .toggle::after{ /* pivot boss */
+    content:""; position:absolute; left:50%; bottom:.14rem; width:.62rem; height:.62rem;
+    transform:translateX(-50%); background:var(--ink-3); border-radius:50%;
+    border:1px solid var(--rule);
+  }
+  .cname{
+    font-family:ui-monospace,Consolas,monospace; font-size:.68rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink); font-weight:600; margin:0 0 .25rem;
+    max-width:none;
+  }
+  .cname span{ display:block; font-weight:400; color:var(--ink-3); letter-spacing:.1em;
+               font-size:.6rem; margin-top:.15rem; }
+  .cstate{
+    font-family:ui-monospace,Consolas,monospace; font-size:.6rem; letter-spacing:.13em;
+    text-transform:uppercase; margin:0; max-width:none;
+  }
+  .safe  .cstate{ color:var(--pos); }
+  .armed .cstate{ color:var(--alert); }
+
+  /* ---- positions table ---- */
+  .tablewrap{ overflow-x:auto; border:1px solid var(--rule); border-radius:6px;
+              background:var(--panel); }
+  table{ border-collapse:collapse; width:100%; min-width:34rem;
+         font-family:"Segoe UI",system-ui,sans-serif; font-size:.86rem; }
+  th,td{ padding:.62em .95em; text-align:right; font-variant-numeric:tabular-nums;
+         border-bottom:1px solid var(--rule-2); white-space:nowrap; }
+  th{ font-family:ui-monospace,Consolas,monospace; font-size:.62rem; letter-spacing:.14em;
+      text-transform:uppercase; color:var(--brass-dim); font-weight:600; }
+  th:first-child, td:first-child{ text-align:left; }
+  td:first-child{ font-family:ui-monospace,Consolas,monospace; letter-spacing:.06em;
+                  color:var(--ink); font-weight:600; }
+  .side{ font-family:ui-monospace,Consolas,monospace; font-size:.66rem; letter-spacing:.12em;
+         color:var(--ink-3); text-transform:uppercase; }
+  tr:last-child td{ border-bottom:none; }
+  .stopcell{ font-family:ui-monospace,Consolas,monospace; font-size:.78rem; color:var(--ink-2); }
+  .tanote{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.82rem; color:var(--ink-3);
+           margin:.8rem 0 0; }
+
+  /* ---- event log ---- */
+  .log{
+    background:var(--mono-bg); border:1px solid var(--rule); border-radius:6px;
+    padding:1rem 1.2rem; overflow-x:auto; margin:0;
+  }
+  .log pre{
+    margin:0; font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.74rem; line-height:1.9; color:var(--ink-2); font-variant-numeric:tabular-nums;
+  }
+  .log .t{ color:var(--ink-3); }
+  .log .tag{ color:var(--brass); }
+  .log .ok{ color:var(--pos); }
+
+  /* ---- footer ---- */
+  .opnote{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.92rem; color:var(--ink-2);
+           margin:3.2rem 0 0; padding:1.1rem 1.3rem; background:var(--panel);
+           border:1px solid var(--rule); border-left:3px solid var(--brass-dim);
+           border-radius:0 6px 6px 0; max-width:none; }
+  footer{ margin:4.5rem 0 0; padding-top:1.6rem; border-top:1px solid var(--rule);
+          font-family:"Segoe UI",system-ui,sans-serif; font-size:.85rem; color:var(--ink-3); }
+  footer p{ max-width:none; }
+  .fine{ font-size:.78rem; line-height:1.6; }
+
+  @media (max-width:600px){
+    .mast{ flex-wrap:wrap; }
+    .mast nav{ gap:.7rem .9rem; }
+    .shell{ padding-top:1.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="mast">
+  <span class="mark">HANDSPIKE</span>
+  <span class="bar"></span>
+  <nav>
+    <a href="/">Sovereign</a>
+    <a href="/demo/cockpit.html" aria-current="page">Cockpit</a>
+    <a href="/demo/dossier.html">Dossier</a>
+    <a href="/demo/memory.html">Memory</a>
+    <a href="/contact.html">Contact</a>
+    <a class="op" href="/login.html">Operator&nbsp;login</a>
+  </nav>
+</header>
+
+<p class="plate">The cockpit</p>
+<h1>The operator's <em>view.</em></h1>
+<p class="standfirst">One screen, owner's eyes only: what the harness holds, what is armed, and
+proof that the watchdogs are awake. Sovereign's cockpit runs on the owner's own machine — this
+page is a stylized rendition of it.</p>
+
+<p class="simband">Simulated display — representative data, not live</p>
+
+<section id="status">
+  <h2>Status strip</h2>
+  <ul class="strip">
+    <li><span class="dot"></span>Market open</li>
+    <li><span class="dot"></span>Mind <span class="val">responsive</span></li>
+    <li><span class="dot"></span>Sentinel <span class="val">armed</span></li>
+    <li><span class="dot"></span>Stop-watch <span class="val">green</span></li>
+    <li><span class="dot neutral"></span>Last heartbeat <span class="val num">44s ago</span></li>
+  </ul>
+</section>
+
+<section id="glance">
+  <h2>The glance</h2>
+  <div class="glance">
+    <div>
+      <p class="k">Equity</p>
+      <p class="v">$10,412.06</p>
+      <p class="sub">venue-measured</p>
+    </div>
+    <div>
+      <p class="k">Open exposure</p>
+      <p class="v">$3,180.22</p>
+      <p class="sub">31% of equity</p>
+    </div>
+    <div>
+      <p class="k">Today</p>
+      <p class="v down">&minus;$41.17</p>
+      <p class="sub">realized + fees</p>
+    </div>
+    <div>
+      <p class="k">Unrealized</p>
+      <p class="v up">+$122.40</p>
+      <p class="sub">open positions</p>
+    </div>
+    <div>
+      <p class="k">Distance to backstop</p>
+      <p class="v">28.4%</p>
+      <p class="sub">halt-all drawdown line</p>
+    </div>
+  </div>
+</section>
+
+<section id="covers">
+  <h2>Missile covers</h2>
+  <div class="covers">
+    <div class="cover safe">
+      <div class="rig">
+        <div class="well"><div class="toggle"></div></div>
+        <div class="lid"></div>
+      </div>
+      <p class="cname">Halt <span>kill switch</span></p>
+      <p class="cstate">Cover down &mdash; safe</p>
+    </div>
+    <div class="cover armed">
+      <div class="rig">
+        <div class="well"><div class="toggle"></div></div>
+        <div class="lid"></div>
+      </div>
+      <p class="cname">Auto-trade <span>the mind may act</span></p>
+      <p class="cstate">Armed</p>
+    </div>
+    <div class="cover armed">
+      <div class="rig">
+        <div class="well"><div class="toggle"></div></div>
+        <div class="lid"></div>
+      </div>
+      <p class="cname">Live mode <span>real venue, real fills</span></p>
+      <p class="cstate">Armed</p>
+    </div>
+    <div class="cover safe">
+      <div class="rig">
+        <div class="well"><div class="toggle"></div></div>
+        <div class="lid"></div>
+      </div>
+      <p class="cname">Picker live <span>selection engine</span></p>
+      <p class="cstate">Cover down &mdash; safe</p>
+    </div>
+  </div>
+  <p>Nothing trades live until its cover is deliberately lifted by the owner. Every cover is
+  designed to fail closed: lose the config, lose the process, lose the network — the switch reads
+  <em>safe</em>, not <em>armed</em>.</p>
+</section>
+
+<section id="positions">
+  <h2>Positions</h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th><th>Side</th><th>Qty</th><th>Entry</th><th>Last</th>
+          <th>Unreal P/L</th><th>Stop</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GDX</td><td><span class="side">long</span></td><td>28</td>
+          <td>40.05</td><td>42.35</td><td class="up">+64.40</td>
+          <td class="stopcell">39.90</td>
+        </tr>
+        <tr>
+          <td>IBIT</td><td><span class="side">long</span></td><td>12</td>
+          <td>61.05</td><td>66.50</td><td class="up">+65.40</td>
+          <td class="stopcell">59.85</td>
+        </tr>
+        <tr>
+          <td>XLE</td><td><span class="side">long</span></td><td>9</td>
+          <td>88.18</td><td>87.83</td><td class="down">&minus;3.15</td>
+          <td class="stopcell">84.60</td>
+        </tr>
+        <tr>
+          <td>XLU</td><td><span class="side">long</span></td><td>5</td>
+          <td>82.04</td><td>81.19</td><td class="down">&minus;4.25</td>
+          <td class="stopcell">78.95</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tanote">Every open position carries a stop. A position without one is rejected at the
+  rail — by deterministic code, not by asking the mind nicely.</p>
+</section>
+
+<section id="log">
+  <h2>Event log</h2>
+  <div class="log"><pre><span class="t">09:41:12 ET</span>  <span class="tag">HEARTBEAT</span>   mind responsive &middot; cycle 4,182 &middot; reply in 3.9s
+<span class="t">09:41:07 ET</span>  <span class="tag">FILL</span>        GDX BUY 28 @ 40.05 &middot; recorded at venue price + fees
+<span class="t">09:40:58 ET</span>  <span class="tag">COVER CHK</span>   HALT down &middot; AUTO-TRADE armed &middot; LIVE armed &middot; PICKER down
+<span class="t">09:40:44 ET</span>  <span class="tag">WATCHDOG</span>    stop-watch swept 4 positions &middot; 4 stops present &middot; <span class="ok">OK</span>
+<span class="t">09:39:02 ET</span>  <span class="tag">OWNER FLOW</span>  deposit $250.00 detected &rarr; netted out of P&amp;L, not counted as gain
+<span class="t">09:38:57 ET</span>  <span class="tag">SENTINEL</span>    independent heartbeat &middot; armed &middot; no action required</pre></div>
+</section>
+
+<p class="opnote">The real cockpit runs on the owner's own machine behind their private network
+and a PIN — see <a href="/login.html">Operator login</a>. There is no hosted dashboard and no
+Handspike login to your money, deliberately.</p>
+
+<footer>
+  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;&middot;&nbsp; Hendersonville, North Carolina</p>
+  <p class="fine">This page is a simulated display with representative data; it is not connected
+  to any live account, and no performance is claimed or implied. Handspike is a software and
+  engineering company — not an investment adviser, broker-dealer, or fiduciary — and nothing here
+  is investment advice. Autonomous trading involves substantial risk of loss, and no software can
+  eliminate it. <a href="/">Back to Handspike &amp; Sovereign</a>.</p>
+</footer>
+
+</div>
+</body>
+</html>

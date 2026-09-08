@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A real research dossier written by an autonomous agent — with live web access — before it committed a position on its paper research book. Named sources, a stated base rate, and a falsifier committed in advance.">
+<meta name="author" content="Rick Winnett">
+<meta property="og:title" content="Handspike — Dossier: the machine's homework">
+<meta property="og:description" content="Before it acts, it shows its homework. A real pre-commitment research dossier from Sovereign's paper research book, published before resolution.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9875;</text></svg>">
+<title>Handspike — Dossier: the machine's homework</title>
+<style>
+  :root{
+    --ground:#10141a;
+    --panel:#151b23;
+    --ink:#e7e4da;
+    --ink-2:#a9adb0;
+    --ink-3:#6f767e;
+    --rule:#262d36;
+    --rule-2:#1c222b;
+    --brass:#c9a24b;
+    --brass-dim:#8a7134;
+    --mono-bg:#1a212a;
+    --measure:34rem;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+      --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
+      --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
+    --ink-3:#6f767e; --rule:#262d36; --rule-2:#1c222b;
+    --brass:#c9a24b; --brass-dim:#8a7134; --mono-bg:#1a212a;
+  }
+  :root[data-theme="light"]{
+    --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+    --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
+    --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+    font-size:17px; line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell{ max-width:46rem; margin:0 auto; padding:2.4rem 1.5rem 5rem; }
+  p,li{ max-width:var(--measure); }
+  a{ color:var(--brass); text-decoration-color:var(--brass-dim); text-underline-offset:3px; }
+  a:hover{ text-decoration-thickness:2px; }
+
+  /* ---- masthead ---- */
+  header.mast{
+    display:flex; align-items:baseline; gap:1rem; margin:0 0 3.4rem;
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+  }
+  .mark{ color:var(--ink); font-weight:700; letter-spacing:.22em; }
+  .mast .bar{ flex:1; height:1px; background:var(--rule); align-self:center; }
+  .mast nav{ display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:flex-end; }
+  .mast a{ color:var(--ink-3); text-decoration:none; }
+  .mast a:hover{ color:var(--brass); }
+  .mast a[aria-current="page"]{ color:var(--brass); }
+  .mast a.op{ color:var(--brass); border:1px solid var(--rule); padding:.35em .8em; border-radius:3px; }
+  .mast a.op:hover{ border-color:var(--brass-dim); }
+
+  /* ---- hero ---- */
+  .plate{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); margin:0 0 1.2rem;
+  }
+  h1{
+    font-size:clamp(2.1rem,6vw,3.2rem); line-height:1.08;
+    letter-spacing:-.015em; font-weight:400; margin:0 0 1.3rem;
+    text-wrap:balance; max-width:19ch;
+  }
+  h1 em{ font-style:italic; color:var(--brass); }
+  .standfirst{
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    font-size:1rem; color:var(--ink-2); line-height:1.55; margin:0 0 .8rem; max-width:33rem;
+  }
+  .lede{ font-size:1.06rem; color:var(--ink); max-width:33rem; }
+
+  /* ---- sections ---- */
+  section{ margin:3.6rem 0 0; }
+  h2{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--brass); font-weight:600; margin:0 0 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  h2::after{ content:""; flex:1; height:1px; background:var(--rule); }
+  .big{
+    font-size:clamp(1.3rem,3.4vw,1.75rem); line-height:1.3; font-weight:400;
+    max-width:26ch; margin:0 0 1rem; text-wrap:balance;
+  }
+
+  .card{
+    background:var(--panel); border:1px solid var(--rule); border-radius:6px;
+    padding:1.5rem 1.6rem; margin:1.6rem 0 0;
+  }
+  .card p:last-child{ margin-bottom:0; }
+  .stat{
+    font-family:ui-monospace,Consolas,monospace; color:var(--brass);
+    font-size:.85rem; letter-spacing:.04em;
+  }
+
+  /* ---- provenance strip ---- */
+  .prov{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.66rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-3); border:1px solid var(--rule); border-radius:4px;
+    padding:.6em .9em; margin:1.8rem 0 0; line-height:1.9;
+  }
+  .prov b{ color:var(--brass); font-weight:600; }
+
+  /* ---- market card ---- */
+  .qtitle{
+    font-size:clamp(1.25rem,3.2vw,1.6rem); line-height:1.3; font-weight:400;
+    margin:.3rem 0 1.2rem; max-width:30ch; text-wrap:balance;
+  }
+  .ticker{
+    font-family:ui-monospace,Consolas,monospace; font-size:.68rem;
+    letter-spacing:.1em; color:var(--ink-3); word-break:break-all;
+  }
+  .versus{
+    display:flex; align-items:stretch; gap:1px; background:var(--rule);
+    border:1px solid var(--rule); border-radius:6px; overflow:hidden;
+    margin:1.2rem 0 0;
+  }
+  .versus > div{ background:var(--mono-bg); padding:1rem 1.2rem; flex:1; }
+  .versus .k{ font-family:ui-monospace,Consolas,monospace; font-size:.62rem;
+              letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin:0 0 .3rem; }
+  .versus .n{ font-family:ui-monospace,Consolas,monospace; font-size:1.7rem;
+              color:var(--ink); margin:0; line-height:1.1; }
+  .versus .n small{ font-size:.85rem; color:var(--ink-3); }
+  .versus .machine .n{ color:var(--brass); }
+  .qgrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr)); gap:1px;
+          background:var(--rule); border:1px solid var(--rule); border-radius:6px;
+          overflow:hidden; margin:1.2rem 0 0; }
+  .qgrid > div{ background:var(--panel); padding:.9rem 1.1rem; }
+  .qgrid .k{ font-family:ui-monospace,Consolas,monospace; font-size:.62rem;
+             letter-spacing:.14em; text-transform:uppercase; color:var(--brass-dim); margin:0 0 .3rem; }
+  .qgrid .v{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.95rem; color:var(--ink); margin:0; }
+  .whythis{
+    margin:1.4rem 0 0; padding:.2rem 0 .2rem 1.1rem; border-left:2px solid var(--brass-dim);
+    font-family:"Segoe UI",system-ui,sans-serif; font-size:.92rem; color:var(--ink-2);
+    font-style:italic; max-width:32rem;
+  }
+
+  /* ---- dossier body ---- */
+  .dossier{ margin:1.8rem 0 0; }
+  .dossier h3{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); font-weight:600; margin:2.2rem 0 .6rem;
+  }
+  .dossier h3:first-child{ margin-top:0; }
+  .dossier p{ margin:.4rem 0 0; }
+  .verbatim-note{
+    font-family:ui-monospace,Consolas,monospace; font-size:.66rem;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);
+    margin:0 0 1.4rem;
+  }
+
+  ul.srcs{ list-style:none; padding:0; margin:1.2rem 0 0; }
+  ul.srcs li{
+    padding:.6em 0 .6em 1.5em; border-bottom:1px solid var(--rule-2); position:relative;
+    font-family:"Segoe UI",system-ui,sans-serif; font-size:.88rem;
+    overflow-wrap:anywhere;
+  }
+  ul.srcs li::before{ content:"—"; position:absolute; left:0; color:var(--brass-dim); }
+  ul.srcs a{ color:var(--ink-2); }
+  ul.srcs a:hover{ color:var(--brass); }
+
+  .sibling{
+    margin:2rem 0 0; font-family:"Segoe UI",system-ui,sans-serif;
+    font-size:.9rem; color:var(--ink-3); max-width:33rem;
+  }
+
+  /* ---- footer ---- */
+  footer{ margin:4.5rem 0 0; padding-top:1.6rem; border-top:1px solid var(--rule);
+          font-family:"Segoe UI",system-ui,sans-serif; font-size:.85rem; color:var(--ink-3); }
+  footer p{ max-width:none; }
+  .fine{ font-size:.78rem; line-height:1.6; }
+
+  @media (max-width:600px){
+    .mast nav{ gap:.8rem; }
+    .shell{ padding-top:1.6rem; }
+    .versus{ flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="mast">
+  <span class="mark">HANDSPIKE</span>
+  <span class="bar"></span>
+  <nav>
+    <a href="/">Sovereign</a>
+    <a href="/demo/cockpit.html">Cockpit</a>
+    <a href="/demo/dossier.html" aria-current="page">Dossier</a>
+    <a href="/demo/memory.html">Memory</a>
+    <a href="/contact.html">Contact</a>
+    <a class="op" href="/login.html">Operator&nbsp;login</a>
+  </nav>
+</header>
+
+<p class="plate">The research book</p>
+<h1>Before it acts, it shows its <em>homework</em>.</h1>
+<p class="standfirst">What follows is a real dossier, written by an autonomous agent on
+September&nbsp;7, 2026 — with live web access — in the minutes before it committed a position on
+its <strong>$200 paper research book</strong>. This is a research program on a Kalshi prediction
+market. Paper contracts, real prices, real fee schedule. No client money; no money at all.</p>
+<p class="lede">The harness does not let the mind trade on a hunch. Before any commitment it must
+file its case: a base rate, primary-source research, a read on who is on the other side, and —
+in advance — what would prove it wrong. This page is one such filing, published verbatim.</p>
+
+<div class="prov">
+  <b>Real artifact</b> · verbatim &amp; unedited · filed 2026-09-07 · 22:08 UTC (6:08&nbsp;PM&nbsp;ET)
+  · before entry · paper book, no client money
+</div>
+
+<section id="market">
+  <h2>The market</h2>
+  <div class="card">
+    <p class="ticker">KXIPHONERELEASE-IPHONE18PRO-26SEP21 · Kalshi</p>
+    <p class="qtitle">Will Apple Inc. release iPhone&nbsp;18&nbsp;Pro before Sep&nbsp;21,&nbsp;2026?</p>
+    <div class="versus">
+      <div>
+        <p class="k">Market price · YES</p>
+        <p class="n">91&cent;</p>
+      </div>
+      <div class="machine">
+        <p class="k">The machine's honest probability</p>
+        <p class="n">97% <small>confidence: high</small></p>
+      </div>
+    </div>
+    <div class="qgrid">
+      <div><p class="k">Side taken</p><p class="v">YES at 92&cent;</p></div>
+      <div><p class="k">Edge on side</p><p class="v">+5.0 points</p></div>
+      <div><p class="k">Contracts</p><p class="v">43 (paper)</p></div>
+      <div><p class="k">Cost</p><p class="v">$39.79</p></div>
+      <div><p class="k">Fee modeled</p><p class="v">$0.23 (real fee schedule)</p></div>
+      <div><p class="k">Resolves</p><p class="v">Sep 21, 2026</p></div>
+    </div>
+    <p class="whythis">Why this market, in the machine's own words: &ldquo;This is a
+    near-deterministic factual event with an already-confirmed Apple event date and on-sale date,
+    where primary-source research resolves nearly all uncertainty&mdash;unlike the speculative
+    IPO/M&amp;A/AGI markets.&rdquo;</p>
+  </div>
+</section>
+
+<section id="dossier">
+  <h2>The dossier</h2>
+  <p class="verbatim-note">Verbatim · as written by the agent · unedited</p>
+  <div class="dossier">
+    <h3>Base rate</h3>
+    <p>Apple has launched its flagship Pro iPhones in September every year for over a decade, with
+    the announcement in the first/second week and on-sale roughly a week later. iPhone&nbsp;17
+    (2025): event Sept&nbsp;9, on sale Sept&nbsp;19. That base rate alone puts a September
+    18-19 2026 release near-certain.</p>
+
+    <h3>Research</h3>
+    <p>Apple has now OFFICIALLY confirmed a keynote titled 'Surprise and shine' for September&nbsp;9,
+    2026 (10am PT). Multiple outlets (MacRumors, AppleInsider, Forbes/David Phelan) report
+    pre-orders begin Saturday Sept&nbsp;12 and the iPhone&nbsp;18&nbsp;Pro&nbsp;/ 18&nbsp;Pro&nbsp;Max
+    go on sale Friday, September&nbsp;18, 2026. Both the announcement (Sept&nbsp;9) and the on-sale
+    date (Sept&nbsp;18) fall before the Sept&nbsp;21 cutoff&mdash;so under any reasonable reading of
+    'release' the market resolves YES. Notably, Apple is splitting its lineup this year: only the
+    Pro/Pro&nbsp;Max/foldable launch in fall, while the base iPhone&nbsp;18 and 18e slip to spring
+    2027&mdash;but that does NOT affect the Pro, which is the subject of this ticker.</p>
+
+    <h3>Crowd narrative</h3>
+    <p>The price sits at 0.91, compressed toward 50c. The residual discount likely reflects generic
+    'delay risk' and thin volume (9 trades). But with the keynote date confirmed by Apple itself
+    and the on-sale date a full three days inside the window, that discount is too large.</p>
+
+    <h3>Who's on the other side</h3>
+    <p>NO holders are betting on a last-minute delay, a slip of the foldable dragging the whole
+    event, or a technicality in 'release' meaning general availability landing after Sept&nbsp;21.</p>
+
+    <h3>What would prove me wrong</h3>
+    <p>Apple postponing the Sept&nbsp;9 event, or pushing Pro availability past Sept&nbsp;21 (e.g.,
+    a supply-chain or 2nm chip yield disaster). No such signal exists; reporting consistently
+    points to Sept&nbsp;18 sale. Honest probability ~0.97, small residual for genuine tail-risk of
+    postponement within a 13-day window.</p>
+  </div>
+</section>
+
+<section id="sources">
+  <h2>Sources the machine cited</h2>
+  <p class="standfirst" style="margin-bottom:0;">Every dossier must name its sources. These are the
+  five the agent filed with this position, exactly as cited.</p>
+  <ul class="srcs">
+    <li><a href="https://www.macrumors.com/2026/08/13/when-is-iphone-18-pro-iphone-ultra-apple-event/" target="_blank" rel="noopener">macrumors.com — When is the iPhone&nbsp;18&nbsp;Pro / iPhone Ultra Apple event?</a></li>
+    <li><a href="https://www.macrumors.com/guide/apple-september-2026-what-to-expect/" target="_blank" rel="noopener">macrumors.com — Apple September 2026: what to expect</a></li>
+    <li><a href="https://appleinsider.com/articles/26/08/26/what-to-expect-from-apples-surprise-and-shine-iphone-18-pro-event-on-september-9" target="_blank" rel="noopener">appleinsider.com — What to expect from Apple's 'Surprise and shine' iPhone&nbsp;18&nbsp;Pro event on September&nbsp;9</a></li>
+    <li><a href="https://www.forbes.com/sites/davidphelan/2026/09/06/apple-iphone-18-pro-release-date-schedule-your-complete-september-countdown/" target="_blank" rel="noopener">forbes.com — Apple iPhone&nbsp;18&nbsp;Pro release date schedule: your complete September countdown</a></li>
+    <li><a href="https://www.macrumors.com/guide/iphone-18-release-schedule/" target="_blank" rel="noopener">macrumors.com — iPhone&nbsp;18 release schedule</a></li>
+  </ul>
+</section>
+
+<section id="honesty">
+  <h2>The part that keeps us honest</h2>
+  <div class="card">
+    <p class="stat">PUBLISHED BEFORE RESOLUTION</p>
+    <p>This forecast resolves September&nbsp;21. It is published <strong>before</strong> resolution
+    and will not be edited — if it is wrong, it stays wrong in public. One forecast proves nothing;
+    calibration is measured over dozens. The point is the <strong>method</strong>: named sources, a
+    stated base rate, and a falsifier the machine committed to in advance.</p>
+  </div>
+  <p class="sibling">A footnote from the same ledger: this book's selective sibling policy would
+  have demanded more edge than five points before acting, and would have passed on this market.
+  Two policies, one ledger, measured against each other.</p>
+</section>
+
+<footer>
+  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;·&nbsp; Hendersonville, North Carolina</p>
+  <p class="fine">This page reproduces a research artifact from a founder-run research program on a
+  paper (simulated-fill) account at a prediction-market venue. No client money is involved and no
+  performance is claimed or promised; a single forecast, right or wrong, demonstrates a process and
+  nothing more. Handspike is a software and engineering company — not an investment adviser,
+  broker-dealer, or fiduciary — and nothing on this page is investment advice or a recommendation
+  to trade any market. Trading involves substantial risk of loss.
+  <a href="/">Back to Handspike — Sovereign, the autonomous trading harness</a>.</p>
+</footer>
+
+</div>
+</body>
+</html>
