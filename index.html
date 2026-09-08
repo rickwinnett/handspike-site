@@ -143,6 +143,12 @@
   #live .pct{ font-family:ui-monospace,Consolas,monospace; font-size:1.45rem; font-weight:700;
               font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
   #live .pct.up{ color:#4fa96a; } #live .pct.down{ color:#c96a5a; }
+  /* The window the figure covers, set beside it rather than under it. Deliberately quiet: it is the
+     number's scope, not a second headline. Hidden until the feed actually carries the day count —
+     an empty separator floating next to a percentage looks like something failed to load. */
+  #live .days{ font-family:ui-monospace,Consolas,monospace; font-size:.66rem; letter-spacing:.12em;
+               text-transform:uppercase; color:var(--ink-3); }
+  #live .days[hidden]{ display:none; }
   #live.stale{ opacity:.72; }
 
   .tour{ display:grid; grid-template-columns:repeat(auto-fit,minmax(12rem,1fr)); gap:1px;
@@ -215,6 +221,7 @@
 <div id="live" aria-live="polite">
   <span class="k">Live · founder's account</span>
   <span class="pct" id="livePct">—</span>
+  <span class="days" id="liveDays" hidden></span>
 </div>
 
 <p class="plate">The harness</p>
@@ -355,13 +362,24 @@ something far too heavy by hand, with precision. That is the whole company in on
         ageH < 48 ? 'updated ' + Math.round(ageH) + 'h ago' :
         'updated ' + Math.round(ageH / 24) + ' days ago';
       if (ageH !== null && ageH > 6) el.classList.add('stale');
-      // The badge itself is just the number. The context that keeps it honest — the basis, the age,
-      // the not-indicative warning — lives in the footer disclaimer (which names this figure
-      // explicitly) and on hover here, so the detail is one gesture away rather than absent.
-      var days = d.days_elapsed ? d.days_elapsed + ' days in · ' : '';
+      // THE WINDOW, BESIDE THE NUMBER. `days_elapsed` is how long the CURRENT measurement has run —
+      // it is not how long Sovereign has been live, and the two are different quantities upstream
+      // (the measurement re-bases at an era boundary; the system does not restart). So this reads
+      // "over N days", which is true of the percentage it sits next to, rather than "N days active",
+      // which would understate an operation this page elsewhere describes in weeks.
+      var n = d.days_elapsed;
+      var de = document.getElementById('liveDays');
+      if (typeof n === 'number' && n >= 0) {
+        de.textContent = '· over ' + n + (n === 1 ? ' day' : ' days');
+        de.hidden = false;
+      }
+      // The badge itself is just the number and its window. The rest of the context that keeps it
+      // honest — the basis, the age, the not-indicative warning — lives in the footer disclaimer
+      // (which names this figure explicitly) and on hover here, one gesture away rather than absent.
       el.setAttribute('title',
-        days + (d.scale || '') + ' · deposit-neutral (owner deposits netted out, so they cannot ' +
-        'read as gains) · ' + when + ' · historical and unaudited, not indicative of future results');
+        (d.scale || '') + ' · deposit-neutral (owner deposits netted out, so they cannot ' +
+        'read as gains) · measured over the current window, which re-bases at an era boundary · ' +
+        when + ' · historical and unaudited, not indicative of future results');
       el.classList.add('on');
     })
     .catch(function () { /* stay hidden — silence beats a number we cannot stand behind */ });
