@@ -143,8 +143,6 @@
   #live .pct{ font-family:ui-monospace,Consolas,monospace; font-size:1.45rem; font-weight:700;
               font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
   #live .pct.up{ color:#4fa96a; } #live .pct.down{ color:#c96a5a; }
-  #live .meta{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.78rem; color:var(--ink-3);
-               line-height:1.45; flex:1 1 14rem; min-width:0; }
   #live.stale{ opacity:.72; }
 
   .tour{ display:grid; grid-template-columns:repeat(auto-fit,minmax(12rem,1fr)); gap:1px;
@@ -186,7 +184,6 @@
 <div id="live" aria-live="polite">
   <span class="k">Live · founder's account</span>
   <span class="pct" id="livePct">—</span>
-  <span class="meta" id="liveMeta"></span>
 </div>
 
 <p class="plate">The harness</p>
@@ -327,10 +324,13 @@ something far too heavy by hand, with precision. That is the whole company in on
         ageH < 48 ? 'updated ' + Math.round(ageH) + 'h ago' :
         'updated ' + Math.round(ageH / 24) + ' days ago';
       if (ageH !== null && ageH > 6) el.classList.add('stale');
+      // The badge itself is just the number. The context that keeps it honest — the basis, the age,
+      // the not-indicative warning — lives in the footer disclaimer (which names this figure
+      // explicitly) and on hover here, so the detail is one gesture away rather than absent.
       var days = d.days_elapsed ? d.days_elapsed + ' days in · ' : '';
-      document.getElementById('liveMeta').textContent =
+      el.setAttribute('title',
         days + (d.scale || '') + ' · deposit-neutral (owner deposits netted out, so they cannot ' +
-        'read as gains) · ' + when + ' · historical and unaudited, not indicative of future results';
+        'read as gains) · ' + when + ' · historical and unaudited, not indicative of future results');
       el.classList.add('on');
     })
     .catch(function () { /* stay hidden — silence beats a number we cannot stand behind */ });
