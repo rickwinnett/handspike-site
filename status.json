@@ -1,6 +1,6 @@
 {
- "return_pct": 1.4,
- "as_of": "2026-09-08T07:25:03+00:00",
+ "return_pct": 1.74,
+ "as_of": "2026-09-08T07:43:54+00:00",
  "days_elapsed": 10,
  "scale": "under $1k",
  "basis": "deposit-neutral total return since era start; owner deposits netted out",
