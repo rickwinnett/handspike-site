@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Who builds Handspike: one builder in western North Carolina, running Sovereign on his own money, publishing the failures.">
+<meta name="author" content="Rick Winnett">
+<meta property="og:title" content="Who's behind this — Handspike">
+<meta property="og:description" content="One builder, his own capital, and a system that publishes its own failures.">
+<meta property="og:type" content="profile">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9875;</text></svg>">
+<title>Who's behind this — Handspike</title>
+<style>
+  :root{
+    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
+    --ink-3:#6f767e; --rule:#262d36; --rule-2:#1c222b;
+    --brass:#c9a24b; --brass-dim:#8a7134; --mono-bg:#1a212a; --measure:34rem;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+           --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
+           --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9; }
+  }
+  :root[data-theme="dark"]{
+    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
+    --ink-3:#6f767e; --rule:#262d36; --rule-2:#1c222b;
+    --brass:#c9a24b; --brass-dim:#8a7134; --mono-bg:#1a212a;
+  }
+  :root[data-theme="light"]{
+    --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+    --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
+    --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+    font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased;
+  }
+  .shell{ max-width:46rem; margin:0 auto; padding:2.4rem 1.5rem 5rem; }
+  p,li{ max-width:var(--measure); }
+  a{ color:var(--brass); text-decoration-color:var(--brass-dim); text-underline-offset:3px; }
+  a:hover{ text-decoration-thickness:2px; }
+
+  header.mast{
+    display:flex; align-items:baseline; gap:1rem; margin:0 0 3.4rem;
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+  }
+  .mark{ color:var(--ink); font-weight:700; letter-spacing:.22em; }
+  .mast .bar{ flex:1; height:1px; background:var(--rule); align-self:center; }
+  .mast nav{ display:flex; gap:1.2rem; flex-wrap:wrap; }
+  .mast a{ color:var(--ink-3); text-decoration:none; }
+  .mast a:hover{ color:var(--brass); }
+  .mast a.op{ color:var(--brass); border:1px solid var(--rule); padding:.35em .8em; border-radius:3px; }
+  .mast a.op:hover{ border-color:var(--brass-dim); }
+
+  .plate{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); margin:0 0 1.2rem;
+  }
+  h1{
+    font-size:clamp(1.9rem,5vw,2.7rem); line-height:1.1; letter-spacing:-.015em;
+    font-weight:400; margin:0 0 1.2rem; text-wrap:balance; max-width:20ch;
+  }
+  h1 em{ font-style:italic; color:var(--brass); }
+
+  /* ---- the portrait ---- */
+  .who{ display:flex; gap:1.8rem; align-items:flex-start; flex-wrap:wrap;
+        margin:0 0 2.4rem; }
+  .portrait{
+    flex:0 0 auto; width:9.5rem; height:9.5rem; border-radius:50%;
+    background:var(--panel); border:1px solid var(--rule);
+    display:grid; place-items:center; overflow:hidden; position:relative;
+  }
+  .portrait svg{ width:100%; height:100%; display:block; }
+  /* The silhouette is INK, so it flips with the theme like everything else — a black shape on a
+     dark ground would vanish exactly when half the visitors arrive. */
+  .portrait .fig{ fill:var(--ink); }
+  .portrait .lift{ fill:var(--panel); }
+  .portrait figcaption{
+    position:absolute; bottom:.45rem; left:0; right:0; text-align:center;
+    font-family:ui-monospace,Consolas,monospace; font-size:.52rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ground); opacity:.62;
+  }
+  .whotext{ flex:1 1 18rem; min-width:0; }
+  .whotext p:first-child{ margin-top:0; }
+  .lede{ font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+         font-size:1rem; color:var(--ink-2); line-height:1.55; }
+
+  h2{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--brass); font-weight:600; margin:3.2rem 0 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  h2::after{ content:""; flex:1; height:1px; background:var(--rule); }
+  .big{ font-size:clamp(1.25rem,3.2vw,1.6rem); line-height:1.32; font-weight:400;
+        max-width:26ch; margin:0 0 1rem; text-wrap:balance; }
+
+  ul.rails{ list-style:none; padding:0; margin:1.3rem 0 0; }
+  ul.rails li{
+    padding:.68em 0 .68em 1.5em; border-bottom:1px solid var(--rule-2); position:relative;
+    font-family:"Segoe UI",system-ui,sans-serif; font-size:.94rem; color:var(--ink-2);
+    max-width:none;
+  }
+  ul.rails li::before{ content:"—"; position:absolute; left:0; color:var(--brass-dim); }
+  ul.rails li strong{ color:var(--ink); font-weight:600; }
+
+  .card{ background:var(--panel); border:1px solid var(--rule); border-radius:6px;
+         padding:1.4rem 1.5rem; margin:1.5rem 0 0; }
+  .card p:last-child{ margin-bottom:0; }
+
+  footer{ margin:4.5rem 0 0; padding-top:1.6rem; border-top:1px solid var(--rule);
+          font-family:"Segoe UI",system-ui,sans-serif; font-size:.85rem; color:var(--ink-3); }
+  footer p{ max-width:none; }
+  .fine{ font-size:.78rem; line-height:1.6; }
+
+  @media (max-width:600px){ .mast nav{ gap:.8rem; } .shell{ padding-top:1.6rem; } }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="mast">
+  <a href="/" style="text-decoration:none;"><span class="mark">HANDSPIKE</span></a>
+  <span class="bar"></span>
+  <nav>
+    <a href="/">Sovereign</a>
+    <a href="/demo/cockpit.html">Cockpit</a>
+    <a href="/demo/dossier.html">Dossier</a>
+    <a href="/demo/memory.html">Memory</a>
+    <a href="/contact.html">Contact</a>
+    <a class="op" href="/login.html">Operator&nbsp;login</a>
+  </nav>
+</header>
+
+<p class="plate">Who's behind this</p>
+<h1>One builder, <em>his own money</em>, and a system that publishes its failures.</h1>
+
+<div class="who">
+  <!-- Placeholder portrait: a silhouette rather than a stock photograph, because a stranger's face
+       standing in for the founder would be the one dishonest pixel on the site. -->
+  <figure class="portrait" role="img" aria-label="Silhouette portrait placeholder of Rick Winnett">
+    <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- ONE path, because a silhouette only reads through its OUTLINE. The first attempt drew the
+           hair as a separate shape in the same ink over the skull, which merged into a single blob
+           and looked like a bad bob. Here the hair IS the outline: a swept crest that rises well
+           above the crown and breaks forward over the brow. -->
+      <path class="fig" d="
+        M18 160
+        C18 134 40 122 63 118
+        C67 117 69 115 69 112
+        L69 105
+        C60 100 55 92 53 83
+        C50 82 48 78 48 73
+        C48 69 50 67 52 67
+        C50 59 49 52 50 46
+        C51 36 57 28 66 24
+        C74 20 84 19 93 22
+        C99 17 107 16 113 20
+        C120 25 122 34 119 42
+        C122 49 122 57 120 65
+        C119 67 118 68 117 69
+        C119 69 121 72 120 77
+        C119 82 117 85 114 85
+        C112 93 108 100 100 105
+        L100 112
+        C100 115 102 117 106 118
+        C129 122 152 134 152 160
+        Z"/>
+      <!-- The sweep: a lock of hair breaking forward over the brow, in ink so it reads as VOLUME.
+           The first attempt cut this shape out in the ground colour and it looked like a bald
+           patch — the opposite of the brief. -->
+      <path class="fig" d="
+        M50 48
+        C52 37 59 29 69 25
+        C63 33 59 41 58 51
+        C56 57 55 62 55 67
+        C51 62 49 55 50 48 Z"/>
+    </svg>
+    <figcaption>photo pending</figcaption>
+  </figure>
+  <div class="whotext">
+    <p class="lede"><strong>Rick Winnett</strong> builds Handspike from western North Carolina,
+    where he moved to care for his parents. He is a builder and technologist by trade, and Sovereign
+    began as a private answer to a private problem: how to make his own capital work harder without
+    handing it to anyone — or to an unsupervised model.</p>
+    <p class="lede">Every dollar Sovereign has traded is his. There are no outside investors, no
+    clients, and nothing for sale yet.</p>
+  </div>
+</div>
+
+<section>
+  <h2>Why this is built the way it is</h2>
+  <p class="big">Skin in the game, and no one to impress.</p>
+  <p>A trading system funded by strangers has an incentive to look good. This one has the opposite
+  incentive: it is measured against the founder's own money, so a comfortable lie costs him
+  directly. That is why the rails, the watchdogs, and the accounting exist — and why the
+  <a href="/eleven-failures.html">failures get published</a> rather than quietly patched.</p>
+  <ul class="rails">
+    <li><strong>His capital, his risk.</strong> No outside money, no clients, no fiduciary duty
+        anywhere in the picture. The live figure on the front page is his own account, deposit-neutral
+        and unedited — losses and all.</li>
+    <li><strong>Nothing hosted, nothing held.</strong> When Sovereign does ship, it runs on the
+        customer's own machine with the customer's own keys. Handspike is structurally unable to
+        touch anyone's money, which is the point rather than a limitation.</li>
+    <li><strong>Failures first.</strong> The public record leads with eleven production failures
+        because a safety product that only advertises its wins is selling the wrong thing.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>What he does for a living today</h2>
+  <p>Sovereign is not the business yet — the business is the engineering underneath it. If your
+  autonomous agents take irreversible real-world actions (spend money, place orders, send things to
+  people), the deterministic safety layer that keeps a capable model from doing something expensive
+  is the same work, in a domain that is not securities.</p>
+  <div class="card">
+    <p>Fixed-scope, fixed-bid, starting with a written pre-mortem audit.
+    <a href="/contact.html">Start a conversation&nbsp;&rarr;</a> or
+    <a href="/signup.html">follow the build&nbsp;&rarr;</a></p>
+  </div>
+</section>
+
+<footer>
+  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;·&nbsp; Hendersonville, North Carolina &nbsp;·&nbsp; <a href="mailto:rick@handspike.dev">rick@handspike.dev</a></p>
+  <p class="fine">Handspike is a software and engineering company. It is not an investment adviser,
+  broker-dealer, or fiduciary, and nothing on this site is investment advice or an offer of advisory
+  services. Figures shown anywhere on this site are the historical, unaudited record of the founder's
+  own small account and are not indicative of future results. Autonomous trading involves substantial
+  risk of loss.</p>
+</footer>
+
+</div>
+</body>
+</html>
