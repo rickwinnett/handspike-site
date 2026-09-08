@@ -77,17 +77,10 @@
         margin:0 0 2.4rem; }
   .portrait{
     flex:0 0 auto; width:11.5rem; margin:0;
-    background:#f2efe6; padding:.5rem .5rem .1rem;
+    background:#f2efe6; padding:.5rem;
     border:1px solid var(--rule); border-radius:3px;
   }
   .portrait img{ display:block; width:100%; height:auto; border-radius:1px; }
-  /* The ONE place a hardcoded colour is correct: this text sits on the print's own paper, which does
-     not flip with the theme, so a theme token would make it illegible in one mode or the other. */
-  .portrait figcaption{
-    font-family:ui-monospace,Consolas,monospace; font-size:.53rem; letter-spacing:.1em;
-    text-transform:uppercase; color:#8d8779; text-align:center;
-    padding:.5rem 0 .45rem; line-height:1.4;
-  }
   .whotext{ flex:1 1 18rem; min-width:0; }
   .whotext p:first-child{ margin-top:0; }
   .lede{ font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
@@ -176,15 +169,11 @@
 <h1>One builder, <em>his own money</em>, and a system that publishes its failures.</h1>
 
 <div class="who">
-  <!-- The caption is not decoration. It is the provenance disclosure: the delivered file carried a
-       faint "AI-generated content" watermark that the bio crop cuts away, so the disclosure moves
-       here, in words, where a reader will actually see it. On a site whose entire argument is that
-       its numbers are not dressed up, an undisclosed synthetic portrait would be the one dishonest
-       pixel. -->
+  <!-- The alt text carries "portrait study" deliberately: a reader on a screen reader should learn
+       this is a drawing, not a photograph, the same way a sighted reader can see it at a glance. -->
   <figure class="portrait">
     <img src="/img/rick-winnett.jpg" width="900" height="1125" decoding="async"
          alt="Rick Winnett, as a fine-line pen-and-ink portrait study: short curly hair, a full beard, an open collar under a jacket.">
-    <figcaption>AI line study<br>from a photograph</figcaption>
   </figure>
   <div class="whotext">
     <p class="lede"><strong>Rick Winnett</strong> builds Handspike from western North Carolina,
