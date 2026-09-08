@@ -1,0 +1,392 @@
+/* ═══════════════════════════════════════════════════════════════════════════════════════════════
+   THE COCKPIT DESIGN SYSTEM — one copy, linked by every demo page.
+
+   WHY THIS FILE EXISTS. The demo pages were first built in the website's brass-and-serif language,
+   which made them look nothing like the product they were demonstrating. The fix was to port the
+   real cockpit's tokens and geometry — and the moment that happened for one page, the same block
+   was about to be pasted into three. Pasted blocks drift; this site has already been bitten twice
+   by exactly that (the masthead, twice in one night). One file, linked everywhere.
+
+   SOURCE OF TRUTH is the product: cockpit/handspike-cockpit.html in the Handspike repo. When the
+   cockpit changes, this file is what gets re-synced — the pages themselves hold no cockpit CSS.
+
+   TWO CONVENTIONS ARE LOAD-BEARING, NOT DECORATIVE:
+     ORANGE (#ff7a18) means REAL MONEY, and is used for nothing else. Amber (#ffb300) means paper.
+     RED (#ff6b6b) is reserved for LOSS and DANGER — which is why the interactive accent is BLUE.
+     A red-family accent would make "this control is available" and "you are losing money" render
+     as the same colour on a surface where that confusion costs money.
+
+   Everything is scoped under .ck so the host page's own .card / .chip / .pill cannot collide.
+   ═══════════════════════════════════════════════════════════════════════════════════════════════ */
+
+.ck{
+  --bg:#0e1117; --bg-card:#161b22; --bg-raised:#1b2130;
+  --border:#2a313c; --border-strong:#3a4150;
+  --txt:#e6edf3; --txt-dim:#8b949e;
+  --brand:#4d9fff; --real:#ff7a18; --paper:#ffb300; --warn:#e3b341;
+  --win:#2ecc71; --loss:#ff6b6b; --ink-on-brand:#04121f;
+  --real-tint:rgba(255,122,24,0.12); --brand-tint:rgba(77,159,255,0.12);
+  --win-tint:rgba(46,204,113,0.10); --loss-tint:rgba(255,107,107,0.10);
+  --paper-tint:rgba(255,179,0,0.08);
+  --mono:ui-monospace,'SF Mono',SFMono-Regular,'Cascadia Mono',Consolas,'Liberation Mono',monospace;
+  --ui:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,Roboto,'Helvetica Neue',Arial,sans-serif;
+  --radius:10px; --radius-sm:8px;
+  --focus-ring:0 0 0 3px rgba(77,159,255,.55);
+
+  background:var(--bg); color:var(--txt); font-family:var(--ui); font-size:15px; line-height:1.5;
+  border:1px solid var(--border-strong); border-radius:12px; overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.45);
+}
+.ck *{ box-sizing:border-box; }
+.ck :focus-visible{ outline:none; box-shadow:var(--focus-ring); border-radius:6px; }
+.ck-scroll{ overflow-x:auto; }
+/* A fixed-width instrument. Below its natural width it scrolls INSIDE its own frame rather than
+   crushing the columns — a cockpit that reflows is not the cockpit. */
+.ck-app{ display:grid; grid-template-columns:232px 1fr; min-width:1060px; }
+.ck-app.solo{ grid-template-columns:1fr; min-width:720px; }
+
+/* The demo banner rides INSIDE the frame, so a disclosure cannot be lost to a cropped screenshot. */
+.ck-banner{
+  background:var(--brand-tint); border-bottom:1px solid rgba(77,159,255,.3);
+  padding:9px 16px; font-family:var(--mono); font-size:.7rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--brand); font-weight:700; text-align:center;
+}
+.ck-banner span{ color:var(--txt-dim); font-weight:600; letter-spacing:.04em; }
+
+/* ── sidebar ─────────────────────────────────────────────────────────────────────────────────── */
+.ck-side{
+  background:var(--bg); border-right:1px solid var(--border);
+  padding:22px 12px; display:flex; flex-direction:column; gap:20px;
+}
+.ck-wordmark{ display:flex; align-items:center; gap:12px; padding:0 8px; }
+.ck-wordmark .tile{
+  width:34px; height:34px; border-radius:9px; flex:none;
+  background:linear-gradient(135deg,var(--brand),#1e5fbf);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.ck-wordmark .name{ font-size:1.05rem; font-weight:800; letter-spacing:.02em; line-height:1.15; }
+.ck-wordmark .ver{
+  font-family:var(--mono); font-size:.62rem; font-weight:700; letter-spacing:.1em;
+  color:var(--real); text-transform:uppercase;
+}
+.ck-nav{ display:flex; flex-direction:column; gap:1px; }
+.ck-nav .grp{
+  font-size:10px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--txt-dim); padding:13px 12px 3px; user-select:none;
+}
+.ck-nav button, .ck-nav a{
+  display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:8px;
+  color:var(--txt-dim); font-size:.9rem; white-space:nowrap; width:100%; text-align:left;
+  background:none; border:0; font-family:inherit; cursor:pointer; text-decoration:none;
+}
+.ck-nav button:hover, .ck-nav a:hover{ background:var(--bg-card); color:var(--txt); }
+.ck-nav button.on, .ck-nav a.on{
+  background:var(--brand-tint); color:var(--txt); font-weight:600;
+  box-shadow:inset 2px 0 0 var(--brand);
+}
+.ck-nav button[disabled]{ cursor:default; }
+.ck-nav button[disabled]:hover{ background:none; color:var(--txt-dim); }
+.ck-nav svg{ width:16px; height:16px; flex:none; stroke:currentColor; fill:none; stroke-width:1.6; }
+.ck-nav .soon{
+  margin-left:auto; font-family:var(--mono); font-size:.55rem; letter-spacing:.1em;
+  color:var(--border-strong); text-transform:uppercase;
+}
+
+/* ── main column ─────────────────────────────────────────────────────────────────────────────── */
+.ck-main{ padding:18px 22px 26px; display:flex; flex-direction:column; gap:16px; min-width:0; }
+.ck-statusbar{
+  display:flex; flex-wrap:wrap; align-items:center; gap:12px;
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:12px 16px; box-shadow:0 4px 12px rgba(0,0,0,.4);
+}
+.ck-chip{
+  display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px;
+  font-size:.72rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+  border:1px solid var(--border); background:var(--bg-raised); color:var(--txt); white-space:nowrap;
+}
+.ck-chip .dot{ width:7px; height:7px; border-radius:50%; background:currentColor; flex:none; }
+.ck-chip.live{ color:var(--win); border-color:rgba(46,204,113,.4); }
+/* Dark ink on the orange fill: white FAILS AA on #ff7a18 (2.61:1). The border is dark ORANGE,
+   never red-family — red stays reserved for loss and danger. */
+.ck-chip.real{
+  color:var(--ink-on-brand); background:var(--real); border-color:#b35a14; font-weight:700;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+}
+.ck-chip.papr{ color:var(--paper); border-color:rgba(255,179,0,.45); background:var(--paper-tint); }
+.ck-chip.demo{ color:var(--brand); border-color:rgba(77,159,255,.45); background:var(--brand-tint); }
+.ck-chip .mut{ color:var(--txt-dim); font-weight:600; }
+.ck-chip.real .mut{ color:#5a2f08; }
+
+.ck-crumb{
+  font-family:var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--brand);
+}
+.ck-h1{ font-size:1.75rem; font-weight:800; margin:2px 0; letter-spacing:-.01em; }
+.ck-sub{
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+  flex-wrap:wrap; margin-bottom:4px;
+}
+.ck-sub .mode{
+  font-size:1.05rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--real);
+}
+.ck-sub .mode.papr{ color:var(--paper); }
+.ck-armed{
+  display:inline-flex; align-items:center; gap:7px; padding:7px 14px; border-radius:999px;
+  background:var(--real); color:var(--ink-on-brand); border:1px solid #b35a14;
+  font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+}
+.ck-view[hidden]{ display:none; }
+.ck-view{ display:flex; flex-direction:column; gap:16px; }
+
+/* ── cards + metrics ─────────────────────────────────────────────────────────────────────────── */
+.ck-kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.ck-kpis.three{ grid-template-columns:repeat(3,1fr); }
+.ck-card{
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:12px 16px; display:flex; flex-direction:column; gap:6px;
+}
+/* The left rail is the card's STATE, not its topic: orange where real money is at stake. */
+.ck-card.rail-real{ border-left:3px solid var(--real); }
+.ck-card.rail-paper{ border-left:3px solid var(--paper); }
+.ck-card.rail-brand{ border-left:3px solid var(--brand); }
+.ck-card .lbl{
+  font-family:var(--mono); font-size:.68rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--txt-dim); display:flex; align-items:center; gap:6px;
+}
+.ck-card .val{
+  font-family:var(--mono); font-size:1.75rem; font-weight:700; font-variant-numeric:tabular-nums;
+  line-height:1.15; letter-spacing:-.01em;
+}
+.ck-card .val.sm{ font-size:1.25rem; }
+.ck-card .sub{ font-family:var(--mono); font-size:.78rem; font-variant-numeric:tabular-nums; }
+/* The prose INSIDE the tile is the design thesis: a number with no sentence attached is a number
+   the operator has to trust rather than check. */
+.ck-card .why{ font-family:var(--mono); font-size:.7rem; color:var(--txt-dim); line-height:1.45; }
+.ck .win{ color:var(--win); } .ck .loss{ color:var(--loss); } .ck .dim{ color:var(--txt-dim); }
+.ck .real-c{ color:var(--real); } .ck .brand-c{ color:var(--brand); } .ck .papr-c{ color:var(--paper); }
+
+/* drill-downs: every metric in the real cockpit opens to show its derivation */
+button.ck-card{ text-align:left; font-family:inherit; cursor:pointer;
+  transition:background .12s, border-color .12s; }
+button.ck-card:hover{ background:var(--bg-raised); border-color:var(--border-strong); }
+.ck-card .q{
+  width:15px; height:15px; border-radius:50%; border:1px solid var(--border-strong);
+  color:var(--txt-dim); font-size:.6rem; display:inline-flex; align-items:center;
+  justify-content:center; margin-left:auto; font-family:var(--ui); flex:none;
+}
+button.ck-card[aria-expanded="true"] .q{ color:var(--brand); border-color:var(--brand); }
+.ck-drill{
+  font-family:var(--mono); font-size:.7rem; line-height:1.55; color:var(--txt-dim);
+  border-top:1px dashed var(--border-strong); margin-top:8px; padding-top:8px;
+}
+.ck-drill[hidden]{ display:none; }
+.ck-drill b{ color:var(--txt); font-weight:700; }
+
+.ck-note{ font-size:.78rem; color:var(--txt-dim); line-height:1.5; max-width:none; margin:0; }
+.ck-sect{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  flex-wrap:wrap; margin-top:10px;
+}
+.ck-sect h3{ font-size:1.15rem; font-weight:800; margin:0; letter-spacing:.02em; text-transform:uppercase; }
+.ck-sect .meta{
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--txt-dim);
+}
+.ck-split{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.ck-eyebrow{
+  font-family:var(--mono); font-size:.62rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--txt-dim);
+}
+
+/* ── tables ──────────────────────────────────────────────────────────────────────────────────── */
+.ck-tblwrap{
+  border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--bg-card);
+}
+.ck-tbl{
+  width:100%; border-collapse:collapse; font-family:var(--mono); font-size:.82rem;
+  font-variant-numeric:tabular-nums;
+}
+.ck-tbl thead th{
+  background:var(--bg-raised); color:var(--txt-dim);
+  font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  text-align:right; padding:12px 14px; border-bottom:1px solid var(--border); white-space:nowrap;
+}
+.ck-tbl thead th:first-child{ text-align:left; }
+.ck-tbl td{ padding:11px 14px; text-align:right; border-bottom:1px solid var(--border); vertical-align:top; }
+.ck-tbl td:first-child{ text-align:left; box-shadow:inset 3px 0 0 var(--brand); }
+.ck-tbl tbody tr:last-child td{ border-bottom:none; }
+.ck-tbl tr.row{ cursor:pointer; }
+.ck-tbl tr.row:hover td{ background:var(--bg-raised); }
+.ck-tbl .sym{ font-family:var(--ui); font-size:.95rem; font-weight:700; color:var(--txt); }
+.ck-tbl .venue{ font-family:var(--ui); font-size:.75rem; color:var(--txt-dim); font-weight:400; }
+.ck-tbl .u2{ display:block; font-size:.68rem; color:var(--txt-dim); }
+.ck-tbl .chev{ color:var(--txt-dim); font-family:var(--ui); transition:transform .15s; display:inline-block; }
+.ck-tbl tr.row.open .chev{ transform:rotate(90deg); color:var(--brand); }
+.ck-tbl tr.detail td{
+  background:var(--bg); font-size:.72rem; color:var(--txt-dim); text-align:left;
+  line-height:1.6; padding:12px 18px; box-shadow:inset 3px 0 0 var(--brand);
+}
+.ck-tbl tr.detail[hidden]{ display:none; }
+.ck-tbl tr.detail b{ color:var(--txt); }
+.ck-sell{
+  font-family:var(--ui); font-size:.7rem; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--txt-dim); background:var(--bg-raised);
+  border:1px solid var(--border); border-radius:6px; padding:5px 12px; cursor:pointer;
+}
+.ck-sell:hover{ border-color:var(--border-strong); color:var(--txt); }
+
+/* ── probability bar (research surfaces) ─────────────────────────────────────────────────────── */
+.ck-bar{
+  background:var(--bg-raised); height:.55em; border-radius:3px; overflow:hidden;
+  border:1px solid var(--border);
+}
+.ck-bar > i{ display:block; height:100%; background:var(--brand); }
+.ck-bar > i.real{ background:var(--real); } .ck-bar > i.win{ background:var(--win); }
+.ck-barrow{ display:grid; grid-template-columns:9.5em 1fr 4em; gap:.7em; align-items:center; margin:6px 0; }
+.ck-barrow .k{ font-family:var(--mono); font-size:.72rem; color:var(--txt-dim); }
+.ck-barrow .n{ font-family:var(--mono); font-size:.78rem; text-align:right; font-variant-numeric:tabular-nums; }
+
+/* ── posture grid ────────────────────────────────────────────────────────────────────────────── */
+.ck-posture{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px;
+  background:var(--border); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+}
+.ck-posture > div{ background:var(--bg-card); padding:12px 14px; }
+.ck-posture .k{
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--txt-dim); margin-bottom:4px;
+}
+.ck-posture .v{ font-family:var(--mono); font-size:.95rem; font-weight:700; }
+
+/* ── filter chips ────────────────────────────────────────────────────────────────────────────── */
+.ck-filters{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.ck-filters button{
+  font-family:var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--txt-dim); background:var(--bg-raised);
+  border:1px solid var(--border); border-radius:999px; padding:6px 13px; cursor:pointer;
+}
+.ck-filters button:hover{ color:var(--txt); border-color:var(--border-strong); }
+.ck-filters button.on{ color:var(--brand); border-color:rgba(77,159,255,.5); background:var(--brand-tint); }
+
+/* ── memory notes ────────────────────────────────────────────────────────────────────────────── */
+.ck-note-card{
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+  overflow:hidden;
+}
+.ck-note-card + .ck-note-card{ margin-top:10px; }
+.ck-note-head{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%;
+  padding:12px 16px; background:none; border:0; cursor:pointer; text-align:left;
+  font-family:var(--mono); font-size:.8rem; color:var(--txt);
+}
+.ck-note-head:hover{ background:var(--bg-raised); }
+.ck-note-head .dir{ color:var(--txt-dim); }
+.ck-note-head .fname{ color:var(--brand); font-weight:700; }
+.ck-note-head .tag{
+  margin-left:auto; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--txt-dim); border:1px solid var(--border); border-radius:999px; padding:3px 9px;
+}
+.ck-note-head .chev{ color:var(--txt-dim); transition:transform .15s; }
+.ck-note-head[aria-expanded="true"] .chev{ transform:rotate(90deg); color:var(--brand); }
+.ck-note-body{
+  padding:0 16px 14px; font-size:.85rem; line-height:1.6; color:var(--txt-dim);
+  border-top:1px solid var(--border);
+}
+.ck-note-body[hidden]{ display:none; }
+.ck-note-body p{ max-width:none; margin:12px 0 0; }
+.ck-note-body b, .ck-note-body strong{ color:var(--txt); }
+.ck-note-body .rule{
+  margin-top:12px; padding:10px 12px; border-radius:var(--radius-sm);
+  background:var(--win-tint); border:1px solid rgba(46,204,113,.28); color:var(--txt);
+  font-size:.82rem;
+}
+.ck-note-body .rule .k{
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--win); display:block; margin-bottom:3px;
+}
+
+/* ── missile covers — geometry and mechanics ported from the real cockpit ────────────────────── */
+.ck-guards{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+.guard{
+  background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:14px 16px; display:flex; flex-direction:column; gap:10px;
+}
+.g-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.g-title{ display:flex; align-items:center; gap:8px; font-weight:700; font-size:.95rem; }
+.g-title svg{ width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; }
+.g-flag{
+  font-family:var(--mono); font-size:.62rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--txt-dim);
+}
+.cover-switch{
+  position:relative; width:100%; height:90px; border-radius:var(--radius);
+  background:radial-gradient(120% 120% at 50% 0%, #11151c, #080a0e);
+  border:1px solid var(--border-strong); overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.6); cursor:pointer;
+}
+.switch-track{
+  width:122px; height:46px; border-radius:999px; background:var(--bg);
+  border:1px solid var(--border-strong); position:relative; display:flex; align-items:center;
+  padding:0 6px; box-shadow:inset 0 2px 5px rgba(0,0,0,.7); cursor:pointer;
+}
+.switch-knob{
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(145deg,#3a4252,#1c222e); border:1px solid #4a5263;
+  position:absolute; left:6px; transition:left .18s ease, background .18s;
+  box-shadow:0 2px 5px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.14);
+}
+.led{
+  position:absolute; right:14px; top:14px; width:9px; height:9px; border-radius:50%;
+  background:#3a3030; box-shadow:inset 0 0 2px rgba(0,0,0,.8);
+}
+/* covered state — hinged hazard lid */
+.cover-lid{
+  position:absolute; inset:0;
+  background:repeating-linear-gradient(45deg,var(--real) 0 14px,#1b1e25 14px 28px);
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  color:#fff; font-weight:800; letter-spacing:.09em; text-transform:uppercase; font-size:.85rem;
+  border-top:3px solid #b35a14; cursor:pointer;
+  transition:transform .25s ease, box-shadow .25s ease; transform-origin:top center;
+  box-shadow:0 6px 14px rgba(0,0,0,.5), inset 0 -10px 18px rgba(0,0,0,.30);
+  text-shadow:0 1px 1px rgba(0,0,0,.4);
+}
+.cover-lid::before,.cover-lid::after{
+  content:""; position:absolute; top:6px; width:9px; height:9px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #7a1515, #4a0c0c);
+  border:1px solid #8a1a1a; box-shadow:0 1px 1px rgba(0,0,0,.5);
+}
+.cover-lid::before{ left:9px; } .cover-lid::after{ right:9px; }
+.guard.open .cover-lid{ transform:translateX(101%); box-shadow:-10px 0 18px rgba(0,0,0,.45); }
+/* HALT is the DE-RISK control — the one you mash in a panic. It keeps the lift-to-throw geometry but
+   wears a CALM SLATE lid (a brake, not a bomb). Orange 45-degree arm-striping stays EXCLUSIVE to
+   go-live. Its ENGAGED state is still loud loss-red: an active emergency stop is a real alarm. */
+.guard[data-control="kill"] .cover-lid{
+  background:repeating-linear-gradient(45deg,#59626f 0 14px,#252a32 14px 28px);
+  border-top:3px solid #3a424e;
+}
+.guard[data-control="kill"] .cover-lid::before,
+.guard[data-control="kill"] .cover-lid::after{
+  background:radial-gradient(circle at 35% 30%, #aab3c0, #5a6472); border:1px solid #6b7686;
+}
+.guard.armed .switch-knob{ left:80px; background:linear-gradient(145deg,var(--real),#b35a14); border-color:var(--real); }
+.guard.armed .led{ background:var(--real); box-shadow:0 0 9px var(--real); }
+.guard.armed .g-flag{ color:var(--real); }
+.guard.armed .g-title svg{ color:var(--real); }
+.guard.on .switch-knob{ left:80px; background:linear-gradient(145deg,var(--loss),#b71c1c); border-color:#c62828; }
+.guard.on .led{ background:var(--loss); box-shadow:0 0 9px var(--loss); }
+.guard.on .g-flag{ color:var(--loss); }
+.g-state{
+  font-family:var(--mono); font-size:.72rem; text-align:center; font-weight:700;
+  letter-spacing:.05em; padding:6px 8px; border-radius:var(--radius-sm);
+  background:var(--bg-raised); border:1px solid var(--border);
+}
+.g-state.off{ color:var(--txt-dim); }
+.g-state.armed{ color:var(--real); border-color:rgba(255,122,24,.45); background:var(--real-tint); }
+.g-state.engaged{ color:var(--loss); border-color:rgba(255,107,107,.35); background:var(--loss-tint); }
+
+@media (prefers-reduced-motion: reduce){
+  .ck *{ transition-duration:.01ms !important; }
+}

@@ -3,34 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The saddlebags: Sovereign's memory system. Every install accumulates its own scars from its own trades, on the customer's own machine — improvement without vendor strategy pushes.">
+<meta name="description" content="Sovereign's memory: scars written on your own machine from your own trades, each ending in a check the harness enforces before the model reasons. Nothing hosted, nothing synced.">
 <meta name="author" content="Rick Winnett">
-<meta property="og:title" content="Handspike — The saddlebags: Sovereign's memory system">
-<meta property="og:description" content="Every install of Sovereign earns its own scars from its own trades. A copied harness is a newborn; yours is a veteran.">
+<meta property="og:title" content="Handspike — The memory system">
+<meta property="og:description" content="A pirated Sovereign is a newborn. Yours is a veteran.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#9875;</text></svg>">
-<title>Handspike — The saddlebags: Sovereign's memory</title>
+<title>Memory — the saddlebags — Handspike</title>
+<link rel="stylesheet" href="/ck.css">
 <style>
+  /* ═══ SITE CHROME ═══ the brass-and-serif world of handspike.dev. The cockpit surface below
+     carries its own palette from /ck.css, because the product does not look like the website. */
   :root{
-    --ground:#10141a;
-    --panel:#151b23;
-    --ink:#e7e4da;
-    --ink-2:#a9adb0;
-    --ink-3:#6f767e;
-    --rule:#262d36;
-    --rule-2:#1c222b;
-    --brass:#c9a24b;
-    --brass-dim:#8a7134;
-    --mono-bg:#1a212a;
-    --measure:34rem;
+    --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
+    --ink-3:#6f767e; --rule:#262d36; --rule-2:#1c222b;
+    --brass:#c9a24b; --brass-dim:#8a7134; --mono-bg:#1a212a; --measure:34rem;
   }
   @media (prefers-color-scheme: light){
-    :root{
-      --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
-      --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
-      --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
-    }
+    :root{ --ground:#f5f4f0; --panel:#fbfaf7; --ink:#1a1d21; --ink-2:#4a5057;
+           --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
+           --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9; }
   }
   :root[data-theme="dark"]{
     --ground:#10141a; --panel:#151b23; --ink:#e7e4da; --ink-2:#a9adb0;
@@ -42,156 +35,77 @@
     --ink-3:#787f86; --rule:#d9dbd6; --rule-2:#e9eae6;
     --brass:#8a6a1f; --brass-dim:#b08c3e; --mono-bg:#eceee9;
   }
-
   *{ box-sizing:border-box; }
   body{
     margin:0; background:var(--ground); color:var(--ink);
     font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
-    font-size:17px; line-height:1.62;
-    -webkit-font-smoothing:antialiased;
+    font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased;
   }
   .shell{ max-width:46rem; margin:0 auto; padding:2.4rem 1.5rem 5rem; }
+  .wide{ max-width:66rem; margin:2.6rem auto; padding:0 1.5rem; }
   p,li{ max-width:var(--measure); }
   a{ color:var(--brass); text-decoration-color:var(--brass-dim); text-underline-offset:3px; }
   a:hover{ text-decoration-thickness:2px; }
-
-  /* ---- masthead ---- */
-  header.mast{
-    display:flex; align-items:baseline; gap:1rem; margin:0 0 3.4rem; flex-wrap:wrap;
-    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
-    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
-  }
-  .mark{ color:var(--ink); font-weight:700; letter-spacing:.22em; }
-  .mast .bar{ flex:1; height:1px; background:var(--rule); align-self:center; }
-  .mast nav{ display:flex; gap:1.2rem; flex-wrap:wrap; align-items:baseline; }
-  .mast a{ color:var(--ink-3); text-decoration:none; }
-  .mast a:hover{ color:var(--brass); }
-  .mast a[aria-current="page"]{ color:var(--brass); }
-  .mast a.op{ color:var(--brass); border:1px solid var(--rule); padding:.35em .8em; border-radius:3px; }
-  .mast a.op:hover{ border-color:var(--brass-dim); }
-
-  /* ---- hero ---- */
   .plate{
     font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
     font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
     color:var(--brass); margin:0 0 1.2rem;
   }
   h1{
-    font-size:clamp(2.1rem,6vw,3.2rem); line-height:1.08;
-    letter-spacing:-.015em; font-weight:400; margin:0 0 1.3rem;
-    text-wrap:balance; max-width:19ch;
+    font-size:clamp(1.9rem,5vw,2.7rem); line-height:1.1; letter-spacing:-.015em;
+    font-weight:400; margin:0 0 1.2rem; text-wrap:balance; max-width:20ch;
   }
   h1 em{ font-style:italic; color:var(--brass); }
-  .standfirst{
-    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
-    font-size:1rem; color:var(--ink-2); line-height:1.55; margin:0 0 .8rem; max-width:33rem;
+  .standfirst{ font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+               font-size:1rem; color:var(--ink-2); line-height:1.55; max-width:33rem; }
+  .lede{ font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+         font-size:1rem; color:var(--ink-2); line-height:1.55; }
+  .try{
+    font-family:ui-monospace,Consolas,monospace; font-size:.78rem; color:var(--ink-2);
+    background:var(--panel); border:1px solid var(--rule); border-left:3px solid var(--brass);
+    border-radius:4px; padding:.85rem 1.1rem; margin:1.6rem 0 0; max-width:none; line-height:1.6;
   }
-  .lede{ font-size:1.06rem; color:var(--ink); max-width:33rem; }
-
-  /* ---- sections ---- */
-  section{ margin:3.6rem 0 0; }
+  .try strong{ color:var(--brass); }
   h2{
     font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
     font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--brass); font-weight:600; margin:0 0 1.1rem;
+    color:var(--brass); font-weight:600; margin:3.2rem 0 1.1rem;
     display:flex; align-items:center; gap:.8rem;
   }
   h2::after{ content:""; flex:1; height:1px; background:var(--rule); }
-  .big{
-    font-size:clamp(1.3rem,3.4vw,1.75rem); line-height:1.3; font-weight:400;
-    max-width:26ch; margin:0 0 1rem; text-wrap:balance;
-  }
-
-  .card{
-    background:var(--panel); border:1px solid var(--rule); border-radius:6px;
-    padding:1.5rem 1.6rem; margin:1.6rem 0 0;
-  }
-  .card p:last-child{ margin-bottom:0; }
-
-  /* ---- simulated-display label ---- */
-  .sim{
-    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
-    font-size:.62rem; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--ink-3); border:1px dashed var(--rule); border-radius:3px;
-    padding:.45em .8em; display:inline-block; margin:1.4rem 0 0;
-  }
-
-  /* ---- memory-file cards ---- */
-  .mem{
-    background:var(--panel); border:1px solid var(--rule); border-radius:6px;
-    margin:1.4rem 0 0; overflow:hidden;
-  }
-  .mem .fplate{
-    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
-    font-size:.72rem; letter-spacing:.06em; color:var(--ink-2);
-    background:var(--mono-bg); border-bottom:1px solid var(--rule);
-    padding:.6em 1.3em; margin:0; display:flex; align-items:baseline; gap:.7em;
-    max-width:none; overflow-x:auto; white-space:nowrap;
-  }
-  .mem .fplate .dir{ color:var(--ink-3); }
-  .mem .fplate .fname{ color:var(--brass); }
-  .mem .fplate .tag{
-    margin-left:auto; color:var(--ink-3); font-size:.62rem;
-    letter-spacing:.14em; text-transform:uppercase;
-  }
-  .mem .body{ padding:1.15rem 1.3rem 1.25rem; }
-  .mem .scar{
-    font-family:"Segoe UI",system-ui,sans-serif; font-size:.94rem;
-    color:var(--ink-2); margin:0 0 .9rem;
-  }
-  .mem .scar strong{ color:var(--ink); font-weight:600; }
-  .mem .now{
-    font-family:"Segoe UI",system-ui,sans-serif; font-size:.94rem;
-    color:var(--ink); margin:0; padding:.15em 0 .15em 1em;
-    border-left:2px solid var(--brass);
-  }
-  .mem .now .k{
-    font-family:ui-monospace,Consolas,monospace; font-size:.66rem;
-    letter-spacing:.16em; text-transform:uppercase; color:var(--brass);
-    font-weight:600; margin-right:.5em;
-  }
-
-  ul.rails{ list-style:none; padding:0; margin:1.4rem 0 0; }
+  .big{ font-size:clamp(1.25rem,3.2vw,1.6rem); line-height:1.32; font-weight:400;
+        max-width:26ch; margin:0 0 1rem; text-wrap:balance; }
+  ul.rails{ list-style:none; padding:0; margin:1.3rem 0 0; }
   ul.rails li{
     padding:.68em 0 .68em 1.5em; border-bottom:1px solid var(--rule-2); position:relative;
     font-family:"Segoe UI",system-ui,sans-serif; font-size:.94rem; color:var(--ink-2);
+    max-width:none;
   }
   ul.rails li::before{ content:"—"; position:absolute; left:0; color:var(--brass-dim); }
   ul.rails li strong{ color:var(--ink); font-weight:600; }
-
-  /* ---- footer ---- */
+  .card{ background:var(--panel); border:1px solid var(--rule); border-radius:6px;
+         padding:1.4rem 1.5rem; margin:1.5rem 0 0; }
+  .card p:last-child{ margin-bottom:0; }
   footer{ margin:4.5rem 0 0; padding-top:1.6rem; border-top:1px solid var(--rule);
           font-family:"Segoe UI",system-ui,sans-serif; font-size:.85rem; color:var(--ink-3); }
   footer p{ max-width:none; }
   .fine{ font-size:.78rem; line-height:1.6; }
+  .mark{ color:var(--ink); font-weight:700; letter-spacing:.22em; }
 
-  @media (max-width:600px){
-    .mast nav{ gap:.8rem; }
-    .shell{ padding-top:1.6rem; }
-  }
-
-  /* ── masthead, canonical (appended 2026-09-07 to end the per-page drift) ────────────────────
-     Sized to FIT: at .62rem with .95rem gaps the eight items measure ~670px inside the 736px
-     reading column, which leaves the rule bar real space instead of collapsing it to zero. */
+  /* ── masthead, canonical ───────────────────────────────────────────────────────────────────── */
   header.mast{ display:flex; align-items:baseline; gap:.9rem; margin:0 0 3.4rem;
     font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
     font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; }
   header.mast .markwrap{ text-decoration:none; white-space:nowrap; }
   header.mast .mark{ color:var(--ink); font-weight:700; letter-spacing:.2em; font-size:.68rem; }
-  /* min-width keeps the rule visible even when the row is tight — a bar that vanishes reads as a
-     broken header rather than as a design that ran out of room. */
   header.mast .bar{ flex:1 1 auto; min-width:1.5rem; height:1px; background:var(--rule);
     align-self:center; }
   header.mast nav{ display:flex; gap:.95rem; flex-wrap:wrap; align-items:baseline; }
-  /* nowrap is the fix for "THE / MEMO": a label may drop to the next LINE, but must never break
-     in the middle of itself. */
   header.mast nav a{ color:var(--ink-3); text-decoration:none; white-space:nowrap; }
   header.mast nav a:hover{ color:var(--brass); }
   header.mast nav a.op{ color:var(--brass); border:1px solid var(--rule);
     padding:.4em .75em; border-radius:3px; }
   header.mast nav a.op:hover{ border-color:var(--brass-dim); }
-  /* THE CURRENT PAGE STAYS IN THE NAV, MARKED. Both selectors, because some pages carry the class
-     and some carry only the attribute. */
   header.mast nav a.cur,
   header.mast nav a[aria-current="page"]{ color:var(--brass); cursor:default; }
   @media (max-width:640px){
@@ -202,8 +116,8 @@
 </style>
 </head>
 <body>
-<div class="shell">
 
+<div class="shell">
 <header class="mast">
   <a href="/" class="markwrap"><span class="mark">HANDSPIKE</span></a>
   <span class="bar"></span>
@@ -219,15 +133,150 @@
   </nav>
 </header>
 
-<p class="plate">Demonstration · The memory system</p>
+<p class="plate">Demo · the memory system</p>
 <h1>The saddlebags. <em>Every install earns its own.</em></h1>
 <p class="standfirst">Sovereign keeps a memory: a file of scars, written on your machine, from your
 own trades. Each entry records what went wrong and the rule it produced — and the harness consults
-those rules before the mind reasons. Nothing about it is hosted, synced, or shared.</p>
+those rules <em>before</em> the mind reasons. Nothing about it is hosted, synced, or shared.</p>
 <p class="lede">The software you install is identical to everyone else's. What it <em>becomes</em>
 is not. Every venue quirk it hits, every accounting flattery it catches, every silent failure it
 survives gets written down — and stays with your copy.</p>
 
+<p class="try"><strong>It works.</strong> Filter by kind, then open an entry to see the scar and the
+rule it produced. These five are real: earned by the founder's own installations running founder
+capital, and either already published in the field report or harmless to share.</p>
+</div>
+
+<div class="wide">
+<div class="ck">
+  <div class="ck-banner">Memory browser <span>— real entries, rendered in the cockpit surface that shows them</span></div>
+  <div class="ck-scroll">
+  <div class="ck-app solo">
+    <main class="ck-main">
+
+      <div class="ck-statusbar">
+        <span class="ck-chip"><span class="dim">Store</span> &nbsp;local file</span>
+        <span class="ck-chip live"><span class="dot"></span> On this machine only</span>
+        <span class="ck-chip"><span class="dim">Sync</span> &nbsp;none</span>
+        <span class="ck-chip"><span class="dim">Egress</span> &nbsp;none</span>
+      </div>
+
+      <div>
+        <div class="ck-crumb">Cockpit · Memory</div>
+        <div class="ck-h1">Scars</div>
+      </div>
+
+      <div class="ck-sect">
+        <h3>Entries</h3>
+        <span class="meta" id="filterCount">5 entries</span>
+      </div>
+
+      <div class="ck-filters">
+        <button type="button" class="on" data-filter="all">All</button>
+        <button type="button" data-filter="venue">Venue rules</button>
+        <button type="button" data-filter="accounting">Accounting</button>
+        <button type="button" data-filter="modelops">Model ops</button>
+        <button type="button" data-filter="datatruth">Data truth</button>
+      </div>
+
+      <div>
+        <article class="ck-note-card" data-tags="venue">
+          <button type="button" class="ck-note-head" aria-expanded="false">
+            <span class="chev">&rsaquo;</span>
+            <span><span class="dir">memory/</span><span class="fname">leveraged-etf-floor</span></span>
+            <span class="tag">scar · venue rules</span>
+          </button>
+          <div class="ck-note-body" hidden>
+            <p>Leveraged tickers were mechanically dead below the venue's <b>$2,000 equity
+            floor</b> — silently. The strategy looked flat for two weeks; the venue was refusing
+            every order the whole time. Nothing errored, nothing alarmed, and the flat line was
+            indistinguishable from a strategy that had simply stopped finding trades.</p>
+            <div class="rule"><span class="k">The rule it produced</span>
+            The harness checks venue eligibility gates <b>before</b> the mind reasons about a
+            ticker, and a refusal is recorded with its reason rather than swallowed.</div>
+          </div>
+        </article>
+
+        <article class="ck-note-card" data-tags="accounting">
+          <button type="button" class="ck-note-head" aria-expanded="false">
+            <span class="chev">&rsaquo;</span>
+            <span><span class="dir">memory/</span><span class="fname">fake-fills-lesson</span></span>
+            <span class="tag">scar · accounting</span>
+          </button>
+          <div class="ck-note-body" hidden>
+            <p>A sibling strategy reported <b>+84.8%</b> on mid-price paper fills. Re-run with real
+            quotes and real commissions: <b>&minus;2.3%</b>. The entire "edge" was the spread it
+            never paid and the fees it never counted.</p>
+            <div class="rule"><span class="k">The rule it produced</span>
+            Paper books fill at the real ask, sell at the real bid, and pay the published fee. A
+            book that flatters itself is worse than no book, because it is trusted.</div>
+          </div>
+        </article>
+
+        <article class="ck-note-card" data-tags="modelops">
+          <button type="button" class="ck-note-head" aria-expanded="false">
+            <span class="chev">&rsaquo;</span>
+            <span><span class="dir">memory/</span><span class="fname">mind-outage-visibility</span></span>
+            <span class="tag">scar · model ops</span>
+          </button>
+          <div class="ck-note-body" hidden>
+            <p>The model was silent on <b>36% of decision cycles</b> — quota exhaustion plus a
+            request timeout — and nothing said so. A silent cycle writes a record with no thesis,
+            which on readback is indistinguishable from a deliberate decision to wait. The system
+            was reading its own outages as patience.</p>
+            <div class="rule"><span class="k">The rule it produced</span>
+            Every model call is attributed and logged, and the silence rate is computed from the
+            ledger and shown back to the mind. A silent mind is an alarm, not a quiet day.</div>
+          </div>
+        </article>
+
+        <article class="ck-note-card" data-tags="datatruth">
+          <button type="button" class="ck-note-head" aria-expanded="false">
+            <span class="chev">&rsaquo;</span>
+            <span><span class="dir">memory/</span><span class="fname">kalshi-tape-truth</span></span>
+            <span class="tag">scar · data truth</span>
+          </button>
+          <div class="ck-note-body" hidden>
+            <p>The venue's keyless API reports volume and open interest as <b>null for every
+            market</b>, and liquidity as zero — including on markets that had traded thirty seconds
+            earlier. A liquidity filter built on those fields silently rejected the entire exchange
+            and returned zero candidates, which looks exactly like "nothing worth trading today".</p>
+            <div class="rule"><span class="k">The rule it produced</span>
+            Activity is measured from the public trade tape instead of the quote fields, and an
+            empty scan reports its funnel — how many candidates died at each stage — so a
+            zero-result run is diagnosable rather than a shrug.</div>
+          </div>
+        </article>
+
+        <article class="ck-note-card" data-tags="venue accounting">
+          <button type="button" class="ck-note-head" aria-expanded="false">
+            <span class="chev">&rsaquo;</span>
+            <span><span class="dir">memory/</span><span class="fname">one-wallet-two-views</span></span>
+            <span class="tag">scar · venue rules</span>
+          </button>
+          <div class="ck-note-body" hidden>
+            <p>The venue reports spot USD and futures buying power through different endpoints, and
+            they are <b>the same dollars seen twice</b> — futures draws on the spot balance with no
+            sweep between them. Adding the two reported <b>$319.43 against about $186</b> of real
+            money. A balance that double-counts is not a display bug; it is a sizing input.</p>
+            <div class="rule"><span class="k">The rule it produced</span>
+            Each venue has exactly one authoritative balance field per question, named in the code
+            with the measurement that established it. Balances are never summed across endpoints.</div>
+          </div>
+        </article>
+      </div>
+
+      <p class="ck-note">Entries are plain files on the operator's own disk. There is no memory
+      service, no account, and nothing to sync — which is also why nobody can hand you someone
+      else's.</p>
+
+    </main>
+  </div>
+  </div>
+</div>
+</div>
+
+<div class="shell" style="padding-top:0">
 <section id="why">
   <h2>Why memory, not updates</h2>
   <p class="big">Improvement doesn't arrive from us. It accrues on your machine.</p>
@@ -240,55 +289,6 @@ survives gets written down — and stays with your copy.</p>
   memory entry, and the entry becomes a check the harness runs <em>before</em> the model spends a
   single token of reasoning. We ship the rails and the memory machinery. The seasoning comes from
   your own data, on your own server, and it never leaves.</p>
-</section>
-
-<section id="entries">
-  <h2>Four entries from the founder's fleet</h2>
-  <p>These four are real — earned by the founder's own installations, running founder capital, and
-  already published in the field report or harmless to share. This is how they read in the
-  operator's cockpit.</p>
-  <p class="sim">Simulated display — representative data, not live</p>
-
-  <div class="mem">
-    <p class="fplate"><span class="dir">memory/</span><span class="fname">leveraged-etf-floor</span><span class="tag">scar · venue rules</span></p>
-    <div class="body">
-      <p class="scar">Leveraged tickers were mechanically dead below the venue's $2,000 equity
-      floor — <strong>silently</strong>. The strategy looked flat for two weeks; the venue was
-      refusing orders the whole time.</p>
-      <p class="now"><span class="k">Now:</span>the harness checks venue eligibility gates
-      <em>before</em> the mind reasons about a ticker.</p>
-    </div>
-  </div>
-
-  <div class="mem">
-    <p class="fplate"><span class="dir">memory/</span><span class="fname">fake-fills-lesson</span><span class="tag">scar · accounting</span></p>
-    <div class="body">
-      <p class="scar">A sibling strategy reported +84.8% on mid-price paper fills. Re-run with real
-      quotes and real commissions: <strong>−2.3%</strong>.</p>
-      <p class="now"><span class="k">Now:</span>paper books fill at the real ask, sell at the real
-      bid, and pay the published fee — a book that flatters itself is worse than no book.</p>
-    </div>
-  </div>
-
-  <div class="mem">
-    <p class="fplate"><span class="dir">memory/</span><span class="fname">mind-outage-visibility</span><span class="tag">scar · model ops</span></p>
-    <div class="body">
-      <p class="scar">The model was silent on <strong>36% of decision cycles</strong> — quota
-      exhaustion plus a timeout — and nothing said so.</p>
-      <p class="now"><span class="k">Now:</span>every model call is attributed and logged; a silent
-      mind is an alarm, not a quiet day.</p>
-    </div>
-  </div>
-
-  <div class="mem">
-    <p class="fplate"><span class="dir">memory/</span><span class="fname">kalshi-tape-truth</span><span class="tag">scar · data truth</span></p>
-    <div class="body">
-      <p class="scar">The venue's API reports volume as <strong>null for every market</strong> — a
-      liquidity filter built on those fields silently rejects the whole exchange.</p>
-      <p class="now"><span class="k">Now:</span>activity is measured from the public trade tape,
-      and an empty scan is a diagnosable funnel, not a shrug.</p>
-    </div>
-  </div>
 </section>
 
 <section id="mechanics">
@@ -320,18 +320,20 @@ survives gets written down — and stays with your copy.</p>
     <a href="/eleven-failures.html">Eleven ways my autonomous agent failed in production</a> —
     every failure above, in full, with the deterministic control that now catches it.</p>
   </div>
+  <p style="margin-top:1.6rem;">Next: <a href="/demo/cockpit.html">the operator's view&nbsp;&rarr;</a>
+  and <a href="/demo/dossier.html">how it decides&nbsp;&rarr;</a></p>
 </section>
 
 <footer>
-  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;·&nbsp; Hendersonville, North Carolina</p>
-  <p class="fine">This page is a demonstration of Sovereign's memory system, rendered with
-  representative data. The entries shown are historical operating notes from a founder-funded
-  installation and are not performance claims; autonomous trading involves substantial risk of
-  loss, and no software can eliminate it. Handspike is a software and engineering company, not an
-  investment adviser, and nothing here is investment advice.
-  <a href="/">Back to the harness</a>.</p>
+  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;·&nbsp; Hendersonville, North Carolina &nbsp;·&nbsp; <a href="mailto:rick@handspike.dev">rick@handspike.dev</a></p>
+  <p class="fine">This page demonstrates Sovereign's memory system. The entries shown are historical
+  operating notes from founder-funded installations and are not performance claims; autonomous
+  trading involves substantial risk of loss, and no software can eliminate it. Handspike is a
+  software and engineering company, not an investment adviser, broker-dealer, or fiduciary, and
+  nothing here is investment advice. <a href="/">Back to the harness</a>.</p>
 </footer>
-
 </div>
+
+<script src="/ck.js"></script>
 </body>
 </html>
