@@ -1,0 +1,9 @@
+{
+ "return_pct": -3.5,
+ "as_of": "2026-09-08T00:09:29+00:00",
+ "days_elapsed": 9,
+ "scale": "under $1k",
+ "basis": "deposit-neutral total return since era start; owner deposits netted out",
+ "account": "founder's own live account",
+ "note": "Historical, unaudited, small account. Not indicative of future results."
+}
