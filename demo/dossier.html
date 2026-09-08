@@ -230,6 +230,30 @@ in advance — what would prove it wrong. This page is one such filing, publishe
   · before entry · paper book, no client money
 </div>
 
+<!-- THE LEDGER, RENDERED FROM THE SYSTEM. Everything below this block is one frozen worked example;
+     this block is the live list, read from a file the founder's machine publishes. It exists because
+     a hand-pasted artifact is true exactly once — the dossier below becomes misleading the day its
+     market resolves, and HTML does not rot loudly. New forecasts and their outcomes appear here on
+     their own. If the feed cannot be read the section stays hidden and the page is still complete. -->
+<section id="ledger" style="display:none;">
+  <h2>The running ledger</h2>
+  <p id="ledgerNote" style="font-family:'Segoe UI',system-ui,sans-serif;font-size:.9rem;
+     color:var(--ink-2);"></p>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:.88rem;
+                  font-family:'Segoe UI',system-ui,sans-serif;">
+      <thead><tr style="text-align:left;color:var(--ink-3);">
+        <th style="padding:.4em .6em;">Filed</th>
+        <th style="padding:.4em .6em;">Market</th>
+        <th style="padding:.4em .6em;text-align:right;">Its call</th>
+        <th style="padding:.4em .6em;text-align:right;">Market</th>
+        <th style="padding:.4em .6em;">Outcome</th>
+      </tr></thead>
+      <tbody id="ledgerRows"></tbody>
+    </table>
+  </div>
+</section>
+
 <section id="market">
   <h2>The market</h2>
   <div class="card">
@@ -336,5 +360,61 @@ in advance — what would prove it wrong. This page is one such filing, publishe
 </footer>
 
 </div>
+<script>
+// Render the running ledger from /forecasts.json — the file the founder's machine publishes. Rules:
+// any failure leaves the section hidden (the frozen example below still carries the page), and a
+// resolved forecast shows its outcome whether it was right or wrong. There is no branch here that
+// hides a miss.
+(function () {
+  var sec = document.getElementById('ledger');
+  if (!sec) return;
+  fetch('/forecasts.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !Array.isArray(d.forecasts) || !d.forecasts.length) return;
+      var esc = function (s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+        });
+      };
+      var body = document.getElementById('ledgerRows');
+      d.forecasts.forEach(function (f) {
+        var tr = document.createElement('tr');
+        tr.style.borderTop = '1px solid var(--rule-2)';
+        var side = (f.side || 'yes').toUpperCase();
+        var call = side + ' ' + Math.round((f.side === 'no' ? 1 - f.prob : f.prob) * 100) + '%';
+        var mkt = (typeof f.market_price === 'number')
+          ? Math.round(f.market_price * 100) + 'c' : '—';
+        var out, colour;
+        if (f.outcome === null || f.outcome === undefined) {
+          out = f.acted ? 'pending · position open' : 'pending · recorded only';
+          colour = 'var(--ink-3)';
+        } else {
+          out = f.correct ? 'correct' : 'wrong';
+          colour = f.correct ? '#4fa96a' : '#c96a5a';
+        }
+        tr.innerHTML =
+          '<td style="padding:.45em .6em;color:var(--ink-3);white-space:nowrap;">' +
+            esc((f.ts || '').slice(0, 10)) + '</td>' +
+          '<td style="padding:.45em .6em;">' + esc(f.title || f.ticker) + '</td>' +
+          '<td style="padding:.45em .6em;text-align:right;font-variant-numeric:tabular-nums;' +
+            'white-space:nowrap;">' + esc(call) + '</td>' +
+          '<td style="padding:.45em .6em;text-align:right;font-variant-numeric:tabular-nums;">' +
+            esc(mkt) + '</td>' +
+          '<td style="padding:.45em .6em;color:' + colour + ';white-space:nowrap;">' +
+            esc(out) + '</td>';
+        body.appendChild(tr);
+      });
+      var n = d.n_resolved || 0;
+      document.getElementById('ledgerNote').textContent =
+        (n === 0
+          ? 'Nothing has resolved yet — every forecast below is still live. '
+          : n + ' resolved, ' + (d.n_correct || 0) + ' correct. ') +
+        (d.note || '');
+      sec.style.display = '';
+    })
+    .catch(function () { /* stay hidden — the worked example carries the page */ });
+})();
+</script>
 </body>
 </html>
