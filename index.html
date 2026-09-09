@@ -344,9 +344,6 @@ something far too heavy by hand, with precision. That is the whole company in on
 
       var last = vals[vals.length - 1];
       var col = last >= 0 ? '#4fa96a' : '#c96a5a';          // rule 2
-      var rebuilt = d.n_rebuilt
-        ? d.n_rebuilt + ' rebuilt'
-        : d.n + ' samples';
 
       box.innerHTML =
         "<svg viewBox='0 0 " + w + " " + h + "' preserveAspectRatio='none' aria-hidden='true'>" +
@@ -359,7 +356,14 @@ something far too heavy by hand, with precision. That is the whole company in on
         "</svg>" +
         // The caption reports the REAL extremes from the feed, not the padded drawing band —
         // `lo`/`hi` above were widened by 12% purely to keep the line off the frame edge.
-        "<span class='cap'><span>" + d.n + " samples · " + rebuilt + "</span>" +
+        //
+        // THE SAMPLE/REBUILT COUNT WAS REMOVED (owner, 2026-09-09). It read "120 samples · 94
+        // rebuilt" beside the extremes, and the two were computed over DIFFERENT populations — the
+        // count over the whole stored series, the extremes over the downsampled drawing window — so
+        // the line invited a reader to relate two numbers that do not belong to each other. A
+        // provenance disclosure that is itself imprecise is worse than none: it looks like rigour.
+        // The range still shows, which is the number a reader can actually check against the curve.
+        "<span class='cap'><span></span>" +
         "<span>" + d.lo.toFixed(2).replace('-', '−') + "% … " +
         d.hi.toFixed(2).replace('-', '−') + "%</span></span>";
       box.hidden = false;
