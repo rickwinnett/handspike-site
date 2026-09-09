@@ -1,10 +1,10 @@
 # ==================================================================================================
-# deploy.ps1 — stand up the handspike.dev visitor counter, or update it
+# deploy.ps1 -- stand up the handspike.dev visitor counter, or update it
 # ==================================================================================================
 #
 #   powershell -NoProfile -ExecutionPolicy Bypass -File _counter\deploy.ps1
 #
-# Safe to run again. It creates nothing twice, and it will NOT rotate the salt on a re-run — rotating
+# Safe to run again. It creates nothing twice, and it will NOT rotate the salt on a re-run -- rotating
 # it would change every future hash, so every returning visitor would be counted as a new one and the
 # number would silently restart. If the salt ever genuinely has to change, delete the D1 database in
 # the same breath, because the count it holds becomes meaningless the moment the salt moves.
@@ -76,7 +76,7 @@ if ($tomlNew -ne $toml) {
 Head "Schema"
 npx --yes wrangler d1 execute $DB_NAME --remote --file=schema.sql --yes
 if ($LASTEXITCODE -ne 0) { throw "schema apply failed" }
-Say "applied (CREATE TABLE IF NOT EXISTS — existing rows untouched)."
+Say "applied (CREATE TABLE IF NOT EXISTS -- existing rows untouched)."
 
 # ---- 5. deploy ---------------------------------------------------------------------------------
 Head "Deploy"
@@ -92,7 +92,7 @@ Say "live at $url"
 Head "Salt"
 $secrets = (npx --yes wrangler secret list 2>&1 | Out-String)
 if ($secrets -match 'VISITOR_SALT') {
-  Say "VISITOR_SALT already set — left alone on purpose (rotating it would reset the count)."
+  Say "VISITOR_SALT already set -- left alone on purpose (rotating it would reset the count)."
 } else {
   $bytes = New-Object byte[] 32
   $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
@@ -122,5 +122,5 @@ Write-Host "      git -C `"$(Split-Path -Parent $here)`" add visitors.js _counte
 Write-Host "      git -C `"$(Split-Path -Parent $here)`" commit -m `"site: visitor counter endpoint`""
 Write-Host "      git -C `"$(Split-Path -Parent $here)`" push"
 Write-Host ""
-Write-Host "  Until that push lands, the footer stays blank — which is the correct thing for it to do."
+Write-Host "  Until that push lands, the footer stays blank -- which is the correct thing for it to do."
 Write-Host ""
