@@ -1,6 +1,32 @@
 {
- "as_of": "2026-09-09T18:45:03+00:00",
+ "as_of": "2026-09-09T19:05:02+00:00",
  "forecasts": [
+  {
+   "ticker": "KXIPOANTHROPIC-DATE-26OCT01",
+   "title": "When will Anthropic officially announce an IPO?",
+   "ts": "2026-09-09T18:47:26",
+   "policy": "hunt",
+   "prob": 0.03,
+   "market_price": 0.045,
+   "side": "no",
+   "side_price": 0.96,
+   "confidence": "high",
+   "acted": false,
+   "reason": "hunt chose NO but its own numbers refuse it: side price 0.96, own edge +1.0pt vs fee 0.3pt \u2014 Resolution is gated by a hard, checkable SEC procedural clock (public S-1 must be on file 15 days before any roadshow) plus a dated Reuters timeline, so primary sources settle it mechanically rather than requiring a forecast of human behavior or volatility.",
+   "dossier": "BASE RATE: For a US IPO, the three resolution triggers here (S-1 declared effective, IPO priced, exchange ticker assigned) all cluster within days of pricing, at the END of the process. From public S-1 flip to pricing is essentially never under ~3 weeks for a mega-deal, because SEC policy requires the issuer to publicly file at least 15 days before any roadshow, and roadshows themselves run 7-10 business days.\n\nRESEARCH: Anthropic submitted a CONFIDENTIAL draft S-1 on June 1, 2026 (its own newsroom; CNBC). Critically, that self-announced filing did NOT resolve this market YES \u2014 strong evidence Kalshi is applying its strict three-prong test, not the loose market title. EDGAR shows no public S-1 or S-1/A as of today (Sept 9); it was still absent as of Aug 26. Reuters (Sept 5, 2026) reports the public S-1 has slipped to LATE SEPTEMBER and the roadshow to MID-OCTOBER at the earliest, targeting a late-October listing 'just days before the November midterms.' Working forward from the 15-day rule: even if the S-1 went public today, the roadshow could not start before Sept 24, making a pre-Oct-1 pricing arithmetically impossible. No ticker has been confirmed.\n\nCROWD NARRATIVE: Headlines scream '$965B\u2013$2T AI IPO, fall 2026,' and the market's title ('officially announce an IPO') reads far looser than its rules. That gap \u2014 plus lottery-ticket appeal on a marquee name with 561k volume \u2014 is what holds the price at 4-5c rather than 1c.\n\nWHO'S ON THE OTHER SIDE: YES buyers are betting either that the deal accelerates dramatically, or that Kalshi loosely reads a proposed Nasdaq symbol printed on a late-September public S-1 ('we have applied to list under the symbol...') as 'a securities exchange has assigned a ticker.' I price that as roughly 45% chance of a public S-1 landing before Sept 30 times ~8% chance of the loose reading, since the secondary rule's framing ('even if the company does not start trading until after Oct 1') clearly targets the pricing stage.\n\nWHAT WOULD PROVE ME WRONG: A public S-1/A appearing on EDGAR in the next few days containing a reserved Nasdaq ticker, followed by Kalshi guidance treating symbol reservation as assignment \u2014 or any report that Anthropic has compressed to a pre-Oct-1 pricing. Absent that, this is mechanically NO.",
+   "sources": [
+    "Kalshi API: api.elections.kalshi.com/trade-api/v2/markets/KXIPOANTHROPIC-DATE-26OCT01 (rules_primary/secondary)",
+    "https://www.anthropic.com/news/confidential-draft-s1-sec",
+    "https://www.cnbc.com/2026/06/01/anthropic-ipo-s1-prospectus.html",
+    "https://valueaddvc.com/pulse/anthropic-ipo-timeline-shifts-mid-october-2026 (citing Reuters, Sept 5 2026)",
+    "https://www.sec.gov/about/divisions-offices/division-corporation-finance/draft-registration-statement-processing-procedures-expanded",
+    "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&company=anthropic&type=S-1 (no public S-1 on file)",
+    "https://www.startuphub.ai/ai-news/ipo-watch/2026/anthropic-ipo-roadshow-investor-meetings-2026-07-21",
+    "https://finance.yahoo.com/markets/stocks/articles/anthropic-sets-fall-ipo-eyeing-185032639.html"
+   ],
+   "outcome": null,
+   "correct": null
+  },
   {
    "ticker": "KXCPICOMBO-26AUG-0503",
    "title": "Will Headline be 0.5% or above AND Core be 0.3% or above for Aug 2026?",
