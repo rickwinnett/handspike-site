@@ -23,6 +23,17 @@ $SITE_JS  = Join-Path (Split-Path -Parent $here) 'visitors.js'
 function Say($m) { Write-Host "  $m" }
 function Head($m) { Write-Host ""; Write-Host "== $m" -ForegroundColor Cyan }
 
+# EXPLICIT UTF-8 IN BOTH DIRECTIONS, and it is not fussiness. Windows PowerShell 5.1 decodes with the
+# system ANSI codepage unless told otherwise, and Set-Content -Encoding utf8 adds a BOM. Run the naive
+# pair over a file containing an em-dash and it comes back as three CP1252 characters -- which is what
+# happened to wrangler.toml's comments on the first run of this script. visitors.js is the file that
+# actually matters: its tooltip text is em-dashes and curly apostrophes, all of it visible to readers,
+# and mangling it would ship mojibake to the live site the moment the endpoint was wired in.
+function ReadText($p) { [System.IO.File]::ReadAllText($p, [System.Text.Encoding]::UTF8) }
+function WriteText($p, $s) {
+  [System.IO.File]::WriteAllText($p, $s, (New-Object System.Text.UTF8Encoding($false)))
+}
+
 # ---- 1. authentication -------------------------------------------------------------------------
 Head "Cloudflare account"
 $who = (npx --yes wrangler whoami 2>&1 | Out-String)
@@ -65,10 +76,10 @@ if ($dbId) {
 
 # ---- 3. bind it --------------------------------------------------------------------------------
 $tomlPath = Join-Path $here 'wrangler.toml'
-$toml = Get-Content $tomlPath -Raw
+$toml = ReadText $tomlPath
 $tomlNew = [regex]::Replace($toml, 'database_id\s*=\s*"[^"]*"', ('database_id = "' + $dbId + '"'))
 if ($tomlNew -ne $toml) {
-  Set-Content -Path $tomlPath -Value $tomlNew -Encoding utf8 -NoNewline
+  WriteText $tomlPath $tomlNew
   Say "wrangler.toml bound to $dbId."
 }
 
@@ -106,12 +117,12 @@ if ($secrets -match 'VISITOR_SALT') {
 # ---- 7. point the page at it -------------------------------------------------------------------
 Head "Wiring the page"
 if (-not (Test-Path $SITE_JS)) { throw "visitors.js not found at $SITE_JS" }
-$js = Get-Content $SITE_JS -Raw
+$js = ReadText $SITE_JS
 $jsNew = [regex]::Replace($js, "var ENDPOINT = '[^']*';", ("var ENDPOINT = '" + $url + "';"))
 if ($jsNew -eq $js) {
   Say "visitors.js already points at this endpoint."
 } else {
-  Set-Content -Path $SITE_JS -Value $jsNew -Encoding utf8 -NoNewline
+  WriteText $SITE_JS $jsNew
   Say "visitors.js ENDPOINT set."
 }
 
