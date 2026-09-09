@@ -1,6 +1,23 @@
 {
- "as_of": "2026-09-09T18:25:03+00:00",
+ "as_of": "2026-09-09T18:45:03+00:00",
  "forecasts": [
+  {
+   "ticker": "KXCPICOMBO-26AUG-0503",
+   "title": "Will Headline be 0.5% or above AND Core be 0.3% or above for Aug 2026?",
+   "ts": "2026-09-09T18:40:48",
+   "policy": "select",
+   "prob": 0.09,
+   "market_price": 0.08,
+   "side": "yes",
+   "side_price": null,
+   "confidence": "medium",
+   "acted": false,
+   "reason": "My own estimate from the Cleveland Fed nowcast (headline 0.36 needing \u22650.45, core 0.20 needing \u22650.25, jointly ~8-10%) lands on top of the 0.08 price, and I lack the component-level inputs \u2014 August retail gasoline/CPI-basis energy detail, shelter/OER momentum, used-vehicle auction and airfare/lodging trackers \u2014 that would let me diverge from that nowcast by the 2.5 points needed.",
+   "dossier": "",
+   "sources": [],
+   "outcome": null,
+   "correct": null
+  },
   {
    "ticker": "KXIPHONERELEASE-IPHONE18PRO-26OCT01",
    "title": "Will Apple Inc. release iPhone 18 Pro before Oct 1, 2026?",
