@@ -22,10 +22,14 @@ broker, your model, your server and your keys. A rented analytics beacon in its 
 one place on the site where the argument does not apply to itself. Nothing leaves the owner's own
 Cloudflare account — the same account that already serves the DNS for the domain.
 
-**It counts people, not requests.** A visitor is counted **once, ever**. The stored record is
+**It counts visitors, not requests.** A visitor is counted **once, ever**. The stored record is
 `sha256(secret salt | truncated IP | user-agent | accept-language)`, 128 bits of it, and that is the
 entire row: no IP, no timestamp, no page, no referrer, no cookie, no localStorage. The salt is a
 Worker secret, so the hashes are not reversible by anyone holding only the database.
+
+The honest definition under the conventional label is **per browser, not per person** — one reader on
+a phone and a laptop is two. Every analytics product works this way; the tooltip on the figure says so
+out loud, which most of them do not.
 
 **It excludes crawlers, in four independent ways.** A GitHub Pages site is crawled far more than it
 is read, and a footer reading "14,000 visitors" that is really 13,900 robots is worse than no footer.

@@ -19,6 +19,10 @@
      sha256(secret salt | truncated IP | user-agent | accept-language), 128 bits of it, and that is
      the entire record. No IP, no timestamp, no page, no referrer, no cookie, no localStorage.
 
+   And the part every analytics product elides: that identity is A BROWSER ON A CONNECTION, not a
+   human. One person on a phone and a laptop is two. Nothing here can tell the difference, and the
+   tooltip on the rendered figure says so rather than letting "unique visitors" imply otherwise.
+
    The salt is a Worker secret, so the hashes are not reversible by anyone holding only the database —
    without it, the 2^32 IPv4 space is enumerable in seconds and "hashed" would mean nothing. IPv6 is
    truncated to its /64 before hashing, because the low 64 bits rotate on most consumer connections

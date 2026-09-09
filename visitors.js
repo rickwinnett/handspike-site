@@ -65,11 +65,17 @@
 
     // The method, one gesture away rather than absent — the same place the live badge keeps its
     // basis and its age. A counter that will not say how it counts is asking to be taken on trust.
+    //
+    // "Unique visitors" is the conventional label and it is the one used above, but the honest
+    // definition underneath it is PER BROWSER — one person on a phone and a laptop counts twice.
+    // Every analytics product works this way and almost none of them says so; there is no version
+    // of this that identifies a person rather than a device, and pretending otherwise would be a
+    // small false claim sitting directly beneath a very carefully qualified real one.
     el.setAttribute('title',
-      'Counted once per visitor, ever — not once per visit. No cookies, no third party, and ' +
-      'nothing kept that could identify anyone: the connecting address is salted, hashed, ' +
-      'truncated and discarded, and only the hash is stored. Known crawlers are excluded, which is ' +
-      'why this number is far smaller than the site’s raw traffic.');
+      'Counted once per browser, ever — not once per visit. One person on a phone and a laptop ' +
+      'is two. No cookies and no third party: the connecting address is salted, hashed, truncated ' +
+      'and discarded, and only the hash is stored. Known crawlers are excluded and counting needs ' +
+      'JavaScript, so this figure runs well below the site’s raw traffic.');
     el.hidden = false;
   }
 
