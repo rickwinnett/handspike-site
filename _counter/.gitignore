@@ -1,0 +1,7 @@
+# The local-development salt. Never the production one — that lives only on Cloudflare — but there is
+# no reason for any salt to be in git.
+.dev.vars
+
+# wrangler's local state: the miniflare D1 file, caches, build output.
+.wrangler/
+node_modules/

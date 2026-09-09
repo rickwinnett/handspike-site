@@ -103,4 +103,18 @@ header.mast nav a[aria-current="page"]{ color:var(--brass); cursor:default; }
 footer{ margin:4.5rem 0 0; padding-top:1.6rem; border-top:1px solid var(--rule);
         font-family:"Segoe UI",system-ui,sans-serif; font-size:.85rem; color:var(--ink-3); }
 footer p{ max-width:none; }
+
+/* The visitor count, appended to the colophon line by visitors.js. It inherits the footer's colour
+   and size on purpose — this is a footnote about the site, not a metric about the account, and
+   nothing here should compete with the live return badge at the top of the page.
+
+   tabular-nums is the one thing it genuinely needs: the figure grows a digit at a time and, in a
+   proportional face, "1,199" and "1,200" are different widths. Every page load would nudge the line
+   ending sideways.
+
+   It carries the `hidden` attribute in the markup and only ever loses it once a real number has
+   arrived, so a page whose counter is unreachable renders as though the counter were never there. */
+#visitors{ font-variant-numeric:tabular-nums; cursor:help; }
+#visitors[hidden]{ display:none; }
+
 .fine{ font-size:.78rem; line-height:1.6; }
