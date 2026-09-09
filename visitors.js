@@ -32,7 +32,7 @@
   // Written by _counter/deploy.ps1 on a successful deploy. Empty means the counter has not been
   // stood up yet, and the correct behaviour then is to do nothing whatsoever — not to fetch a URL
   // that is not there, and certainly not to render a placeholder.
-  var ENDPOINT = '';
+  var ENDPOINT = 'https://handspike-visitors.handspike.workers.dev/hit';
 
   if (!ENDPOINT) return;
 
