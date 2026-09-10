@@ -1,6 +1,31 @@
 {
- "as_of": "2026-09-10T18:36:49+00:00",
+ "as_of": "2026-09-10T18:45:02+00:00",
  "forecasts": [
+  {
+   "ticker": "KXBTCPRICE-85000-26SEP11",
+   "title": "Will Bitcoin be above $85,000 by Sep 11, 2026 at 11:59 PM ET?",
+   "ts": "2026-09-10T18:44:42",
+   "policy": "hunt",
+   "prob": 0.01,
+   "market_price": 0.035,
+   "side": "no",
+   "side_price": 0.97,
+   "confidence": "high",
+   "acted": false,
+   "reason": "hunt chose NO but its own numbers refuse it: side price 0.97, own edge +2.0pt vs fee 0.2pt \u2014 It is the only shortlist market whose answer is a hard, checkable quantitative fact \u2014 current BTC spot versus a barrier, with ~36 hours left \u2014 so live price and realized-vol data give a decisive edge over a price that is just sitting on the minimum-tick floor.",
+   "dossier": "RESOLUTION MECHANICS: Per the Kalshi record, this is a touch/barrier market \u2014 YES if the CF Bitcoin Real-Time Index (BRTI) is above $85,000 at any minute from Aug 24, 2026 through Sep 11, 2026 11:59 PM ET, with immediate early resolution on a cross. It is still trading, so no touch has occurred in the 18 days the window has been open.\n\nSPOT AND PATH: CoinDesk shows BTC at ~$77,161, down 1.6% on the day, after hotter-than-expected PPI drove a risk-off session; Yahoo has it opening $78,292 and sliding to $77,942 intraday. Spot-ETF flows flipped to $167M of outflows after a three-week inflow run. The barrier requires +10.2% from here inside ~36 hours. Since the window opened Aug 24, the highest print has been ~$81,455 (Sep 4 high $81,167) \u2014 BTC has never come within 4.4% of $85k during the measurement period, and it is now moving away from it.\n\nBASE RATE / VOL MATH: August 2026 was BTC's best month of the year (+25%), so vol is not dead, but the recent weekly range ($76,877\u2013$81,455, ~6%) implies daily sigma of roughly 2%. Over 1.5 days sigma is ~2.6%, so $85,000 is a ~4-sigma barrier. Reflection-principle touch probability under a normal is <0.1%; even assuming crypto tails an order of magnitude fatter than lognormal, that lands near 0.5\u20131%. Historically, no CPI print has produced a same-day 10% BTC rally \u2014 post-CPI BTC moves cluster at 1\u20135%.\n\nCROWD NARRATIVE: The 3c/4c quote is not a considered forecast; it is the minimum-tick floor where cheap-lottery buyers and residual open interest from when $85k looked reachable (early September, BTC ~$81k) still sit. 24h tape is $8 across 13 trades \u2014 no informed flow is repricing it. The other side is buying a Sep-11 CPI melt-up plus a squeeze through $85k.\n\nDISCONFIRMING OBSERVABLE: A dovish CPI surprise Sep 11 that takes BRTI back above ~$82,000 intraday would put the barrier inside 2 sigma of the remaining window and make me wrong; short of that, NO.",
+   "sources": [
+    "Kalshi API market record for KXBTCPRICE-85000-26SEP11 (rules_primary/secondary, BRTI settlement, bid 0.03/ask 0.04, OI 3,673)",
+    "https://www.coindesk.com/price/bitcoin",
+    "https://finance.yahoo.com/personal-finance/investing/article/bitcoin-and-ethereum-prices-today-thursday-september-10-2026-crypto-prices-slide-back-with-inflation-data-on-tap-113018195.html",
+    "https://www.cryptotimes.io/2026/09/01/bitcoins-first-positive-august-since-2021-comes-with-a-familiar-september-test/",
+    "https://www.cryptotimes.io/2026/09/04/bitcoin-price-prediction-september-2026-can-btc-reach-90k-or-retest-72k/",
+    "https://en.cryptonomist.ch/2026/09/10/bitcoin-price-today-analysis-uptrend/",
+    "BLS release calendar: CPI scheduled 2026-09-11; PPI released 2026-09-10"
+   ],
+   "outcome": null,
+   "correct": null
+  },
   {
    "ticker": "KXIPOANTHROPIC-DATE-26OCT01",
    "title": "When will Anthropic officially announce an IPO?",
