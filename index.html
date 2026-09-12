@@ -344,9 +344,14 @@ something far too heavy by hand, with precision. That is the whole company in on
 
       var last = vals[vals.length - 1];
       var col = last >= 0 ? '#4fa96a' : '#c96a5a';          // rule 2
+      // Area fill: a FIXED light-green wash under the curve, independent of the win/loss colour
+      // above (owner, 2026-09-12: "light green like money") — closes the line down to the chart's
+      // bottom edge and back to the start so it paints as a band, not a stray triangle.
+      var areaPts = pts + ' ' + w + ',' + h + ' 0,' + h;
 
       box.innerHTML =
         "<svg viewBox='0 0 " + w + " " + h + "' preserveAspectRatio='none' aria-hidden='true'>" +
+          "<polygon points='" + areaPts + "' fill='#4fa96a' fill-opacity='0.14' stroke='none'/>" +
           "<line x1='0' y1='" + y(0).toFixed(1) + "' x2='" + w + "' y2='" + y(0).toFixed(1) + "' " +
             "stroke='var(--rule)' stroke-width='1' stroke-dasharray='4 4' " +
             "vector-effect='non-scaling-stroke'/>" +
