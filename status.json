@@ -1,7 +1,7 @@
 {
  "return_pct": -14.35,
- "as_of": "2026-09-19T00:25:02+00:00",
- "days_elapsed": 20,
+ "as_of": "2026-09-19T00:45:01+00:00",
+ "days_elapsed": 21,
  "scale": "under $1k",
  "basis": "deposit-neutral total return since era start; owner deposits netted out",
  "account": "founder's own live account",
