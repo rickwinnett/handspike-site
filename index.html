@@ -170,9 +170,10 @@ something far too heavy by hand, with precision. That is the whole company in on
     <li><strong>Missile covers</strong> — hard software gates modeled on the covers over a launch
         switch; nothing trades live until a human deliberately arms it, and every cover is
         designed to fail closed.</li>
-    <li><strong>Deterministic risk rails</strong> — per-class position caps, rules that never
-        permit an uncovered position or a position without a stop, and a drawdown backstop that
-        halts trading at a preset loss threshold.</li>
+    <li><strong>Deterministic risk rails</strong> — hard ceilings on leveraged and options risk
+        that the model cannot override, never-naked rules for leveraged and short positions, and a
+        per-position catastrophe backstop that force-closes a disaster position. One sleeve is
+        exempt by design: income holdings kept for their distributions carry no stops.</li>
     <li><strong>Watchdogs that don't use AI</strong> — a no-LLM enforcer on a timer and an
         independent last-resort sentinel, both built on the assumption that the mind can go dark
         mid-position.</li>
@@ -231,9 +232,8 @@ something far too heavy by hand, with precision. That is the whole company in on
 <section id="status">
   <h2>Status</h2>
   <p><strong>Sovereign is not for sale yet.</strong> It is in live trials on founder capital, and
-  it stays there until its own ledgers earn the next step. When it ships, it ships the way it runs:
-  paper first, graduation gates before real money, capital floors published with the fee math on
-  the page.</p>
+  it stays there until its own ledgers earn the next step. When it ships, it ships paper first:
+  graduation gates before real money, capital floors published with the fee math on the page.</p>
   <p><a href="/signup.html"><strong>Follow the build</strong></a> — honest updates, failures
   included, and first word when the gates open. Or write to
   <a href="/contact.html">us directly</a>; if you run autonomous agents with real-world blast

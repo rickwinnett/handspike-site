@@ -240,9 +240,11 @@ that one takes two deliberate actions, and finding that out by doing it is the p
                 <td><span class="ck-sell">Sell</span></td>
               </tr>
               <tr class="detail" hidden><td colspan="8">
-                <b>Stop resting at the broker</b> at $14.20 — a bracket order held by the venue, so it
-                survives this machine losing power. Risk to the stop is $5.54. Exiting now costs about
-                $0.01 in fees, so the round trip is not what makes this position red.
+                <b>Software stop</b> at $14.20 — enforced by the no-AI watchdog every few minutes, not
+                an order resting at the broker, so it only protects while this machine is running.
+                (Only the futures venue holds its stops at the exchange.) Risk to the stop is $5.54.
+                Exiting now costs about $0.01 in fees, so the round trip is not what makes this
+                position red.
               </td></tr>
 
               <tr class="row" tabindex="0">
@@ -348,16 +350,16 @@ that one takes two deliberate actions, and finding that out by doing it is the p
 
           <div class="guard" data-control="mode">
             <div class="g-head">
-              <span class="g-title"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="M12 3v18M5 8h14M5 16h14"/></svg> Trading mode</span>
+              <span class="g-title"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="M12 3v18M5 8h14M5 16h14"/></svg> Futures to live</span>
               <span class="g-flag">covered</span>
             </div>
             <div class="cover-switch">
               <div class="switch-track" aria-hidden="true"><div class="switch-knob"></div><span class="led"></span></div>
-              <div class="cover-lid" role="button" tabindex="0" aria-label="Trading mode — lift cover to go live">
+              <div class="cover-lid" role="button" tabindex="0" aria-label="Futures — lift cover to arm a leveraged real-money venue">
                 <span class="lift-cue">Tap to open</span>
               </div>
             </div>
-            <div class="g-state off" data-alt="LIVE — REAL MONEY">PAPER — SIMULATED</div>
+            <div class="g-state off" data-alt="ARMED — LEVERED, REAL $">FUTURES COVERED — NO ORDERS</div>
           </div>
 
           <div class="guard" data-control="picker">
@@ -378,10 +380,10 @@ that one takes two deliberate actions, and finding that out by doing it is the p
         <div class="ck-sect"><h3>Posture</h3><span class="meta">Read-only &middot; derived, not typed</span></div>
         <div class="ck-posture">
           <div><div class="k">Risk ceiling</div><div class="v">35% <span class="dim">of equity</span></div></div>
-          <div><div class="k">Catastrophe backstop</div><div class="v loss">&minus;35%</div></div>
-          <div><div class="k">Per-position stop</div><div class="v win">Required</div></div>
+          <div><div class="k">Per-position backstop</div><div class="v loss">&minus;35%</div></div>
+          <div><div class="k">Futures stop</div><div class="v win">Required</div></div>
           <div><div class="k">Naked shorts</div><div class="v win">Blocked</div></div>
-          <div><div class="k">Round-trip toll</div><div class="v">1.00% <span class="dim">max</span></div></div>
+          <div><div class="k">Round-trip toll</div><div class="v">1.25% <span class="dim">max</span></div></div>
           <div><div class="k">Cover state</div><div class="v" id="coverCount">4 covered</div></div>
         </div>
         <p class="ck-note">The backstop needs a successful account read to fire. If the account
@@ -417,7 +419,7 @@ that one takes two deliberate actions, and finding that out by doing it is the p
               <tr class="detail" hidden><td colspan="5">
                 The model wanted it and the funding was there. The venue layer refused anyway:
                 <b>one contract costs $2.09 to open and close — 1.43% of futures equity, over the
-                1.00% toll ceiling.</b> At that size the round trip alone needs a 1.43% move to break
+                1.25% toll ceiling.</b> At that size the round trip alone needs a 1.43% move to break
                 even before the idea is worth anything. This is the gate doing its job: refusing a
                 position so small that fees eat the edge.
               </td></tr>
@@ -505,8 +507,9 @@ that one takes two deliberate actions, and finding that out by doing it is the p
     <li><strong>The refusals are the product.</strong> Declines is not an error log. It is the record
         of every trade the system chose not to make, with its reason and its grade — including the
         ones where declining turned out to be wrong.</li>
-    <li><strong>Read-only, over a private network.</strong> The real cockpit reaches its operator on
-        their own tailnet behind a PIN. It is not on the public internet, and this page is a rebuild
+    <li><strong>Private network, behind a PIN.</strong> The real cockpit reaches its operator on
+        their own tailnet behind a PIN, and arming real money asks for it again. It is not on the
+        public internet, and this page is a rebuild
         rather than a window into it.</li>
   </ul>
 </section>
