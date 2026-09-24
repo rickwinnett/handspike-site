@@ -140,7 +140,7 @@
      no inbound path to the trading machine. If the file is missing, unreadable, or the number was
      withheld upstream, this banner simply never appears — it can go quiet, but it cannot go wrong. -->
 <div id="live" aria-live="polite">
-  <span class="k">Live · founder's account</span>
+  <span class="k">Return on money put in · founder's account</span>
   <span class="pct" id="livePct">—</span>
   <span class="days" id="liveDays" hidden></span>
   <span class="curve" id="liveCurve" hidden></span>
@@ -247,8 +247,8 @@ something far too heavy by hand, with precision. That is the whole company in on
   advisory services. Sovereign is trading-infrastructure software and is not available for
   purchase. No performance results are claimed for Sovereign as a product. The live figure above
   and any figures in the field report or demo pages are the historical, unaudited record of the
-  founder's own small account, are stated deposit-neutral (owner deposits netted out so they cannot
-  read as gains), and are <strong>not indicative of future results</strong> — yours or ours. The
+  founder's own small account, are stated as return on money put in (equity vs every dollar put in;
+  deposits are capital, never gain), and are <strong>not indicative of future results</strong> — yours or ours. The
   third-party model study cited above (arXiv:2604.07355) is unaffiliated with Handspike, and its
   results imply nothing about any result Sovereign may achieve. Autonomous trading involves
   substantial risk of loss, and no software can eliminate it.</p>
@@ -292,7 +292,7 @@ something far too heavy by hand, with precision. That is the whole company in on
       // contradict each other.
       //
       // "DAY N" IS THE HOUSE CONVENTION, ON EVERY SURFACE: days_elapsed + 1, exactly as the cockpit's
-      // TOTAL RETURN tile renders it ("day 11 of 125"). Printing the raw elapsed count here made the
+      // Return-on-money-put-in tile renders it ("day 11"). Printing the raw elapsed count here made the
       // public banner say "10 days" while the cockpit said "day 11" about the same instant — both
       // true, and indistinguishable from a bug to anyone who looked at both.
       var n = d.days_elapsed;
@@ -305,8 +305,8 @@ something far too heavy by hand, with precision. That is the whole company in on
       // honest — the basis, the age, the not-indicative warning — lives in the footer disclaimer
       // (which names this figure explicitly) and on hover here, one gesture away rather than absent.
       el.setAttribute('title',
-        (d.scale || '') + ' · deposit-neutral (owner deposits netted out, so they cannot ' +
-        'read as gains) · measured over the current window, which re-bases at an era boundary · ' +
+        (d.scale || '') + ' · return on money put in (equity vs every dollar put in; deposits are ' +
+        'capital, never gain) · measured over the current window, which re-bases at an era boundary · ' +
         when + ' · historical and unaudited, not indicative of future results');
       el.classList.add('on');
     })
