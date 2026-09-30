@@ -1,6 +1,6 @@
 {
- "return_pct": -28.69,
- "as_of": "2026-09-29T23:45:02+00:00",
+ "return_pct": -28.36,
+ "as_of": "2026-09-30T00:05:06+00:00",
  "days_elapsed": 31,
  "scale": "under $10k",
  "basis": "return on money put in: equity of the scored accounts vs every dollar put into them since era start; deposits are capital, never gain",
