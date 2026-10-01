@@ -368,9 +368,16 @@ something far too heavy by hand, with precision. That is the whole company in on
         // the line invited a reader to relate two numbers that do not belong to each other. A
         // provenance disclosure that is itself imprecise is worse than none: it looks like rigour.
         // The range still shows, which is the number a reader can actually check against the curve.
-        "<span class='cap'><span></span>" +
+        // REALIZED ONLY (owner, 2026-09-30: "only realized need to go into the nl graph", then
+        // "Graph only"). The line leaves open positions out until they close, while the percent
+        // beside it counts them, so the two end at different values. Captioned ONLY when the feed
+        // says so: an older history.json without `kind` is never labelled as something it is not.
+        // On the FACE, not only on hover: a phone cannot hover (review 2026-09-30).
+        "<span class='cap'><span>" +
+        (d.kind === 'realized' ? 'realized only · the % counts open positions' : '') + "</span>" +
         "<span>" + d.lo.toFixed(2).replace('-', '−') + "% … " +
         d.hi.toFixed(2).replace('-', '−') + "%</span></span>";
+      if (d.kind === 'realized' && typeof d.kind_note === 'string') box.setAttribute('title', d.kind_note);
       box.hidden = false;
     })
     .catch(function () { /* stay hidden — the banner is complete without a curve */ });
