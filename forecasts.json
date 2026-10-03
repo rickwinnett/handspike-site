@@ -1,10 +1,11 @@
 {
- "as_of": "2026-10-03T06:26:57+00:00",
+ "as_of": "2026-10-03T06:32:55+00:00",
  "forecasts": [
   {
    "ticker": "KXCOMPANYACTIONMERGER-27-26OCT01",
    "title": "Will Tesla or SpaceX announce a definitive, binding agreement for Tesla to acquire SpaceX, SpaceX to acquire Tesla, or the two entities to merge or combine in any structure that results in a transfer ",
-   "ts": "2026-09-12T18:44:19",
+   "ts": "2026-09-12T18:44:19Z",
+   "ts_et": "Sep 12, 2026 \u00b7 2:44 PM ET",
    "policy": "hunt",
    "prob": 0.02,
    "market_price": 0.045,
@@ -32,7 +33,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.85",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.85%?",
-   "ts": "2026-09-12T18:39:30",
+   "ts": "2026-09-12T18:39:30Z",
+   "ts_et": "Sep 12, 2026 \u00b7 2:39 PM ET",
    "policy": "select",
    "prob": 0.68,
    "market_price": 0.7,
@@ -49,7 +51,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.82",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.82%?",
-   "ts": "2026-09-12T18:39:30",
+   "ts": "2026-09-12T18:39:30Z",
+   "ts_et": "Sep 12, 2026 \u00b7 2:39 PM ET",
    "policy": "select",
    "prob": 0.84,
    "market_price": 0.89,
@@ -66,7 +69,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.83",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.83%?",
-   "ts": "2026-09-12T18:39:30",
+   "ts": "2026-09-12T18:39:30Z",
+   "ts_et": "Sep 12, 2026 \u00b7 2:39 PM ET",
    "policy": "select",
    "prob": 0.82,
    "market_price": 0.895,
@@ -83,7 +87,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.79",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.79%?",
-   "ts": "2026-09-12T18:39:30",
+   "ts": "2026-09-12T18:39:30Z",
+   "ts_et": "Sep 12, 2026 \u00b7 2:39 PM ET",
    "policy": "select",
    "prob": 0.9,
    "market_price": 0.945,
@@ -100,7 +105,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.81",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.81%?",
-   "ts": "2026-09-12T18:39:30",
+   "ts": "2026-09-12T18:39:30Z",
+   "ts_et": "Sep 12, 2026 \u00b7 2:39 PM ET",
    "policy": "select",
    "prob": 0.86,
    "market_price": 0.905,
@@ -117,7 +123,8 @@
   {
    "ticker": "KXIPOANTHROPIC-DATE-26OCT17",
    "title": "When will Anthropic officially announce an IPO?",
-   "ts": "2026-09-11T18:42:46",
+   "ts": "2026-09-11T18:42:46Z",
+   "ts_et": "Sep 11, 2026 \u00b7 2:42 PM ET",
    "policy": "hunt",
    "prob": 0.1,
    "market_price": 0.285,
@@ -145,7 +152,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.85",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.85%?",
-   "ts": "2026-09-11T18:38:41",
+   "ts": "2026-09-11T18:38:41Z",
+   "ts_et": "Sep 11, 2026 \u00b7 2:38 PM ET",
    "policy": "select",
    "prob": 0.69,
    "market_price": 0.69,
@@ -162,7 +170,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.84",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.84%?",
-   "ts": "2026-09-11T18:38:41",
+   "ts": "2026-09-11T18:38:41Z",
+   "ts_et": "Sep 11, 2026 \u00b7 2:38 PM ET",
    "policy": "select",
    "prob": 0.73,
    "market_price": 0.73,
@@ -179,7 +188,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.82",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.82%?",
-   "ts": "2026-09-11T18:38:41",
+   "ts": "2026-09-11T18:38:41Z",
+   "ts_et": "Sep 11, 2026 \u00b7 2:38 PM ET",
    "policy": "select",
    "prob": 0.79,
    "market_price": 0.79,
@@ -196,7 +206,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.83",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.83%?",
-   "ts": "2026-09-11T18:38:41",
+   "ts": "2026-09-11T18:38:41Z",
+   "ts_et": "Sep 11, 2026 \u00b7 2:38 PM ET",
    "policy": "select",
    "prob": 0.78,
    "market_price": 0.775,
@@ -213,7 +224,8 @@
   {
    "ticker": "KX30YMORTW-26SEP17-T6.81",
    "title": "Will the average U.S. 30-year fixed-rate mortgage rate for Sep 17, 2026 be above 6.81%?",
-   "ts": "2026-09-11T18:38:41",
+   "ts": "2026-09-11T18:38:41Z",
+   "ts_et": "Sep 11, 2026 \u00b7 2:38 PM ET",
    "policy": "select",
    "prob": 0.81,
    "market_price": 0.815,
