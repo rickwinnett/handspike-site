@@ -1,9 +1,9 @@
 {
- "as_of": "2026-10-07T20:05:02+00:00",
- "n": 29,
+ "as_of": "2026-10-07T20:25:03+00:00",
+ "n": 33,
  "n_rebuilt": 0,
  "lo": 0.35,
- "hi": 0.36,
+ "hi": 0.38,
  "points": [
   {
    "t": "2026-10-07T17:25:07",
@@ -120,6 +120,22 @@
   {
    "t": "2026-10-07T20:03:09",
    "p": 0.35
+  },
+  {
+   "t": "2026-10-07T20:08:10",
+   "p": 0.35
+  },
+  {
+   "t": "2026-10-07T20:13:11",
+   "p": 0.38
+  },
+  {
+   "t": "2026-10-07T20:18:12",
+   "p": 0.38
+  },
+  {
+   "t": "2026-10-07T20:23:13",
+   "p": 0.38
   }
  ],
  "basis": "return on money put in: equity of the scored accounts vs every dollar put into them since the reset (Oct 7, 2026); deposits are capital, never gain",
