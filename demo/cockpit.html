@@ -174,9 +174,9 @@ that one takes two deliberate actions, and finding that out by doing it is the p
           </button>
           <button type="button" class="ck-card rail-real drill" aria-expanded="false">
             <span class="lbl">Open risk <span class="q" aria-hidden="true">?</span></span>
-            <span class="val win">$150.20</span>
-            <span class="sub win">27.1%</span>
-            <span class="why">of equity &middot; ceiling 50% &middot; every position stopped — written
+            <span class="val">$150.20</span>
+            <span class="sub">27.1%</span>
+            <span class="why">of equity &middot; every position stopped — written
               and resting stops agree</span>
             <span class="ck-drill" hidden>Risk is measured <b>to the stop</b>, not to zero: the money
               actually exposed is entry minus stop, times size. "Written and resting stops agree" is a
@@ -375,11 +375,9 @@ that one takes two deliberate actions, and finding that out by doing it is the p
 
         <div class="ck-sect"><h3>Posture</h3><span class="meta">Read-only &middot; derived, not typed</span></div>
         <div class="ck-posture">
-          <div><div class="k">Risk ceiling</div><div class="v">50% <span class="dim">of equity</span></div></div>
           <div><div class="k">Per-position backstop</div><div class="v loss">&minus;35%</div></div>
           <div><div class="k">Futures stop</div><div class="v win">Required</div></div>
           <div><div class="k">Naked shorts</div><div class="v win">Blocked</div></div>
-          <div><div class="k">Round-trip toll</div><div class="v">1.25% <span class="dim">max</span></div></div>
           <div><div class="k">Cover state</div><div class="v" id="coverCount">4 covered</div></div>
         </div>
         <p class="ck-note">The backstop needs a successful account read to fire. If the account
@@ -406,21 +404,6 @@ that one takes two deliberate actions, and finding that out by doing it is the p
             </thead>
             <tbody>
               <tr class="row" tabindex="0">
-                <td><span class="chev">&rsaquo;</span> <span class="sym">Add 3rd oil contract</span><br><span class="venue">Futures</span></td>
-                <td class="dim">&mdash;</td>
-                <td class="real-c">Toll ceiling</td>
-                <td class="dim">n/a</td>
-                <td class="dim">Blocked</td>
-              </tr>
-              <tr class="detail" hidden><td colspan="5">
-                The model wanted it and the funding was there. The venue layer refused anyway:
-                <b>one contract costs $2.09 to open and close — 1.43% of futures equity, over the
-                1.25% toll ceiling.</b> At that size the round trip alone needs a 1.43% move to break
-                even before the idea is worth anything. This is the gate doing its job: refusing a
-                position so small that fees eat the edge.
-              </td></tr>
-
-              <tr class="row" tabindex="0">
                 <td><span class="chev">&rsaquo;</span> <span class="sym">DOT</span><br><span class="venue">Crypto · fade</span></td>
                 <td class="win">+14.0%</td>
                 <td>No catalyst</td>
@@ -431,20 +414,6 @@ that one takes two deliberate actions, and finding that out by doing it is the p
                 A 14% move with <b>no identifiable event behind it</b> fails the catalyst rule. The
                 refusal is filed with a 7-day horizon and will be scored against the actual outcome —
                 including the case where declining was wrong.
-              </td></tr>
-
-              <tr class="row" tabindex="0">
-                <td><span class="chev">&rsaquo;</span> <span class="sym">TQQQ</span><br><span class="venue">Leveraged ETF</span></td>
-                <td class="win">+3.1%</td>
-                <td>Equity floor</td>
-                <td class="dim">n/a</td>
-                <td class="dim">Blocked</td>
-              </tr>
-              <tr class="detail" hidden><td colspan="5">
-                Leveraged ETFs require $2,000 of account equity at this broker. Below that the order
-                would be rejected at the venue. It is refused <b>before</b> it is sent, and the reason
-                is recorded — a silent rejection at the broker looks identical to a strategy that
-                simply stopped working.
               </td></tr>
 
               <tr class="row" tabindex="0">
