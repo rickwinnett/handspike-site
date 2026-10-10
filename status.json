@@ -1,7 +1,7 @@
 {
  "realized_pct": -1.47,
  "return_pct": 0.4,
- "as_of": "2026-10-10T04:45:02+00:00",
+ "as_of": "2026-10-10T04:57:26+00:00",
  "days_elapsed": 2,
  "scale": "under $10k",
  "basis": "realized P&L on money put in since the reset (Oct 7, 2026): closed trades, fees and settlements; an open position counts when it closes; deposits are capital, never gain",
