@@ -374,6 +374,21 @@ something far too heavy by hand, with precision. That is the whole company in on
           "<polyline points='" + pts + "' fill='none' stroke='" + col + "' stroke-width='2' " +
             "stroke-linejoin='round' vector-effect='non-scaling-stroke'/>" +
           "<circle cx='" + w + "' cy='" + y(last).toFixed(1) + "' r='4' fill='" + col + "'/>" +
+          // THE TRADE MARKS (owner 2026-10-09: "on the website just put a mark but no info or click
+          // thru"): a short vertical line through the curve where a trade closed. The feed carries the
+          // time and nothing else, so the page can say nothing else — no hover, no link, no result.
+          (Array.isArray(d.marks) ? d.marks.map(function (m) {
+            if (!m || typeof m.t !== 'string') return '';
+            var i = -1;
+            for (var k = 0; k < d.points.length; k++) {
+              if (typeof d.points[k].t === 'string' && d.points[k].t >= m.t) { i = k; break; }
+            }
+            if (i < 0) return '';
+            var x = (i * w / (n - 1)).toFixed(1), yy = y(vals[i]);
+            return "<line x1='" + x + "' y1='" + (yy - 7).toFixed(1) + "' x2='" + x + "' y2='" +
+              (yy + 7).toFixed(1) + "' stroke='currentColor' stroke-width='1.4' " +
+              "vector-effect='non-scaling-stroke'/>";
+          }).join('') : '') +
         "</svg>" +
         // The caption reports the REAL extremes from the feed, not the padded drawing band —
         // `lo`/`hi` above were widened by 12% purely to keep the line off the frame edge.
