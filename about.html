@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Who builds Handspike: one builder in western North Carolina, running Sovereign on his own money, publishing the failures.">
+<meta name="author" content="Rick Winnett">
+<meta property="og:title" content="Who's behind this — Handspike">
+<meta property="og:description" content="One builder, his own capital, and a system that publishes its own failures.">
+<meta property="og:type" content="profile">
+<meta property="og:image" content="https://www.handspike.dev/img/rick-winnett.jpg">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M18 12h16v30h32V12h16v76H66V58H34v30H18z%22 fill=%22%232f6fed%22/></svg>">
+<meta name="theme-color" content="#000000">
+<title>Who's behind this — Handspike</title>
+<link rel="stylesheet" href="/site.css">
+<style>
+
+  .plate{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); margin:0 0 1.2rem;
+  }
+  h1{
+    font-size:clamp(1.9rem,5vw,2.7rem); line-height:1.1; letter-spacing:-.015em;
+    font-weight:400; margin:0 0 1.2rem; text-wrap:balance; max-width:20ch;
+  }
+  h1 em{ font-style:italic; color:var(--brass); }
+
+  /* ---- the portrait ----
+     Mounted like a print in a mat, not dropped in like an avatar: the drawing is a line engraving,
+     and the site's whole visual argument is instrument panel and engraved plate. The paper tone is
+     carried in the JPEG itself (the greyscale ramp was remapped to #1a1d21 -> #f2efe6), so the mat
+     colour here only has to match it. */
+  .who{ display:flex; gap:1.9rem; align-items:flex-start; flex-wrap:wrap;
+        margin:0 0 2.4rem; }
+  .portrait{
+    flex:0 0 auto; width:11.5rem; margin:0;
+    background:#f2efe6; padding:.5rem;
+    border:1px solid var(--rule); border-radius:3px;
+  }
+  .portrait img{ display:block; width:100%; height:auto; border-radius:1px; }
+  .whotext{ flex:1 1 18rem; min-width:0; }
+  .whotext p:first-child{ margin-top:0; }
+  .lede{ font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+         font-size:1rem; color:var(--ink-2); line-height:1.55; }
+
+  h2{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--brass); font-weight:600; margin:3.2rem 0 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  h2::after{ content:""; flex:1; height:1px; background:var(--rule); }
+  .big{ font-size:clamp(1.25rem,3.2vw,1.6rem); line-height:1.32; font-weight:400;
+        max-width:26ch; margin:0 0 1rem; text-wrap:balance; }
+
+  ul.rails{ list-style:none; padding:0; margin:1.3rem 0 0; }
+  ul.rails li{
+    padding:.68em 0 .68em 1.5em; border-bottom:1px solid var(--rule-2); position:relative;
+    font-family:"Segoe UI",system-ui,sans-serif; font-size:.94rem; color:var(--ink-2);
+    max-width:none;
+  }
+  ul.rails li::before{ content:"—"; position:absolute; left:0; color:var(--brass-dim); }
+  ul.rails li strong{ color:var(--ink); font-weight:600; }
+
+  .card{ background:var(--panel); border:1px solid var(--rule); border-radius:6px;
+         padding:1.4rem 1.5rem; margin:1.5rem 0 0; }
+  .card p:last-child{ margin-bottom:0; }
+
+  @media (max-width:600px){ .shell{ padding-top:1.6rem; } }
+
+                      </style>
+</head>
+<body>
+<div class="shell">
+
+<header class="mast">
+  <a href="/" class="markwrap"><span class="mark">HANDSPIKE</span></a>
+  <span class="bar"></span>
+  <nav>
+    <a href="/">Sovereign</a>
+    <a href="/demo/cockpit.html">Cockpit</a>
+    <a href="/eleven-failures.html">Memo</a>
+    <a href="/about.html" aria-current="page" class="cur">About</a>
+    <a href="/contact.html">Contact</a>
+    <a class="op" href="/login.html">Operator&nbsp;login</a>
+  </nav>
+</header>
+
+<p class="plate">Who's behind this</p>
+<h1>One builder, <em>his own money</em>, and a system that publishes its failures.</h1>
+
+<div class="who">
+  <!-- The alt text carries "portrait study" deliberately: a reader on a screen reader should learn
+       this is a drawing, not a photograph, the same way a sighted reader can see it at a glance. -->
+  <figure class="portrait">
+    <img src="/img/rick-winnett.jpg" width="900" height="1125" decoding="async"
+         alt="Rick Winnett, as a fine-line pen-and-ink portrait study: short curly hair, a full beard, an open collar under a jacket.">
+  </figure>
+  <div class="whotext">
+    <p class="lede"><strong>Rick Winnett</strong> builds Handspike from western North Carolina,
+    where he moved to care for his parents. He is a builder and technologist by trade, and Sovereign
+    began as a private answer to a private problem: how to make his own capital work harder without
+    handing it to anyone — or to an unsupervised model.</p>
+    <p class="lede">Every dollar Sovereign has traded is his. There are no outside investors, no
+    clients, and nothing for sale yet.</p>
+  </div>
+</div>
+
+<section>
+  <h2>Why this is built the way it is</h2>
+  <p class="big">Skin in the game, and no one to impress.</p>
+  <p>A trading system funded by strangers has an incentive to look good. This one has the opposite
+  incentive: it is measured against the founder's own money, so a comfortable lie costs him
+  directly. That is why Sovereign protects the money first and counts it honestly — and why the
+  <a href="/eleven-failures.html">failures get published</a> rather than quietly patched.</p>
+  <ul class="rails">
+    <li><strong>His capital, his risk.</strong> No outside money, no clients, no fiduciary duty
+        anywhere in the picture. The live figure on the front page is his own account, deposit-neutral
+        and unedited — losses and all.</li>
+    <li><strong>Nothing hosted, nothing held.</strong> When Sovereign does ship, it runs on the
+        customer's own machine with the customer's own keys. Handspike is structurally unable to
+        touch anyone's money, which is the point rather than a limitation.</li>
+    <li><strong>Failures first.</strong> The public record leads with eleven production failures
+        because a safety product that only advertises its wins is selling the wrong thing.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>What he does for a living today</h2>
+  <p>Sovereign is not the business yet — the business is the engineering underneath it. If your
+  autonomous agents take irreversible real-world actions (spend money, place orders, send things to
+  people), the safety engineering that keeps a capable model from doing something expensive
+  is the same work, in a domain that is not securities.</p>
+  <div class="card">
+    <p>Fixed-scope, fixed-bid, starting with a written pre-mortem audit.
+    <a href="/contact.html">Start a conversation&nbsp;&rarr;</a> or
+    <a href="/signup.html">follow the build&nbsp;&rarr;</a></p>
+  </div>
+</section>
+
+<footer>
+  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;·&nbsp; Hendersonville, North Carolina &nbsp;·&nbsp; <a href="mailto:rick@handspike.dev">rick@handspike.dev</a><span id="visitors" hidden></span></p>
+  <p class="fine">Handspike is a software and engineering company. It is not an investment adviser,
+  broker-dealer, or fiduciary, and nothing on this site is investment advice or an offer of advisory
+  services. Figures shown anywhere on this site are the historical, unaudited record of the founder's
+  own small account and are not indicative of future results. Autonomous trading involves substantial
+  risk of loss.</p>
+</footer>
+
+</div>
+<script src="/visitors.js" defer></script>
+</body>
+</html>

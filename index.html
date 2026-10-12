@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Handspike builds Sovereign: an autonomous trading harness where the customer owns everything — their broker, their AI model, their server, their keys. Your money never answers to us.">
+<meta name="author" content="Rick Winnett">
+<meta property="og:title" content="Handspike — Sovereign, the autonomous trading harness">
+<meta property="og:description" content="Your money never answers to us. Bring your own broker, bring your own model. Optimized for the Claude family.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M18 12h16v30h32V12h16v76H66V58H34v30H18z%22 fill=%22%232f6fed%22/></svg>">
+<meta name="theme-color" content="#000000">
+<title>Handspike — Sovereign, the autonomous trading harness</title>
+<link rel="stylesheet" href="/site.css">
+<style>
+
+  /* ---- hero ---- */
+  .plate{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); margin:0 0 1.2rem;
+  }
+  h1{
+    font-size:clamp(2.1rem,6vw,3.2rem); line-height:1.08;
+    letter-spacing:-.015em; font-weight:400; margin:0 0 1.3rem;
+    text-wrap:balance; max-width:19ch;
+  }
+  h1 em{ font-style:italic; color:var(--brass); }
+  .standfirst{
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    font-size:1rem; color:var(--ink-2); line-height:1.55; margin:0 0 .8rem; max-width:33rem;
+  }
+  .lede{ font-size:1.06rem; color:var(--ink); max-width:33rem; }
+
+  /* ---- sections ---- */
+  section{ margin:3.6rem 0 0; }
+  h2{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--brass); font-weight:600; margin:0 0 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  h2::after{ content:""; flex:1; height:1px; background:var(--rule); }
+  .big{
+    font-size:clamp(1.3rem,3.4vw,1.75rem); line-height:1.3; font-weight:400;
+    max-width:26ch; margin:0 0 1rem; text-wrap:balance;
+  }
+
+  ul.rails{ list-style:none; padding:0; margin:1.4rem 0 0; }
+  ul.rails li{
+    padding:.68em 0 .68em 1.5em; border-bottom:1px solid var(--rule-2); position:relative;
+    font-family:"Segoe UI",system-ui,sans-serif; font-size:.94rem; color:var(--ink-2);
+  }
+  ul.rails li::before{ content:"—"; position:absolute; left:0; color:var(--brass-dim); }
+  ul.rails li strong{ color:var(--ink); font-weight:600; }
+
+  .card{
+    background:var(--panel); border:1px solid var(--rule); border-radius:6px;
+    padding:1.5rem 1.6rem; margin:1.6rem 0 0;
+  }
+  .card p:last-child{ margin-bottom:0; }
+  .stat{
+    font-family:ui-monospace,Consolas,monospace; color:var(--brass);
+    font-size:.85rem; letter-spacing:.04em;
+  }
+
+  .own{ display:grid; grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr)); gap:1px;
+        background:var(--rule); border:1px solid var(--rule); border-radius:6px;
+        overflow:hidden; margin:1.5rem 0 0; }
+  .own > div{ background:var(--panel); padding:1.1rem 1.2rem; }
+  .own .k{ font-family:ui-monospace,Consolas,monospace; font-size:.66rem;
+           letter-spacing:.14em; text-transform:uppercase; color:var(--brass-dim); margin:0 0 .35rem; }
+  .own .v{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.92rem; color:var(--ink); margin:0; }
+
+  /* ---- live status banner ---- */
+  /* THE COCKPIT'S HOME GRAPH, IN PERCENTS (owner 2026-10-11 ~7:50 PM ET: "the web graph never show dollar
+     amount. on %'s", then "other than that, two should look and function the same"). The block below is
+     laid out as home.py::_return_graph draws it: one header row (the wins-vs-losses record on the left; on
+     the right the realized figure, a dot, and the unrealized figure in its thin rectangle), the graph full
+     width under it, 112px tall, and the caption under that (the range, day N, any staleness note). The
+     one public-only addition is the "Realized P&L · founder's account" label above it. The colours are
+     the SITE's palette under the cockpit's token names (--win, --loss, --border-strong), so the svg below
+     reads attribute for attribute like the cockpit's. */
+  #live{ display:none; margin:0 0 2.2rem; border:1px solid var(--rule); border-radius:6px;
+         background:var(--panel); padding:.9rem 1.1rem;
+         --win:#4fa96a; --loss:#c96a5a; --border-strong:#4b545d; }
+  #live.on{ display:block; }
+  #live .k{ display:block; margin:0 0 .5rem; font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+            font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--brass-dim); }
+  #live .head{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:.15rem .8rem;
+               margin-bottom:2px; font-family:ui-monospace,Consolas,monospace; font-size:.7rem;
+               letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+  #live .fig{ font-variant-numeric:tabular-nums; }
+  #live .pct{ font-weight:700; }
+  #live .pct.up{ color:var(--win); } #live .pct.down{ color:var(--loss); }
+  #live .sep[hidden]{ display:none; }
+  /* The unrealized figure and its word inside a thin rectangle in the figure's own colour (the cockpit's
+     _unrealized_box). It never breaks inside itself; on a phone the whole box wraps instead. */
+  #live .unreal{ display:inline-block; white-space:nowrap; border:1px solid var(--ink-3); border-radius:4px;
+                 padding:0 5px; line-height:1.5; }
+  #live .unreal b{ font-weight:700; }
+  #live .unreal.up{ border-color:var(--win); } #live .unreal.up b{ color:var(--win); }
+  #live .unreal.down{ border-color:var(--loss); } #live .unreal.down b{ color:var(--loss); }
+  #live .unreal[hidden]{ display:none; }
+  #live .curve{ display:block; }
+  #live .curve[hidden]{ display:none; }
+  #live .curve svg{ display:block; width:100%; height:112px; }
+  #live .curve .cap{ display:flex; justify-content:space-between; gap:0 .6rem; margin-top:2px;
+                     font-family:ui-monospace,Consolas,monospace; font-size:.7rem; color:var(--ink-3); }
+  #live .curve .cap span{ font-variant-numeric:tabular-nums; }
+  /* Fewer than three points since the reset: said plainly, as the cockpit says it, never a two-point "trend". */
+  #live .curve .collect{ border:1px dashed var(--border-strong); border-radius:6px; padding:14px 16px;
+                         font-family:ui-monospace,Consolas,monospace; font-size:.7rem; color:var(--ink-3); }
+  #live .curve .collect .wl{ letter-spacing:.08em; text-transform:uppercase; font-weight:700; margin-bottom:4px; }
+  #live.stale{ opacity:.72; }
+
+  .tour{ display:grid; grid-template-columns:repeat(auto-fit,minmax(12rem,1fr)); gap:1px;
+         background:var(--rule); border:1px solid var(--rule); border-radius:6px;
+         overflow:hidden; margin:1.5rem 0 0; }
+  .tour a{ background:var(--panel); padding:1.15rem 1.2rem; text-decoration:none; display:block; }
+  .tour a:hover{ background:var(--ground); }
+  .tour .k{ font-family:ui-monospace,Consolas,monospace; font-size:.64rem; letter-spacing:.14em;
+            text-transform:uppercase; color:var(--brass); margin:0 0 .35rem; }
+  .tour .v{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.88rem; color:var(--ink-2);
+            margin:0; max-width:none; }
+
+  @media (max-width:600px){
+        .shell{ padding-top:1.6rem; }
+  }
+
+                      </style>
+</head>
+<body>
+<div class="shell">
+
+<header class="mast">
+  <a href="/" class="markwrap"><span class="mark">HANDSPIKE</span></a>
+  <span class="bar"></span>
+  <nav>
+    <a href="/" aria-current="page" class="cur">Sovereign</a>
+    <a href="/demo/cockpit.html">Cockpit</a>
+    <a href="/eleven-failures.html">Memo</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a class="op" href="/login.html">Operator&nbsp;login</a>
+  </nav>
+</header>
+
+<!-- Live status: reads a static file the founder's machine pushes outward. There is no API here and
+     no inbound path to the trading machine. If the file is missing, unreadable, or the number was
+     withheld upstream, this banner simply never appears — it can go quiet, but it cannot go wrong. -->
+<div id="live" aria-live="polite">
+  <span class="k">Realized P&amp;L · founder's account</span>
+  <div class="head">
+    <span id="liveWL"></span>
+    <span class="fig"><span class="pct" id="livePct">—</span><span class="sep" id="liveSep" hidden> · </span><span class="unreal" id="liveUnreal" hidden></span></span>
+  </div>
+  <div class="curve" id="liveCurve" hidden></div>
+</div>
+
+<p class="plate">The harness</p>
+<h1>Sovereign. <em>Your money never answers to us.</em></h1>
+<p class="standfirst">An autonomous trader that works your own account, with your own AI, on your
+own machine, and gets sharper with every trade it makes. Optimized for the Claude family of models.</p>
+<p class="lede">A <strong>handspike</strong> was the lever bar of the age of sail — worked at the
+capstan to haul the anchor, and at the gun carriage to lay the cannon on target. One person moving
+something far too heavy by hand, with precision. That is the whole company in one tool: leverage
+<em>and</em> aim.</p>
+
+<section id="why">
+  <h2>Why a harness</h2>
+  <p class="big">Handed real money, every frontier model in a public study lost it.</p>
+  <p>In a 57-day public study, six frontier models were each given $10,000 of real capital on a
+  live market venue. <span class="stat">All six lost money — down between 16.0% and 30.8%</span> —
+  and the amount of research they did had no correlation with their results. Our reading of that
+  result: the mind alone is not the product. The mind alone is an accident waiting to happen.</p>
+  <p>Sovereign is the discipline around it:</p>
+  <ul class="rails">
+    <li><strong>It can't bet the farm.</strong> Every position is protected, and its limits hold
+        even when the AI is wrong.</li>
+    <li><strong>It keeps watch when the AI can't.</strong> If the mind goes quiet mid-trade, your
+        positions are still looked after.</li>
+    <li><strong>It tells you the truth.</strong> Your deposits never dress up as gains, and no fee
+        is hidden.</li>
+    <li><strong>It learns from its own mistakes.</strong> Every lesson stays with your Sovereign, so
+        it gets better the longer it runs.</li>
+    <li><strong>Nothing goes live without you.</strong> You decide when real money is in play.</li>
+  </ul>
+</section>
+
+<section id="sovereignty">
+  <h2>What sovereignty means here</h2>
+  <p class="big">Every part that matters is owned by you.</p>
+  <div class="own">
+    <div><p class="k">Your broker</p><p class="v">Your own account at a supported API broker. We never hold funds, keys, or orders.</p></div>
+    <div><p class="k">Your model</p><p class="v">Your own AI subscription or API key. Any frontier model; optimized for the Claude family.</p></div>
+    <div><p class="k">Your server</p><p class="v">Deploys into your own cloud. Your credentials live there. You can revoke us in one click.</p></div>
+    <div><p class="k">Your memory</p><p class="v">The experience your trader accumulates is yours. A copied harness is a newborn; yours is a veteran.</p></div>
+  </div>
+  <p style="margin-top:1.4rem;">There is no hosted platform, no central login, no customer key
+  vault — deliberately. A vendor who cannot touch your money is a vendor you never have to
+  trust with it.</p>
+</section>
+
+<section id="tour">
+  <h2>See it work</h2>
+  <p class="big">A window into a running system.</p>
+  <div class="tour">
+    <a href="/demo/cockpit.html"><p class="k">The cockpit</p>
+      <p class="v">What you would see: every position, what it is protected by, and what Sovereign is
+      doing, at a glance. Simulated display.</p></a>
+  </div>
+</section>
+
+<section id="proof">
+  <h2>Built in the open, scars first</h2>
+  <p>Sovereign has been running live — with the founder's own capital, on the founder's own
+  infrastructure — since mid-2026. We publish the failures, because every one of them made
+  Sovereign safer.</p>
+  <div class="card">
+    <p class="stat">FIELD REPORT</p>
+    <p><a href="/eleven-failures.html">Eleven ways my autonomous agent failed in production</a> —
+    ten weeks of live operation with real money at stake, eleven real failures, and what each one
+    means for an owner now. Nobody attacked the agent. It was blinded by
+    a billing lapse, fed by a data pipe that had been dead for weeks, and reported its own costs
+    3&times; too high for months.</p>
+  </div>
+</section>
+
+<section id="status">
+  <h2>Status</h2>
+  <p><strong>Sovereign is not for sale yet.</strong> It is in live trials on the founder's own
+  money, and it stays there until its record earns the next step. When it ships, it ships
+  paper-first; real money comes only once it has earned it.</p>
+  <p><a href="/signup.html"><strong>Follow the build</strong></a> — honest updates, failures
+  included, and first word when it opens up. Or write to
+  <a href="/contact.html">us directly</a>; if you run autonomous agents with real-world blast
+  radius and want the safety engineering sooner, that is the work we take on today.</p>
+</section>
+
+<footer>
+  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;·&nbsp; Hendersonville, North Carolina<span id="visitors" hidden></span></p>
+  <p class="fine">Handspike is a software and engineering company. It is not an investment adviser,
+  broker-dealer, or fiduciary, and nothing on this site is investment advice or an offer of
+  advisory services. Sovereign is trading-infrastructure software and is not available for
+  purchase. No performance results are claimed for Sovereign as a product. The live figure above
+  and any figures in the field report or demo pages are the historical, unaudited record of the
+  founder's own small account, are stated as realized P&amp;L on money put in, as a percent (closed trades, fees and
+  settlements since the reset; an open position counts when it closes; deposits are capital, never gain),
+  with the open positions' unrealized move since the reset shown beside it and labelled unrealized,
+  and are <strong>not indicative of future results</strong> — yours or ours. The
+  third-party model study cited above (arXiv:2604.07355) is unaffiliated with Handspike, and its
+  results imply nothing about any result Sovereign may achieve. Autonomous trading involves
+  substantial risk of loss, and no software can eliminate it.</p>
+</footer>
+
+</div>
+<script>
+// The live banner and its curve. Read from two static JSON files the founder's machine pushes outward on a
+// timer — no API, no inbound path to the trading machine. Three deliberate behaviours:
+//   1. ANY failure (missing file, bad JSON, missing number) leaves the banner hidden. A number this
+//      page cannot verify is a number it does not show.
+//   2. Older than about 90 minutes -> the figure says "as of <time>" on its face; older than 6 hours ->
+//      the whole banner is also dimmed. A stale figure wearing a fresh face is the one dishonest thing a
+//      live badge can do.
+//   3. Losses render exactly like gains. There is no branch here that hides a negative.
+//
+// PERCENTS ONLY (owner 2026-10-11 ~7:50 PM ET: "the web graph never show dollar amount. on %'s", reversing
+// his ~11:55 AM "do the website in dollars too"; then "other than that, two should look and function the
+// same"). This page NEVER prints a dollar amount: it reads realized_pct / unrealized_pct / return_pct from
+// status.json and p / u from history.json, and it does not read realized_usd, unrealized_usd, d, ud, lo_d,
+// hi_d, ud_last or scale even if a feed carries them (the publisher's PUBLISH_DOLLARS switch is off; this is
+// the second, page-side guard). No feed string is put on the page or in a hover: every word here is the
+// page's own. Everything else is the cockpit's Home graph (home.py::_return_graph) with each dollar figure
+// replaced by its percent of money put in: the same header, the same two lines, the same caption.
+
+// Python's round(a, 2) for a >= 0, as an integer count of hundredths. toFixed rounds the exact binary value
+// as Python does, except on an EXACT tie (a * 8 an odd integer, e.g. 0.125), where Python keeps the even
+// hundredth and toFixed the larger one, so that one case is settled here.
+function pyRound2(a) {
+  if (Number.isInteger(a * 8) && (a * 8) % 2 === 1) {
+    var c = Math.floor(a * 100);
+    return c % 2 ? c + 1 : c;
+  }
+  return Math.round(Number(a.toFixed(2)) * 100);
+}
+// round(v, 2) + 0.0, as the cockpit rounds a stacked value (no -0).
+function round2(v) {
+  var c = pyRound2(Math.abs(v));
+  return c === 0 ? 0 : (v < 0 ? -c : c) / 100;
+}
+function isNum(v) { return typeof v === 'number' && isFinite(v); }
+// A signed percent exactly as the cockpit prints one (handspike.webui.money_fmt.signed_pct_from_percent(v, 2)):
+// '+2.28%' / '-1.61%' / '0.00%'. The ASCII hyphen-minus, never U+2212 (the house glyph law: what a reader
+// copies must match the logs); always two decimals; the sign decided from the ROUNDED value, so a residual
+// that prints 0.00% is never '+0.00%' or '-0.00%'. '' for a non-number.
+function signedPct(v) {
+  if (!isNum(v)) return '';
+  var c = pyRound2(Math.abs(v));
+  var sign = c === 0 ? '' : v < 0 ? '-' : '+';
+  var r = c % 100;
+  return sign + Math.floor(c / 100) + '.' + (r < 10 ? '0' : '') + r + '%';
+}
+// The house colour of a formatted figure, decided from what the reader sees (its sign), never the raw
+// float: '+' -> up (win-green), '-' -> down (loss-red), '0.00%' -> neutral.
+function signClass(txt) {
+  return txt.charAt(0) === '+' ? 'up' : txt.charAt(0) === '-' ? 'down' : '';
+}
+// Python's f"{a:.0f}" for a >= 0 (round half to even on an exact tie: 62.5 -> 62, 37.5 -> 38).
+function pyRound0(a) {
+  if (Number.isInteger(a * 2) && (a * 2) % 2 === 1) {
+    var f = Math.floor(a);
+    return f % 2 ? f + 1 : f;
+  }
+  return Number(a.toFixed(0));
+}
+// The header's words, as the cockpit's _win_loss_label: "2 wins · 1 loss · 67%", "—%" before any trade has
+// closed (never a made-up 0%), "wins vs losses unread" when the feed does not carry the record (the
+// publisher leaves the record out exactly when the box could not read it).
+function winLossLabel(d) {
+  if (!d || typeof d.wins !== 'number' || typeof d.losses !== 'number') return 'wins vs losses unread';
+  var w = d.wins, l = d.losses;
+  return w + ' win' + (w === 1 ? '' : 's') + ' · ' + l + ' loss' + (l === 1 ? '' : 'es') + ' · ' +
+    (isNum(d.win_pct) && d.win_pct >= 0 ? pyRound0(d.win_pct) + '%' : '—%');
+}
+// A stored stamp as milliseconds. A NAIVE value (history.json's point times) is UTC by house rule, so it
+// gets its 'Z' before parsing; without it Date.parse would read it as the VIEWER's local time.
+function utcMs(v) {
+  if (typeof v !== 'string' || !v) return NaN;
+  var s = v.trim();
+  if (!/(Z|z|[+-]\d\d:?\d\d)$/.test(s)) s += 'Z';
+  return Date.parse(s);
+}
+// 'Oct 11 · 7:48 PM ET', as the cockpit's etfmt.when_et(v, zone=True): Eastern, 12-hour. '' when the stamp
+// will not parse or the browser has no time-zone data (withhold rather than approximate).
+function etText(v) {
+  var t = utcMs(v);
+  if (isNaN(t)) return '';
+  try {
+    var g = {};
+    new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric',
+      hour: 'numeric', minute: '2-digit', hour12: true }).formatToParts(new Date(t))
+      .forEach(function (p) { g[p.type] = p.value; });
+    if (!g.month || !g.day || !g.hour || !g.minute || !g.dayPeriod) return '';
+    return g.month + ' ' + g.day + ' · ' + g.hour + ':' + g.minute + ' ' + g.dayPeriod.toUpperCase() + ' ET';
+  } catch (e) { return ''; }
+}
+function escAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+}
+// The last guard on every hover this page writes: anything carrying a '$' is dropped, never shown.
+function noDollar(s) { return /\$/.test(s) ? '' : s; }
+
+// THE HEADER: the realized figure since the reset, as the cockpit's graph header prints it, in percent.
+// Returns what the curve below needs from status.json (day N, the record), or null when nothing is shown.
+function renderBanner(el, d) {
+  // REALIZED P&L, AS THE COCKPIT SHOWS IT (owner 2026-10-07 "make the web match"): the headline is
+  // realized since the reset. A feed without it shows nothing; the all-in figure is never shown under
+  // the realized name.
+  if (!d || !isNum(d.realized_pct)) return null;
+  var pct = d.realized_pct;
+  var ageH = null;
+  var t = utcMs(d.as_of);
+  if (!isNaN(t)) ageH = (Date.now() - t) / 3600000;
+  var when = ageH === null ? '' :
+    ageH < 1.5 ? 'updated just now' :
+    ageH < 48 ? 'updated ' + Math.round(ageH) + 'h ago' :
+    'updated ' + Math.round(ageH / 24) + ' days ago';
+  if (ageH !== null && ageH > 6) el.classList.add('stale');
+  // The realized figure, coloured as the cockpit colours it (home.py: win-green at or above zero, so a flat
+  // 0.00% is green like the solid line it heads), and, once the file is older than the hourly publish
+  // allows, " · as of <time>" in the same span, on the FACE (a phone cannot hover).
+  var pe = document.getElementById('livePct');
+  var asOf = ageH !== null && ageH > 1.5 ? etText(d.as_of) : '';
+  pe.textContent = signedPct(pct) + (asOf ? ' · as of ' + asOf : '');
+  pe.className = 'pct ' + (round2(pct) >= 0 ? 'up' : 'down');
+  // WINS VS LOSSES AND THEN THE %, on the header's left (owner 2026-10-07, "both").
+  var label = winLossLabel(d);
+  var wl = document.getElementById('liveWL');
+  if (wl) wl.textContent = label;
+  // THE UNREALIZED FIGURE AFTER A DOT (owner 2026-10-10 ~11:30 AM ET: "the website does not have the
+  // unrealized stuff"): the open positions' move since the reset as a percent of the same money put in,
+  // read by the publisher off the SAME split as the realized figure, inside a thin rectangle in its own
+  // sign's colour (neutral at zero) with the word "unrealized". Absent from the feed -> absent here: rule 1.
+  var ue = document.getElementById('liveUnreal'), sep = document.getElementById('liveSep');
+  var upct = d.unrealized_pct;
+  if (ue && isNum(upct)) {
+    var ut = signedPct(upct);
+    ue.textContent = '';
+    var ub = document.createElement('b');
+    ub.textContent = ut;
+    ue.appendChild(ub);
+    ue.appendChild(document.createTextNode(' unrealized'));
+    ue.className = 'unreal' + (signClass(ut) ? ' ' + signClass(ut) : '');
+    ue.hidden = false;
+    if (sep) sep.hidden = false;
+  }
+  // The context that keeps the figure honest — the basis, the age, the not-indicative warning — lives in
+  // the footer disclaimer (which names this figure explicitly) and on hover here.
+  el.setAttribute('title', noDollar(
+    'realized P&L on money put in since the reset (closed trades, fees and settlements; an open position ' +
+    'counts when it closes; deposits are capital, never gain)' +
+    (isNum(d.return_pct) ? ' · open positions included: ' + signedPct(d.return_pct) : '') +
+    (isNum(upct) ? ' · unrealized: the open positions’ move since the reset, on the same money put in' : '') +
+    (when ? ' · ' + when : '') + ' · historical and unaudited, not indicative of future results'));
+  el.classList.add('on');
+  // "DAY N" IS THE HOUSE CONVENTION, ON EVERY SURFACE: days_elapsed + 1, as the cockpit renders it. It is how
+  // long the CURRENT measurement has run (since the reset), NOT how long Sovereign has been live — do not
+  // relabel it "N days active". It prints on the caption, after the range, as on the cockpit.
+  return { days: Number.isInteger(d.days_elapsed) && d.days_elapsed >= 0 ? d.days_elapsed : null, label: label,
+           asOfMs: utcMs(d.as_of) };
+}
+
+// THE HOVER ON THE CAPTION, as the cockpit's _curve_provenance + _DASHED_LINE_NOTE + _marks_note, in percent.
+// Which points were watched happening and which were not; "every one recorded live" is said out loud, because
+// "no reconstructed points" and "nobody checked" are different claims and silence reads as the second one.
+function provenance(h, n) {
+  var recon = isNum(h.n_rebuilt) ? h.n_rebuilt : 0;
+  var withheld = isNum(h.n_withheld) ? h.n_withheld : 0;
+  var head = '';
+  // REALIZED ONLY (owner, 2026-09-30, "Graph only"): say what the line leaves out, first. Said only when the
+  // feed says so (`kind` with its `kind_note`): an older file is never labelled as something it is not.
+  if (h.kind === 'realized' && typeof h.kind_note === 'string') {
+    head = 'Realized results since the reset: closed trades, fees, settlements, interest and distributions ' +
+      'taken as cash; the realized figure above is the same measure. Each point is measured from cash and ' +
+      'what the open positions COST, never from their prices, so a price move between two venue reads never ' +
+      'moves it (it lands in Unrealized); an open position counts at what it cost until it closes. ';
+  }
+  // A point skipped because it is KNOWN WRONG is said out loud, never silently. (Its reason stays on the
+  // box: the cockpit's free text can name amounts.)
+  var tail = withheld ? ' ' + withheld + ' recorded points are WITHHELD, not drawn.' : '';
+  if (!recon) {
+    if (head) {
+      var nb = isNum(h.n_bridge) ? h.n_bridge : 0;
+      if (nb) {
+        var ne = isNum(h.bridge_events) ? h.bridge_events : 0, nm = isNum(h.bridge_by_main) ? h.bridge_by_main : 0;
+        return head + n + ' points drawn. Of the recorded rows, the ' + nb + ' before the first at-cost read ' +
+          'draw the RECORDED BRIDGE of realization events read from the venues (' + ne + ' event' +
+          (ne === 1 ? '' : 's') + (nm ? ', ' + nm + ' priced by main from a cited source' : '') +
+          '); every later one is that row\'s own recorded book. Nothing on this curve is estimated.' + tail;
+      }
+      return head + n + ' points drawn, every one recorded live. Nothing on this curve is reconstructed.' + tail;
+    }
+    return n + ' points drawn, every one recorded live at the hour from the same figure the header prints. ' +
+      'Nothing on this curve is reconstructed.' + tail;
+  }
+  return head + n + ' points drawn (evenly thinned from the full record, endpoints always kept). ' + recon +
+    ' points in the underlying record predate this graph and are RECONSTRUCTED from the venue\'s own ' +
+    'futures-P&L ledger; everything after is recorded live. Both are honest, they are not the same thing. ' +
+    'Note the two counts describe different sets: the drawn points are thinned, the ' + recon +
+    ' is counted over the whole record.' + tail;
+}
+// The dashed line's sentence, the cockpit's _DASHED_LINE_NOTE in PERCENT, and honest about it: in dollars a
+// deposit or withdrawal never steps the lines; in percent it CAN, because it changes the base the percent is
+// taken on.
+var DASHED_LINE_NOTE = ' The dashed line is the headline return on money put in since the reset (realized ' +
+  'plus the open positions\' move); its gap above the solid realized line is the unrealized percent in the ' +
+  'rectangle, from the same recorded rows; a row without it is a gap, never a bridged slope. Each line is ' +
+  'coloured by where it ends.';
+// ONE BASE (2026-10-11 ~8:40 PM ET): since the publisher sends `pct_of: "today"`, every point is a percent of
+// TODAY's money put in, the cockpit's dollar curve scaled by one constant, so a deposit or withdrawal never
+// steps the lines. An older feed (per-row percents) says that it can.
+function dashedLineNote(h) {
+  return DASHED_LINE_NOTE + (h && h.pct_of === 'today'
+    ? ' Every point is a percent of today’s money put in, so a deposit or withdrawal never steps the lines.'
+    : ' Both lines are drawn as a percent of money put in at each point, so a deposit or withdrawal can step them.');
+}
+var MARKS_NOTE = ' Marks: one per closed position; a Kalshi forecast that settled without a position is not marked.';
+function marksNote(h) {
+  if (h.marks_ok !== true) return '';
+  var f = isNum(h.n_settled_unheld) ? h.n_settled_unheld : 0;
+  return MARKS_NOTE + (f > 0 ? ' ' + f + ' Kalshi forecast' + (f === 1 ? '' : 's') + ' settled without a ' +
+    'position ' + (f === 1 ? 'is' : 'are') + ' not marked.' : '');
+}
+
+// The era curve, drawn from /history.json — the SAME recorded series the cockpit plots, so the public shape
+// and the operator's shape cannot diverge. Three rules carried over verbatim from the cockpit, because they
+// are what make a return curve honest rather than decorative:
+//   1. ZERO IS FORCED INTO THE BAND AND DRAWN. A curve auto-scaled to its own min/max can put a book
+//      that never once broke even at the top of the frame and read as a rally.
+//   2. Coloured by where it ENDS, not by its slope — a rising line still under water is not good news.
+//      Each of the two lines (realized solid, realized + unrealized dashed) by where IT ends.
+//   3. Any failure leaves it hidden. The banner is still complete without it.
+// The series is RECORDED, never reconstructed: fewer than three points is said plainly ("Recording since the
+// reset"), never drawn as a two-point "trend"; a series the box withheld is not drawn at all.
+function renderCurve(h, head) {
+  var box = document.getElementById('liveCurve');
+  if (!box) return;
+  var day = head && head.days !== null ? 'day ' + (head.days + 1) : '';
+  var pts = h && Array.isArray(h.points) ? h.points.filter(function (p) {
+    return p && typeof p.t === 'string' && isNum(p.p);
+  }) : [];
+  if (pts.length < 3) {
+    // COLLECTING (fewer than three points since the reset), as the cockpit says it: a dashed box with the
+    // record and "Recording since the reset · N of 3 points so far." The record moves off the header into the
+    // box, as on the cockpit. A WITHHELD series (any other note) draws nothing, as on the cockpit.
+    if (h && typeof h.note === 'string' && h.note.indexOf('collecting') === 0) {
+      var cn = Number.isInteger(h.n) && h.n >= 0 ? h.n : 0;
+      var wl = document.getElementById('liveWL');
+      if (wl) wl.textContent = '';
+      box.innerHTML = "<div class='collect' title='" + escAttr(
+          'The line shows realized results only, as a percent of money put in: it starts at zero at the reset ' +
+          'and moves when a trade closes or a fee, settlement, interest or cash payout posts; an open position ' +
+          'counts at what it cost until it closes (its price moves are in Unrealized). A deposit or ' +
+          'withdrawal changes the money put in, so it can step the percent.') + "'>" +
+        "<div class='wl'>" + escAttr(head ? head.label : 'wins vs losses unread') + "</div>" +
+        "Recording since the reset · " + cn + " of 3 points so far.</div>";
+      box.hidden = false;
+      return;
+    }
+    return;                                   // withheld: nothing at all, as on the cockpit
+  }
+
+  var n = pts.length;
+  var vals = pts.map(function (p) { return round2(p.p); });
+  // THE DASHED LINE (owner 2026-10-10 ~11:30 AM ET: "the website does not have the unrealized stuff"), STACKED
+  // since 2026-10-11 (owner ~12:50 AM ET: "shouldnt the green line be its % above the other?"): each point is
+  // p + u rounded to two decimals (the cockpit's round(v + u, 2) + 0.0), the headline return at that row, so
+  // its gap above the solid line IS the unrealized move. A `u` of null is a row the box could not measure — a
+  // GAP: the line breaks there and is never bridged.
+  var gaps = pts.map(function (p) { return isNum(p.u) ? p.u : null; });
+  var us = pts.map(function (p, i) { return gaps[i] === null ? null : round2(p.p + p.u); });
+  var uKnown = us.filter(function (v) { return v !== null; });
+
+  // Both lines share one y scale, so the stacked values widen the band too: neither leaves the frame.
+  var lo = Math.min.apply(null, vals.concat(uKnown)), hi = Math.max.apply(null, vals.concat(uKnown));
+  lo = Math.min(lo, 0); hi = Math.max(hi, 0);          // rule 1
+  var span = (hi - lo) || 1;
+  lo -= span * 0.12; hi += span * 0.12;
+  var w = 600, hh = 120;
+  var y = function (v) { return hh - (v - lo) / (hi - lo) * hh; };
+  var xAt = function (i) { return (i * w / (n - 1)).toFixed(1); };
+  var coords = vals.map(function (v, i) { return xAt(i) + ',' + y(v).toFixed(1); }).join(' ');
+
+  var last = vals[n - 1];
+  var col = last >= 0 ? 'var(--win)' : 'var(--loss)';          // rule 2
+  // Area fill: a FIXED light-green wash under the curve, independent of the win/loss colour above (owner,
+  // 2026-09-12: "light green like money") — closed down to the bottom edge and back to the start.
+  var areaPts = coords + ' ' + w + ',' + hh + ' 0,' + hh;
+
+  // One polyline per run of measured points, so a gap stays a gap; told apart from the realized line by
+  // style — dashed, a hollow end dot — never by a third colour.
+  var uRuns = [], run = [], uLastI = -1;
+  us.forEach(function (v, i) {
+    if (v === null) { if (run.length > 1) uRuns.push(run); run = []; return; }
+    run.push(xAt(i) + ',' + y(v).toFixed(1));
+    uLastI = i;
+  });
+  if (run.length > 1) uRuns.push(run);
+  var uLast = uLastI >= 0 ? us[uLastI] : null;
+  // Neutral when nothing is open there (the GAP at the dashed line's last point is zero, so it lies on the
+  // solid line), else by where the dashed line ends.
+  var gapLast = uLastI >= 0 ? gaps[uLastI] : null;
+  var uCol = uLast === null || gapLast === 0 ? 'var(--ink-3)' : uLast >= 0 ? 'var(--win)' : 'var(--loss)';
+  var dashed = uRuns.map(function (r) {
+    return "<polyline points='" + r.join(' ') + "' fill='none' stroke='" + uCol + "' stroke-width='1.6' " +
+      "stroke-dasharray='5 4' stroke-linejoin='round' vector-effect='non-scaling-stroke'/>";
+  }).join('') + (uLast === null ? '' :
+    "<circle cx='" + xAt(uLastI) + "' cy='" + y(uLast).toFixed(1) + "' r='3.2' " +
+    "fill='none' stroke='" + uCol + "' stroke-width='1.6' vector-effect='non-scaling-stroke'/>");
+
+  // THE TRADE MARKS (owner 2026-10-09: "on the website just put a mark but no info or click thru"): a short
+  // vertical line through the realized line where a position closed, placed as the cockpit places it — at
+  // the first drawn point at or after the close; a close after the last point sits on the last one; one
+  // before the first is not drawn. The feed carries the time and nothing else, so the page says nothing else.
+  var marks = Array.isArray(h.marks) ? h.marks.map(function (m) {
+    if (!m || typeof m.t !== 'string' || m.t < pts[0].t) return '';
+    var i = n - 1;                                        // closed after the last drawn point: sits on it
+    for (var k = 0; k < n; k++) {
+      if (pts[k].t >= m.t) { i = k; break; }
+    }
+    var x = xAt(i), yy = y(vals[i]);
+    return "<line x1='" + x + "' y1='" + (yy - 8).toFixed(1) + "' x2='" + x + "' y2='" +
+      (yy + 8).toFixed(1) + "' stroke='var(--ink)' stroke-width='1.6' " +
+      "vector-effect='non-scaling-stroke'/>";
+  }).join('') : '';
+
+  // THE RANGE SPANS EVERYTHING DRAWN (review 2026-10-10): the frame is scaled to both lines, so the caption
+  // prints the extremes of the drawn values (the realized line and the stacked one), never the padded band,
+  // signed as the cockpit signs them.
+  var capLo = Math.min.apply(null, vals.concat(uKnown)), capHi = Math.max.apply(null, vals.concat(uKnown));
+  // THE LINE'S AGE (the cockpit's "line as of"): when the last recorded row is more than 15 minutes older than
+  // the file's own publish time, the drawn end is older than the figures above it, and the caption says so.
+  // Measured against the LATER of this file's own time and the banner's (review 2026-10-11): the two feeds
+  // publish separately, so a fresh banner over a history.json left alone hours ago must still say its age.
+  var lineAge = '', lastMs = utcMs(pts[n - 1].t), pubMs = utcMs(h.as_of);
+  if (head && isNum(head.asOfMs) && (isNaN(pubMs) || head.asOfMs > pubMs)) pubMs = head.asOfMs;
+  if (!isNaN(lastMs) && !isNaN(pubMs) && pubMs - lastMs > 15 * 60 * 1000) {
+    var la = etText(pts[n - 1].t);
+    if (la) lineAge = ' · line as of ' + la;
+  }
+
+  box.innerHTML =
+    "<svg viewBox='0 0 " + w + " " + hh + "' preserveAspectRatio='none' aria-hidden='true'>" +
+      "<polygon points='" + areaPts + "' fill='var(--win)' fill-opacity='0.14' stroke='none'/>" +
+      // THE ZERO LINE IS A SOLID HAIRLINE (review 2026-10-10): dashed means the unrealized line and
+      // nothing else.
+      "<line x1='0' y1='" + y(0).toFixed(1) + "' x2='" + w + "' y2='" + y(0).toFixed(1) + "' " +
+        "stroke='var(--border-strong)' stroke-width='1' stroke-opacity='.9' " +
+        "vector-effect='non-scaling-stroke'/>" +
+      "<polyline points='" + coords + "' fill='none' stroke='" + col + "' stroke-width='2' " +
+        "stroke-linejoin='round' vector-effect='non-scaling-stroke'/>" +
+      "<circle cx='" + w + "' cy='" + y(last).toFixed(1) + "' r='3.5' fill='" + col + "'/>" +
+      dashed +                                  // over the realized line, as the cockpit draws it
+      marks +
+    "</svg>" +
+    // PROVENANCE ON THE HOVER, the range on the face (owner, 2026-09-09: the old "120 samples · 94 rebuilt"
+    // counted two different populations). The left span is empty, as on the cockpit; what the lines are
+    // lives in this hover and in the banner's own "Realized P&L" label.
+    "<div class='cap' title='" + escAttr(noDollar(provenance(h, n) + dashedLineNote(h) + marksNote(h))) + "'>" +
+      "<span></span><span>" + signedPct(capLo) + " … " + signedPct(capHi) + (day ? ' · ' + day : '') +
+      lineAge + "</span></div>";
+  box.hidden = false;
+}
+
+(function () {
+  var el = document.getElementById('live');
+  if (!el) return;
+  function grab(u) {
+    return fetch(u + '?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r && r.ok ? r.json() : null; })
+      .catch(function () { return null; });     // silence beats a number we cannot stand behind
+  }
+  Promise.all([grab('/status.json'), grab('/history.json')]).then(function (got) {
+    var head = null;
+    try { head = renderBanner(el, got[0]); } catch (e) { head = null; }
+    try { renderCurve(got[1], head); } catch (e) { /* stay hidden — the banner is complete without a curve */ }
+  });
+})();
+</script>
+<script src="/visitors.js" defer></script>
+</body>
+</html>

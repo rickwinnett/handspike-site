@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A working rebuild of the Sovereign cockpit: switch views, lift the missile covers, open the drill-downs. Real layout and real interactions, representative figures.">
+<meta name="author" content="Rick Winnett">
+<meta property="og:title" content="Handspike — The operator's view">
+<meta property="og:description" content="Lift a missile cover and see why arming real money takes two deliberate actions.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M18 12h16v30h32V12h16v76H66V58H34v30H18z%22 fill=%22%232f6fed%22/></svg>">
+<meta name="theme-color" content="#000000">
+<title>Cockpit — the operator's view — Handspike</title>
+<link rel="stylesheet" href="/ck.css">
+<link rel="stylesheet" href="/site.css">
+<style>
+            /* The screen is allowed to break the reading column — a cockpit squeezed into 46rem stops looking
+     like a cockpit. */
+  .wide{ max-width:80rem; margin:2.6rem auto; padding:0 1.5rem; }
+        .plate{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--brass); margin:0 0 1.2rem;
+  }
+  h1{
+    font-size:clamp(1.9rem,5vw,2.7rem); line-height:1.1; letter-spacing:-.015em;
+    font-weight:400; margin:0 0 1.2rem; text-wrap:balance; max-width:20ch;
+  }
+  h1 em{ font-style:italic; color:var(--brass); }
+  .lede{ font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+         font-size:1rem; color:var(--ink-2); line-height:1.55; }
+  .try{
+    font-family:ui-monospace,Consolas,monospace; font-size:.78rem; color:var(--ink-2);
+    background:var(--panel); border:1px solid var(--rule); border-left:3px solid var(--brass);
+    border-radius:4px; padding:.85rem 1.1rem; margin:1.6rem 0 0; max-width:none; line-height:1.6;
+  }
+  .try strong{ color:var(--brass); }
+  h2{
+    font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
+    font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--brass); font-weight:600; margin:3.2rem 0 1.1rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  h2::after{ content:""; flex:1; height:1px; background:var(--rule); }
+  ul.rails{ list-style:none; padding:0; margin:1.3rem 0 0; }
+  ul.rails li{
+    padding:.68em 0 .68em 1.5em; border-bottom:1px solid var(--rule-2); position:relative;
+    font-family:"Segoe UI",system-ui,sans-serif; font-size:.94rem; color:var(--ink-2);
+    max-width:none;
+  }
+  ul.rails li::before{ content:"—"; position:absolute; left:0; color:var(--brass-dim); }
+  ul.rails li strong{ color:var(--ink); font-weight:600; }
+
+</style>
+</head>
+<body>
+
+<div class="shell">
+<header class="mast">
+  <a href="/" class="markwrap"><span class="mark">HANDSPIKE</span></a>
+  <span class="bar"></span>
+  <nav>
+    <a href="/">Sovereign</a>
+    <a href="/demo/cockpit.html" aria-current="page" class="cur">Cockpit</a>
+    <a href="/eleven-failures.html">Memo</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a class="op" href="/login.html">Operator&nbsp;login</a>
+  </nav>
+</header>
+
+<p class="plate">Demo · the operator's view</p>
+<h1>The screen you watch when <em>a model has your money</em>.</h1>
+<p class="lede">This is the Sovereign cockpit, rebuilt here from the real interface — same palette,
+same layout, same interactions. It is the surface an operator checks in five seconds to answer one
+question: <em>is anything about to hurt me?</em> The figures are representative, not the live book;
+the live number is on the <a href="/">front page</a>.</p>
+
+<p class="try"><strong>It works.</strong> Switch views in the sidebar. Open a metric to see how it
+was derived. Expand a position. Then go to <strong>Controls</strong> and try to arm real money —
+that one takes two deliberate actions, and finding that out by doing it is the point.</p>
+</div>
+
+<div class="wide">
+<div class="ck">
+  <div class="ck-banner">Demo &middot; representative figures <span>— layout, palette and interactions are the real cockpit</span></div>
+  <div class="ck-scroll">
+  <div class="ck-app">
+
+    <!-- ───────────── sidebar ───────────── -->
+    <aside class="ck-side">
+      <div class="ck-wordmark">
+        <span class="tile" aria-hidden="true">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 6-8"/><path d="M17 6h4v4"/></svg>
+        </span>
+        <span>
+          <span class="name">HANDSPIKE</span><br>
+          <span class="ver">Alpha 10.0</span>
+        </span>
+      </div>
+
+      <nav class="ck-nav" aria-label="Cockpit sections">
+        <button type="button" class="on" data-view="home">
+          <svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg> Home</button>
+        <button type="button" data-view="controls">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg> Controls</button>
+        <button type="button" data-view="declines">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/></svg> Declines</button>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg> Alpha Report <span class="soon">live only</span></button>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> Portfolio <span class="soon">live only</span></button>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1H5a1 1 0 01-1-1z"/></svg> Income Engine <span class="soon">live only</span></button>
+
+        <span class="grp">Create</span>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg> Foundry <span class="soon">live only</span></button>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg> Scouts <span class="soon">live only</span></button>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><path d="M4 19V5M4 8c5-3 11 3 16 0M4 14c5-3 11 3 16 0"/></svg> Librarian <span class="soon">live only</span></button>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> Master log <span class="soon">live only</span></button>
+
+        <span class="grp">Compete</span>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg> Sandbox AI <span class="soon">live only</span></button>
+
+        <span class="grp">Prove</span>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg> Edge catalog <span class="soon">live only</span></button>
+        <button type="button" disabled><svg viewBox="0 0 24 24"><path d="M12 20V9M12 9c0-3 2-5 5-5 0 3-2 5-5 5zM12 12c0-3-2-5-5-5 0 3 2 5 5 5z"/></svg> OptionHarvest <span class="soon">live only</span></button>
+      </nav>
+    </aside>
+
+    <!-- ───────────── main ───────────── -->
+    <main class="ck-main">
+
+      <div class="ck-statusbar">
+        <span class="ck-chip real"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/></svg> Bot · LIVE</span>
+        <span class="ck-chip live"><span class="dot"></span> Markets <span class="mut">3 open</span></span>
+        <span class="ck-chip live"><span class="dot"></span> Sovereign live <span class="mut">· 2h ago</span></span>
+        <span class="ck-chip demo">Demo data</span>
+      </div>
+
+      <div>
+        <div class="ck-crumb">Cockpit · <span id="crumb">Home</span></div>
+        <div class="ck-h1" id="viewTitle">Home</div>
+      </div>
+
+      <!-- ════════ HOME ════════ -->
+      <section class="ck-view" data-view="home">
+        <div class="ck-sub">
+          <span class="mode">Sovereign</span>
+          <span class="ck-armed"><span style="font-size:1.1em;line-height:0">&bull;</span> Sovereign armed · real $</span>
+        </div>
+
+        <div class="ck-kpis">
+          <button type="button" class="ck-card rail-real drill" aria-expanded="false">
+            <span class="lbl">Total NAV <span class="q" aria-hidden="true">?</span></span>
+            <span class="val loss">$642.10</span>
+            <span class="why">All accounts &middot; equities $190.00 + futures venue $355.00 +
+              brokerage $97.10 &middot; below the $684.07 put in</span>
+            <span class="ck-drill" hidden>Summed from three <b>live broker reads</b>, not from a
+              local tally. If any venue fails to answer, this tile shows the last good read with its
+              age rather than a fresh-looking zero — a money surface that invents a number is worse
+              than one that admits it is blind.</span>
+          </button>
+          <button type="button" class="ck-card rail-real drill" aria-expanded="false">
+            <span class="lbl">Deployed <span class="q" aria-hidden="true">?</span></span>
+            <span class="val win">$451.60 / 70%</span>
+            <span class="why">70% of NAV at work &middot; green: the share rose at its last move, red: it
+              fell &middot; a futures row counts its MARGIN — $1,848.80 of exposure controlled</span>
+            <span class="ck-drill" hidden>A futures position ties up <b>margin</b>, not notional, so
+              counting the contract's full face value here would read as 3&times; leverage on a book
+              that has none of it. Both numbers are shown because either alone misleads.</span>
+          </button>
+          <button type="button" class="ck-card rail-real drill" aria-expanded="false">
+            <span class="lbl">Open risk <span class="q" aria-hidden="true">?</span></span>
+            <span class="val">$150.20</span>
+            <span class="sub">27.1%</span>
+            <span class="why">of equity &middot; every position stopped — written
+              and resting stops agree</span>
+            <span class="ck-drill" hidden>Risk is measured <b>to the stop</b>, not to zero: the money
+              actually exposed is entry minus stop, times size. "Written and resting stops agree" is a
+              live reconciliation between what the system intends and what the broker is holding. When
+              they disagree, this is the line that changes.</span>
+          </button>
+          <button type="button" class="ck-card rail-real drill" aria-expanded="false">
+            <span class="lbl">Realized P&amp;L <span class="q" aria-hidden="true">?</span></span>
+            <span class="val loss">&minus;6.12%</span>
+            <span class="sub loss">&minus;$41.85</span>
+            <span class="why">since the reset &middot; on $684.07 capital in &middot; day 11</span>
+            <span class="ck-drill" hidden><b>Realized</b> means closed trades, fees and settlements since
+              the reset; an open position counts when it closes. Every owner deposit is booked into the
+              capital trail, so adding money can never register as profit. Open positions included, the
+              return on money put in is &minus;3.98% (&minus;$27.20). This is the single number the front
+              page publishes.</span>
+          </button>
+        </div>
+
+        <p class="ck-note">Options lane ARMED &middot; debit ceiling $17.13 — paid in CASH, so the cap
+        falls as capital is deployed &middot; floor $25.00 &middot; <strong>it cannot fire</strong>
+        until spendable cash reaches $25.00 — not a fault, the cash is deployed elsewhere.</p>
+
+        <div class="ck-split">
+          <div class="ck-card">
+            <span class="lbl">Wins vs losses</span>
+            <span class="val"><span class="win">4</span> &ndash; <span class="loss">7</span> &middot; 36%</span>
+            <span class="why">trades closed since the reset: a win made money after fees, a loss lost it</span>
+          </div>
+          <div class="ck-card">
+            <span class="lbl">Unrealized P&amp;L</span>
+            <span class="val win">+$14.65</span>
+            <span class="why">how far the open positions have moved since the reset</span>
+          </div>
+        </div>
+
+        <div class="ck-sect">
+          <h3>Open positions</h3>
+          <span class="meta">5 &middot; live broker read &middot; tap a row</span>
+        </div>
+        <div class="ck-tblwrap">
+          <table class="ck-tbl">
+            <thead>
+              <tr>
+                <th scope="col">Symbol</th><th scope="col">Qty</th><th scope="col">Avg entry</th>
+                <th scope="col">Mark</th><th scope="col">Stop</th><th scope="col">Tied up</th>
+                <th scope="col">Unrealized</th><th scope="col"><span class="dim">Act</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row" tabindex="0">
+                <td><span class="chev">&rsaquo;</span> <span class="sym">CRK</span><br><span class="venue">Equities</span></td>
+                <td>4.1</td><td>$15.55</td><td>$15.26</td>
+                <td>$14.20<span class="u2">6.9% room</span></td>
+                <td>$62.57</td>
+                <td class="loss">&minus;$1.19<span class="u2 loss">&minus;1.9%</span></td>
+                <td><span class="ck-sell">Sell</span></td>
+              </tr>
+              <tr class="detail" hidden><td colspan="8">
+                <b>Software stop</b> at $14.20 — watched by Sovereign itself, so it protects while
+                Sovereign is running. Risk to the stop is $5.54.
+                Exiting now costs about $0.01 in fees, so the round trip is not what makes this
+                position red.
+              </td></tr>
+
+              <tr class="row" tabindex="0">
+                <td><span class="chev">&rsaquo;</span> <span class="sym">STNG</span><br><span class="venue">Equities</span></td>
+                <td>0.63</td><td>$79.42</td><td>$82.35</td>
+                <td>$78.30<span class="u2">4.9% room</span></td>
+                <td>$51.88</td>
+                <td class="win">+$1.85<span class="u2 win">+3.7%</span></td>
+                <td><span class="ck-sell">Sell</span></td>
+              </tr>
+              <tr class="detail" hidden><td colspan="8">
+                Fractional size on purpose: the position is sized by <b>risk to the stop</b>, not by
+                round lots. A whole share here would have put 2.4% of the book behind one ticker.
+              </td></tr>
+
+              <tr class="row" tabindex="0">
+                <td><span class="chev">&rsaquo;</span> <span class="sym">XLV</span><br><span class="venue">Equities</span></td>
+                <td>0.37</td><td>$171.43</td><td>$171.45</td>
+                <td>$166.50<span class="u2">2.9% room</span></td>
+                <td>$63.44</td>
+                <td class="win">+$0.01<span class="u2 dim">flat</span></td>
+                <td><span class="ck-sell">Sell</span></td>
+              </tr>
+              <tr class="detail" hidden><td colspan="8">
+                Flat is shown as <b>flat</b>, not rounded into a win. A cockpit that rounds toward
+                good news teaches its operator to stop reading it.
+              </td></tr>
+
+              <tr class="row" tabindex="0">
+                <td><span class="chev">&rsaquo;</span> <span class="sym">BTC</span><br><span class="venue">Spot</span></td>
+                <td>0.000002</td><td>$78,980.35<span class="u2">owner-pinned</span></td><td>$79,292.42</td>
+                <td class="dim">&mdash;<span class="u2 dim">no stop</span></td>
+                <td>$0.14</td>
+                <td class="dim">$0.00<span class="u2 dim">dust, deliberate</span></td>
+                <td><span class="ck-sell">Sell</span></td>
+              </tr>
+              <tr class="detail" hidden><td colspan="8">
+                Fourteen cents of dust, held on purpose to keep the venue's read path exercised.
+                <b>"No stop" is stated, not hidden</b> — an unprotected row must be visibly
+                unprotected, even when the amount is trivial.
+              </td></tr>
+
+              <tr class="row" tabindex="0">
+                <td><span class="chev">&rsaquo;</span> <span class="sym">NOL-21SEP26</span><br><span class="venue">Futures · controls $1,848.80</span></td>
+                <td>2</td><td>$91.72<span class="u2">incl. fee</span></td><td>$92.44</td>
+                <td>$88.50<span class="u2">4.3% room</span></td>
+                <td>$219.85<span class="u2">margin</span></td>
+                <td class="win">+$14.36<span class="u2 win">+6.5%</span></td>
+                <td><span class="ck-sell">Sell</span></td>
+              </tr>
+              <tr class="detail" hidden><td colspan="8">
+                Two contracts controlling $1,848.80 of oil on $219.85 of margin. The stop was
+                <b>trailed 86.30 &rarr; 88.50</b>, which cut open risk from 35% of equity to about
+                23% without touching the position. Entry price includes the fee, because an entry that
+                excludes its own cost is a number that flatters itself.
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="ck-note">Open value $451.60 across every venue &middot; flattening every position
+        would cost about $1.50 in fees. Exposure controlled $2,094.13 — 3.2&times; NAV.</p>
+      </section>
+
+      <!-- ════════ CONTROLS ════════ -->
+      <section class="ck-view" data-view="controls" hidden>
+        <div class="ck-sub">
+          <span class="mode">Safety controls</span>
+          <span class="ck-chip demo">Nothing here reaches a broker</span>
+        </div>
+        <p class="ck-note">Every switch that can put real money at risk sits under a hinged cover.
+        <strong>Tap the cover to lift it, then tap the switch behind it.</strong> Two deliberate
+        actions, never one — the cover exists so that no single mis-tap can arm real capital. Turn a
+        switch back off and its cover falls shut on its own.</p>
+
+        <div class="ck-guards">
+          <div class="guard" data-control="kill">
+            <div class="g-head">
+              <span class="g-title"><svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/></svg> Kill switch</span>
+              <span class="g-flag">covered</span>
+            </div>
+            <div class="cover-switch">
+              <div class="switch-track" aria-hidden="true"><div class="switch-knob"></div><span class="led"></span></div>
+              <div class="cover-lid" role="button" tabindex="0" aria-label="Kill switch — lift cover to engage">
+                <span class="lift-cue">Tap to open</span>
+              </div>
+            </div>
+            <div class="g-state off" data-alt="KILL ENGAGED — ENTRIES BLOCKED">KILL OFF — ENTRIES ALLOWED</div>
+          </div>
+
+          <div class="guard" data-control="auto">
+            <div class="g-head">
+              <span class="g-title"><svg viewBox="0 0 24 24" stroke-linecap="round"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 4v4M9 14h.01M15 14h.01"/></svg> Auto-trade</span>
+              <span class="g-flag">covered</span>
+            </div>
+            <div class="cover-switch">
+              <div class="switch-track" aria-hidden="true"><div class="switch-knob"></div><span class="led"></span></div>
+              <div class="cover-lid" role="button" tabindex="0" aria-label="Auto-trade — lift cover to arm">
+                <span class="lift-cue">Tap to open</span>
+              </div>
+            </div>
+            <div class="g-state off" data-alt="AUTO ON — HUNTING">AUTO OFF — STANDING DOWN</div>
+          </div>
+
+          <div class="guard" data-control="mode">
+            <div class="g-head">
+              <span class="g-title"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="M12 3v18M5 8h14M5 16h14"/></svg> Futures to live</span>
+              <span class="g-flag">covered</span>
+            </div>
+            <div class="cover-switch">
+              <div class="switch-track" aria-hidden="true"><div class="switch-knob"></div><span class="led"></span></div>
+              <div class="cover-lid" role="button" tabindex="0" aria-label="Futures — lift cover to arm a leveraged venue">
+                <span class="lift-cue">Tap to open</span>
+              </div>
+            </div>
+            <div class="g-state off" data-alt="ARMED — LEVERED, REAL $">FUTURES COVERED — NO ORDERS</div>
+          </div>
+
+          <div class="guard" data-control="picker">
+            <div class="g-head">
+              <span class="g-title"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="M4 17l5-6 4 3 7-9"/><path d="M17 5h4v4"/></svg> Picker to live</span>
+              <span class="g-flag">covered</span>
+            </div>
+            <div class="cover-switch">
+              <div class="switch-track" aria-hidden="true"><div class="switch-knob"></div><span class="led"></span></div>
+              <div class="cover-lid" role="button" tabindex="0" aria-label="Picker — lift cover to send real orders">
+                <span class="lift-cue">Tap to open</span>
+              </div>
+            </div>
+            <div class="g-state off" data-alt="PICKER LIVE — REAL ORDERS">PICKER PAPER — NO ORDERS SENT</div>
+          </div>
+        </div>
+
+        <div class="ck-sect"><h3>Posture</h3><span class="meta">Read-only &middot; derived, not typed</span></div>
+        <div class="ck-posture">
+          <div><div class="k">Per-position backstop</div><div class="v loss">&minus;35%</div></div>
+          <div><div class="k">Futures stop</div><div class="v win">Required</div></div>
+          <div><div class="k">Naked shorts</div><div class="v win">Blocked</div></div>
+          <div><div class="k">Cover state</div><div class="v" id="coverCount">4 covered</div></div>
+        </div>
+        <p class="ck-note">The backstop needs a successful account read to fire. If the account
+        becomes unreadable, the cockpit says so in words rather than showing a stale number that
+        looks healthy — an inert safety net that appears armed is worse than a missing one.</p>
+      </section>
+
+      <!-- ════════ DECLINES ════════ -->
+      <section class="ck-view" data-view="declines" hidden>
+        <div class="ck-sub">
+          <span class="mode">What it refused</span>
+          <span class="ck-chip"><span class="dim">Last 24h</span></span>
+        </div>
+        <p class="ck-note">Most of what an autonomous trader does is <strong>decline</strong>. Every
+        refusal is written down with its reason and its horizon, so a decision to sit out can be
+        graded later against what actually happened. A system that only logs its trades cannot be
+        told apart from a system that got lucky.</p>
+
+        <div class="ck-tblwrap">
+          <table class="ck-tbl">
+            <thead>
+              <tr><th scope="col">Candidate</th><th scope="col">Move</th><th scope="col">Refused by</th>
+                  <th scope="col">Resolves</th><th scope="col"><span class="dim">Graded</span></th></tr>
+            </thead>
+            <tbody>
+              <tr class="row" tabindex="0">
+                <td><span class="chev">&rsaquo;</span> <span class="sym">DOT</span><br><span class="venue">Crypto · fade</span></td>
+                <td class="win">+14.0%</td>
+                <td>No catalyst</td>
+                <td>7 days</td>
+                <td class="dim">Pending</td>
+              </tr>
+              <tr class="detail" hidden><td colspan="5">
+                A 14% move with <b>no identifiable event behind it</b> fails the catalyst rule. The
+                refusal is filed with a 7-day horizon and will be scored against the actual outcome —
+                including the case where declining was wrong.
+              </td></tr>
+
+              <tr class="row" tabindex="0">
+                <td><span class="chev">&rsaquo;</span> <span class="sym">ETH</span><br><span class="venue">Crypto · long</span></td>
+                <td class="dim">+0.4%</td>
+                <td>Dead mid</td>
+                <td>7 days</td>
+                <td class="dim">Pending</td>
+              </tr>
+              <tr class="detail" hidden><td colspan="5">
+                Spread too wide relative to the expected move — the position would start meaningfully
+                behind. <b>Declining to pay the spread is a decision</b>, and it is logged like one.
+              </td></tr>
+
+              <tr class="row" tabindex="0">
+                <td><span class="chev">&rsaquo;</span> <span class="sym">ZEC</span><br><span class="venue">Crypto · momentum</span></td>
+                <td class="win">+22.0%</td>
+                <td>No catalyst</td>
+                <td>7 days</td>
+                <td class="loss">Wrong &minus;</td>
+              </tr>
+              <tr class="detail" hidden><td colspan="5">
+                Graded and <b>scored against itself</b>: the move continued after the refusal, so this
+                decline is recorded as a miss. Kept visible on purpose. A refusal ledger that quietly
+                drops its bad calls is just a highlight reel.
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  </div>
+</div>
+</div>
+
+<div class="shell" style="padding-top:0">
+<section>
+  <h2>What you are looking at</h2>
+  <ul class="rails">
+    <li><strong>Orange means real money, and nothing else does.</strong> Paper trading is amber, the
+        interactive accent is blue, and red is reserved for loss and danger. An accent in the red
+        family would make "this control is available" and "you are losing money" the same colour, so
+        the palette rules that out at the token level.</li>
+    <li><strong>Arming takes two actions, not one.</strong> Lift the cover, then throw the switch.
+        The covers are not theatre: they are there because the failure mode for an autonomous trading
+        system is a single careless tap, and a control that can be armed by accident will eventually
+        be armed by accident.</li>
+    <li><strong>Every number carries the sentence that explains it.</strong> The prose inside each
+        tile is not a tooltip — it is the reason the figure can be checked rather than trusted. Open
+        one and it tells you how it was derived and what would make it wrong.</li>
+    <li><strong>It reports what it cannot do.</strong> The options lane is armed and still cannot
+        fire, because spendable cash is below its floor. Stated plainly, because a silent no-op is
+        indistinguishable from a broken component.</li>
+    <li><strong>The refusals are the product.</strong> Declines is not an error log. It is the record
+        of every trade the system chose not to make, with its reason and its grade — including the
+        ones where declining turned out to be wrong.</li>
+    <li><strong>Private network, behind a PIN.</strong> The real cockpit reaches its operator on
+        their own tailnet behind a PIN, and arming real money asks for it again. It is not on the
+        public internet, and this page is a rebuild
+        rather than a window into it.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Where the real one lives</h2>
+  <!-- No operator-login link here. It lives in the masthead, on every page, and only there — a
+       second one in the body reads as a call to action, and this door is not one. -->
+  <p>The cockpit runs on the owner's own machine, reachable only over the owner's private network.
+  There is no hosted version, no shared instance, and no account of yours for us to hold.</p>
+  <p>Next: <a href="/eleven-failures.html">what eleven real failures taught it&nbsp;&rarr;</a></p>
+</section>
+
+<footer>
+  <p><span class="mark" style="font-size:.68rem;">HANDSPIKE</span> &nbsp;·&nbsp; Hendersonville, North Carolina &nbsp;·&nbsp; <a href="mailto:rick@handspike.dev">rick@handspike.dev</a><span id="visitors" hidden></span></p>
+  <p class="fine">The figures on this page are representative and are shown to demonstrate the
+  interface; they are not the live account and are not a track record. The controls on this page are
+  a local rebuild — they reach no broker and move no money. Handspike is a software and engineering
+  company. It is not an investment adviser, broker-dealer, or fiduciary, and nothing on this site is
+  investment advice or an offer of advisory services. Autonomous trading involves substantial risk of
+  loss.</p>
+</footer>
+</div>
+
+<script src="/ck.js"></script>
+<script src="/visitors.js" defer></script>
+</body>
+</html>
