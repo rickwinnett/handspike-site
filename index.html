@@ -74,24 +74,28 @@
   .own .v{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.92rem; color:var(--ink); margin:0; }
 
   /* ---- live status banner ---- */
-  /* THE COCKPIT'S HOME GRAPH, IN PERCENTS (owner 2026-10-11 ~7:50 PM ET: "the web graph never show dollar
-     amount. on %'s", then "other than that, two should look and function the same"). The block below is
-     laid out as home.py::_return_graph draws it: one header row (the wins-vs-losses record on the left; on
-     the right the realized figure, a dot, and the unrealized figure in its thin rectangle), the graph full
-     width under it, 112px tall, and the caption under that (the range, day N, any staleness note). The
-     one public-only addition is the "Realized P&L · founder's account" label above it. The colours are
-     the SITE's palette under the cockpit's token names (--win, --loss, --border-strong), so the svg below
-     reads attribute for attribute like the cockpit's. */
+  /* THE COCKPIT'S HOME GRAPH, IN PERCENTS, IN THE SITE'S OWN DRESS (owner 2026-10-14 ~1:40 AM ET: "public can have
+     it. %'s only", then "make it look right on the page"; standing since 2026-10-11 ~7:50 PM ET: "the web graph
+     never show dollar amount. on %'s", then "other than that, two should look and function the same"). The block is
+     laid out as home.py::_return_graph draws it since the cockpit's 10/13 redesign: one header row (the wins-vs-losses
+     record on the left; on the right the realized figure, a dot, and the unrealized figure in its thin rectangle),
+     then the plot (a round-percent axis with 0% always labelled, an Eastern time axis, the realized steps, the dashed
+     line, the wash, a dot per closed position, the readout), then the legend line. The one public-only addition is
+     the "Realized P&L · founder's account" label above it. The colours are the SITE's palette under the cockpit's
+     token names (--win, --loss, --border-strong, --warn); the type is the site's own mono and the card, rules and
+     ink the site's own, so the graph reads as part of this page rather than a pasted instrument. */
   #live{ display:none; margin:0 0 2.2rem; border:1px solid var(--rule); border-radius:6px;
          background:var(--panel); padding:.9rem 1.1rem;
-         --win:#4fa96a; --loss:#c96a5a; --border-strong:#4b545d; }
+         --win:#4fa96a; --loss:#c96a5a; --border-strong:#4b545d; --warn:#e3b341;
+         --mono:ui-monospace,Consolas,"Cascadia Mono",monospace; }
   #live.on{ display:block; }
   #live .k{ display:block; margin:0 0 .5rem; font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
             font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--brass-dim); }
   #live .head{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:.15rem .8rem;
                margin-bottom:2px; font-family:ui-monospace,Consolas,monospace; font-size:.7rem;
                letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
-  #live .fig{ font-variant-numeric:tabular-nums; }
+  /* The figures keep to the right edge even when a narrow card wraps them under the record. */
+  #live .fig{ font-variant-numeric:tabular-nums; margin-left:auto; text-align:right; }
   #live .pct{ font-weight:700; }
   #live .pct.up{ color:var(--win); } #live .pct.down{ color:var(--loss); }
   #live .sep[hidden]{ display:none; }
@@ -105,15 +109,97 @@
   #live .unreal[hidden]{ display:none; }
   #live .curve{ display:block; }
   #live .curve[hidden]{ display:none; }
-  #live .curve svg{ display:block; width:100%; height:112px; }
-  #live .curve .cap{ display:flex; justify-content:space-between; gap:0 .6rem; margin-top:2px;
-                     font-family:ui-monospace,Consolas,monospace; font-size:.7rem; color:var(--ink-3); }
-  #live .curve .cap span{ font-variant-numeric:tabular-nums; }
   /* Fewer than three points since the reset: said plainly, as the cockpit says it, never a two-point "trend". */
   #live .curve .collect{ border:1px dashed var(--border-strong); border-radius:6px; padding:14px 16px;
                          font-family:ui-monospace,Consolas,monospace; font-size:.7rem; color:var(--ink-3); }
   #live .curve .collect .wl{ letter-spacing:.08em; text-transform:uppercase; font-weight:700; margin-bottom:4px; }
   #live.stale{ opacity:.72; }
+
+  /* THE PLOT. ONE svg (0..1000 x 0..1000, stretched, every stroke non-scaling) holds the strokes and the wash; the
+     axis labels, the dots and the readout are HTML over the same box, placed in percent, so nothing round or textual
+     is ever stretched. The y gutter is sized in ch of the axis' own mono face (--rg-yw, set per render from the
+     longest label), so it fits whatever face and size the reader's browser resolves. */
+  #live .rg [hidden]{ display:none !important; }
+  #live .rg-plot{ position:relative; height:160px; margin-top:.75rem; touch-action:pan-y pinch-zoom; cursor:crosshair;
+                  user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent;
+                  font:500 .68rem/1 var(--mono); font-variant-numeric:tabular-nums; }
+  #live .rg-area{ position:absolute; left:calc(var(--rg-yw, 3rem) + 10px); right:8px; top:8px; bottom:8px; }
+  #live .rg-area svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; display:block; }
+  #live .rg-area svg *{ vector-effect:non-scaling-stroke; }
+  #live .rg-area .g{ fill:none; stroke:var(--rule); stroke-width:1; }
+  #live .rg-area .v{ fill:none; stroke:var(--rule); stroke-width:1; stroke-opacity:.5; }
+  #live .rg-area .a{ stroke:none; }
+  #live .rg-area .z{ stroke:var(--ink-3); stroke-opacity:.75; stroke-width:1.25; }
+  #live .rg-area .u{ fill:none; stroke-width:1.5; stroke-dasharray:5 3; stroke-opacity:.85; stroke-linejoin:round; }
+  #live .rg-area .r{ fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+  #live .rg-area .cw{ stroke:var(--win); } #live .rg-area .cl{ stroke:var(--loss); }
+  #live .rg-area .cf{ stroke:var(--ink-3); }
+  #live .rg-yl{ position:absolute; left:0; top:8px; bottom:8px; width:var(--rg-yw, 3rem); pointer-events:none;
+                color:var(--ink-3); }
+  #live .rg-yl span{ position:absolute; right:0; transform:translateY(-50%); white-space:nowrap; }
+  #live .rg-yl .z{ color:var(--ink); }
+  #live .rg-xl{ position:relative; height:1.1rem; margin:5px 8px 0 calc(var(--rg-yw, 3rem) + 10px);
+                font:500 .68rem/1 var(--mono); color:var(--ink-3); white-space:nowrap;
+                font-variant-numeric:tabular-nums; }
+  #live .rg-xl span{ position:absolute; top:0; transform:translateX(-50%); }
+  #live .rg-xl .l0{ transform:none; } #live .rg-xl .l1{ transform:translateX(-100%); }
+  /* a bare clock's twin that carries the zone word on a narrow card only (xlNarrow) */
+  #live .rg-xl .ph{ display:none; }
+  /* A CLOSED POSITION: a 9 px dot on the realized line, green a win and red a loss by its result's sign, dim at
+     exactly zero, a hollow ring when the feed does not say. A mark and nothing more: no pointer, no focus, no title. */
+  #live .rg-mk{ position:absolute; z-index:2; width:9px; height:9px; margin:-4.5px 0 0 -4.5px; border-radius:50%;
+                background:var(--ink-3); box-shadow:0 0 0 2px var(--panel); pointer-events:none; }
+  #live .rg-mk.w{ background:var(--win); } #live .rg-mk.l{ background:var(--loss); }
+  #live .rg-mk.u{ background:var(--panel); box-shadow:inset 0 0 0 1.5px var(--ink-3), 0 0 0 2px var(--panel); }
+  /* THE READOUT: the crosshair, the realized line's dot, the unrealized gap's bar, the tip. */
+  #live .rg-xh{ position:absolute; top:0; bottom:0; width:0; border-left:1px solid var(--ink-3); opacity:.6;
+                pointer-events:none; }
+  #live .rg-gb{ position:absolute; z-index:1; width:2px; margin-left:-1px; border-radius:1px; pointer-events:none; }
+  #live .rg-hd{ position:absolute; z-index:1; width:7px; height:7px; margin:-3.5px 0 0 -3.5px; border-radius:50%;
+                background:var(--ink); box-shadow:0 0 0 2px var(--panel); pointer-events:none; }
+  #live .rg-tip{ position:absolute; top:0; z-index:3; min-width:9.75rem; max-width:15rem; pointer-events:none;
+                 background:var(--mono-bg); border:1px solid var(--border-strong); border-radius:4px;
+                 padding:.4rem .55rem; font:400 .7rem/1.55 var(--mono); color:var(--ink-2);
+                 font-variant-numeric:tabular-nums; }
+  #live .rg-tip .t{ color:var(--ink-3); white-space:nowrap; }
+  #live .rg-tip .row{ display:flex; align-items:center; gap:6px; white-space:nowrap; }
+  #live .rg-tip .row b{ margin-left:auto; padding-left:12px; font-weight:700; color:var(--ink); }
+  #live .rg-tip .row b.pos{ color:var(--win); } #live .rg-tip .row b.neg{ color:var(--loss); }
+  #live .rg-tip i{ display:inline-block; flex:none; }
+  #live .rg-tip i.kr{ width:14px; height:2px; border-radius:1px; }
+  #live .rg-tip i.ku{ width:2px; height:10px; margin:0 6px; border-radius:1px; }
+  /* THE LEGEND LINE: the keys, then "day N" (and a stale line's "line as of", in the warn colour) and the "?" as one
+     group at the right edge that wraps as a unit. */
+  #live .rg-legend{ display:flex; flex-wrap:wrap; align-items:center; gap:.35rem 1.1rem; margin-top:.6rem;
+                    font:400 .68rem/1.4 var(--mono); color:var(--ink-3); }
+  #live .rg-key{ display:inline-flex; align-items:center; gap:.45rem; white-space:nowrap; }
+  #live .rg-key .sw{ display:inline-block; width:16px; height:2px; border-radius:1px; background:currentColor; }
+  #live .rg-key .sw.u{ border-radius:0; background:repeating-linear-gradient(90deg,currentColor 0 5px,transparent 5px 8px); }
+  #live .rg-key .cw{ color:var(--win); } #live .rg-key .cl{ color:var(--loss); } #live .rg-key .cf{ color:var(--ink-3); }
+  #live .rg-key .dt{ display:inline-block; width:7px; height:7px; border-radius:50%;
+                     background:linear-gradient(90deg,var(--win) 50%,var(--loss) 50%); }
+  /* a feed whose marks carry no sign (one published before r) draws only rings, so its key is a ring too */
+  #live .rg-key .dt.u{ background:transparent; box-shadow:inset 0 0 0 1.5px var(--ink-3); }
+  #live .rg-legend .end{ margin-left:auto; display:inline-flex; flex-wrap:wrap; justify-content:flex-end;
+                         align-items:center; gap:.3rem .6rem; }
+  #live .rg-legend .meta{ font-variant-numeric:tabular-nums; }
+  #live .rg-legend .st{ color:var(--warn); white-space:nowrap; }
+  /* The "?" (a span, as the cockpit's own): the provenance as its TITLE and nothing more. A mouse sees it on hover;
+     no tap opens its words on this page (review 2026-10-14: the site adds no visible text about how anything works,
+     owner 2026-10-11), so it is not a control. */
+  #live .rg-q{ display:inline-grid; place-items:center; flex:none; width:1.15rem; height:1.15rem;
+               border:1px solid var(--border-strong); border-radius:50%; color:var(--ink-3);
+               font:600 .62rem/1 var(--mono); cursor:help; }
+  #live .rg-q:hover{ color:var(--brass); border-color:var(--brass-dim); }
+
+  /* A NARROW CARD (a 568 px screen or less): a shorter plot, a tighter card, and the axis labels xlNarrow and the
+     odd steps from 0% leave out marked .alt (every date stays, the zone word stays on the last clock shown). */
+  @media (max-width:568px){
+    #live{ padding:.8rem; }
+    #live .rg-plot{ height:140px; }
+    #live .rg-xl .alt, #live .rg-yl .alt{ display:none; }
+    #live .rg-xl .ph{ display:block; }
+  }
 
   .tour{ display:grid; grid-template-columns:repeat(auto-fit,minmax(12rem,1fr)); gap:1px;
          background:var(--rule); border:1px solid var(--rule); border-radius:6px;
@@ -269,11 +355,15 @@ something far too heavy by hand, with precision. That is the whole company in on
 // PERCENTS ONLY (owner 2026-10-11 ~7:50 PM ET: "the web graph never show dollar amount. on %'s", reversing
 // his ~11:55 AM "do the website in dollars too"; then "other than that, two should look and function the
 // same"). This page NEVER prints a dollar amount: it reads realized_pct / unrealized_pct / return_pct from
-// status.json and p / u from history.json, and it does not read realized_usd, unrealized_usd, d, ud, lo_d,
+// status.json and p / u (and each mark's t / r) from history.json, and it does not read realized_usd,
+// unrealized_usd, d, ud, lo_d,
 // hi_d, ud_last or scale even if a feed carries them (the publisher's PUBLISH_DOLLARS switch is off; this is
 // the second, page-side guard). No feed string is put on the page or in a hover: every word here is the
 // page's own. Everything else is the cockpit's Home graph (home.py::_return_graph) with each dollar figure
-// replaced by its percent of money put in: the same header, the same two lines, the same caption.
+// replaced by its percent of money put in: the same header, the same axes, the same two lines, the same
+// dots and legend line (since 2026-10-14, owner ~1:40 AM ET: "public can have it. %'s only", then "make it
+// look right on the page": the cockpit's 10/13 redesign, in the site's own type and rules). A mark's r is the
+// sign of that close's result and nothing more; no symbol, size or amount of any trade reaches this page.
 
 // Python's round(a, 2) for a >= 0, as an integer count of hundredths. toFixed rounds the exact binary value
 // as Python does, except on an EXACT tie (a * 8 an odd integer, e.g. 0.125), where Python keeps the even
@@ -325,14 +415,19 @@ function winLossLabel(d) {
     (isNum(d.win_pct) && d.win_pct >= 0 ? pyRound0(d.win_pct) + '%' : '—%');
 }
 // A stored stamp as milliseconds. A NAIVE value (history.json's point times) is UTC by house rule, so it
-// gets its 'Z' before parsing; without it Date.parse would read it as the VIEWER's local time.
+// gets its 'Z' before parsing; without it Date.parse would read it as the VIEWER's local time. Only an ISO
+// date WITH a clock is an instant: a date alone is NaN (the cockpit's etfmt.parse_utc refuses one too;
+// Date.parse would make it a midnight nobody recorded).
 function utcMs(v) {
   if (typeof v !== 'string' || !v) return NaN;
-  var s = v.trim();
-  if (!/(Z|z|[+-]\d\d:?\d\d)$/.test(s)) s += 'Z';
-  return Date.parse(s);
+  var m = /^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?)(Z|z|[+-]\d{2}:?\d{2})?$/.exec(v.trim());
+  if (!m) return NaN;
+  var z = !m[3] || m[3] === 'z' ? 'Z' : m[3].length === 5 ? m[3].slice(0, 3) + ':' + m[3].slice(3) : m[3];
+  return Date.parse(m[1] + 'T' + m[2].replace(/(\.\d{3})\d+$/, '$1') + z);
 }
-// 'Oct 11 · 7:48 PM ET', as the cockpit's etfmt.when_et(v, zone=True): Eastern, 12-hour. '' when the stamp
+// 'Oct 11 · 7:48 PM ET', as the cockpit's etfmt.when_et(v, zone=True): Eastern, 12-hour, the zone word zoneWord's
+// (the cockpit's zone_label): "ET", except inside the November fall-back hour, where two instants an hour apart read
+// the same wall time and each carries its own ('Nov 1 · 1:30 AM EDT', then 'Nov 1 · 1:30 AM EST'). '' when the stamp
 // will not parse or the browser has no time-zone data (withhold rather than approximate).
 function etText(v) {
   var t = utcMs(v);
@@ -343,7 +438,8 @@ function etText(v) {
       hour: 'numeric', minute: '2-digit', hour12: true }).formatToParts(new Date(t))
       .forEach(function (p) { g[p.type] = p.value; });
     if (!g.month || !g.day || !g.hour || !g.minute || !g.dayPeriod) return '';
-    return g.month + ' ' + g.day + ' · ' + g.hour + ':' + g.minute + ' ' + g.dayPeriod.toUpperCase() + ' ET';
+    return g.month + ' ' + g.day + ' · ' + g.hour + ':' + g.minute + ' ' + g.dayPeriod.toUpperCase() + ' ' +
+      (zoneWord(t) || 'ET');
   } catch (e) { return ''; }
 }
 function escAttr(s) {
@@ -369,13 +465,15 @@ function renderBanner(el, d) {
     ageH < 48 ? 'updated ' + Math.round(ageH) + 'h ago' :
     'updated ' + Math.round(ageH / 24) + ' days ago';
   if (ageH !== null && ageH > 6) el.classList.add('stale');
-  // The realized figure, coloured as the cockpit colours it (home.py: win-green at or above zero, so a flat
-  // 0.00% is green like the solid line it heads), and, once the file is older than the hourly publish
-  // allows, " · as of <time>" in the same span, on the FACE (a phone cannot hover).
+  // The realized figure, coloured as the cockpit colours it since its 10/13 redesign (home.py: the house
+  // money_fmt.pnl_color of the figure as printed: win-green above zero, loss-red below, dim at exactly
+  // 0.00%, never a green zero, like the solid line it heads), and, once the file is older than the hourly
+  // publish allows, " · as of <time>" in the same span, on the FACE (a phone cannot hover).
   var pe = document.getElementById('livePct');
   var asOf = ageH !== null && ageH > 1.5 ? etText(d.as_of) : '';
-  pe.textContent = signedPct(pct) + (asOf ? ' · as of ' + asOf : '');
-  pe.className = 'pct ' + (round2(pct) >= 0 ? 'up' : 'down');
+  var pTxt = signedPct(pct);
+  pe.textContent = pTxt + (asOf ? ' · as of ' + asOf : '');
+  pe.className = 'pct' + (signClass(pTxt) ? ' ' + signClass(pTxt) : '');
   // WINS VS LOSSES AND THEN THE %, on the header's left (owner 2026-10-07, "both").
   var label = winLossLabel(d);
   var wl = document.getElementById('liveWL');
@@ -408,12 +506,13 @@ function renderBanner(el, d) {
   el.classList.add('on');
   // "DAY N" IS THE HOUSE CONVENTION, ON EVERY SURFACE: days_elapsed + 1, as the cockpit renders it. It is how
   // long the CURRENT measurement has run (since the reset), NOT how long Sovereign has been live — do not
-  // relabel it "N days active". It prints on the caption, after the range, as on the cockpit.
+  // relabel it "N days active". It prints on the graph's legend line, as on the cockpit.
   return { days: Number.isInteger(d.days_elapsed) && d.days_elapsed >= 0 ? d.days_elapsed : null, label: label,
            asOfMs: utcMs(d.as_of) };
 }
 
-// THE HOVER ON THE CAPTION, as the cockpit's _curve_provenance + _DASHED_LINE_NOTE + _marks_note, in percent.
+// THE "?" ON THE LEGEND LINE (its title, and nothing on the face), as the cockpit's _curve_provenance +
+// _DASHED_LINE_NOTE + _marks_note, in percent.
 // Which points were watched happening and which were not; "every one recorded live" is said out loud, because
 // "no reconstructed points" and "nobody checked" are different claims and silence reads as the second one.
 function provenance(h, n) {
@@ -475,16 +574,457 @@ function marksNote(h) {
     'position ' + (f === 1 ? 'is' : 'are') + ' not marked.' : '');
 }
 
-// The era curve, drawn from /history.json — the SAME recorded series the cockpit plots, so the public shape
-// and the operator's shape cannot diverge. Three rules carried over verbatim from the cockpit, because they
-// are what make a return curve honest rather than decorative:
-//   1. ZERO IS FORCED INTO THE BAND AND DRAWN. A curve auto-scaled to its own min/max can put a book
-//      that never once broke even at the top of the frame and read as a rally.
-//   2. Coloured by where it ENDS, not by its slope — a rising line still under water is not good news.
-//      Each of the two lines (realized solid, realized + unrealized dashed) by where IT ends.
+// ================================================================================================================
+// THE ERA CURVE, drawn from /history.json — the SAME recorded series the cockpit plots, so the public shape and the
+// operator's shape cannot diverge. Since 2026-10-14 (owner ~1:40 AM ET: "public can have it. %'s only", then "make
+// it look right on the page") it is the cockpit's REDESIGNED Home graph (home.py::_return_graph, 10/13) in percent.
+// Three rules carried over verbatim from the cockpit, because they are what make a return curve honest rather than
+// decorative:
+//   1. ZERO IS FORCED INTO THE BAND AND DRAWN. A curve auto-scaled to its own min/max can put a book that never
+//      once broke even at the top of the frame and read as a rally. The y axis is round percents and 0% is always
+//      one of its labelled ticks, in the bright ink.
+//   2. Coloured by where it ENDS, not by its slope — a rising line still under water is not good news. Each of the
+//      two lines (realized solid, realized + unrealized dashed) by where IT ends; the realized line is dim at
+//      exactly 0.00%, never a green zero.
 //   3. Any failure leaves it hidden. The banner is still complete without it.
 // The series is RECORDED, never reconstructed: fewer than three points is said plainly ("Recording since the
 // reset"), never drawn as a two-point "trend"; a series the box withheld is not drawn at all.
+//
+// THE LOOK, as the cockpit draws it: ONE svg in a 0..1000 x 0..1000 space, stretched to the plot, holds the strokes
+// and the wash only (every stroke non-scaling); the axis labels, the closed-trade dots and the readout are HTML laid
+// over the same box in percent, so nothing round or textual is ever stretched. x is TIME, first to last drawn row,
+// with Eastern labels (axisTicks, the cockpit's etfmt.axis_ticks); the row index, with no labels, when the rows'
+// times cannot make an axis. The realized line is a STEP line: a recorded value holds until the next recorded row,
+// and no slope is drawn that the money did not make. The wash between the line and 0% is green above 0% and red
+// below. A small dot sits where each position closed, green a win and red a loss by the sign of its result (the
+// feed's r), a hollow ring when the feed does not say; on this page a dot is a mark ONLY, no trade details and no
+// click-through (owner 2026-10-09 ~11:30 PM ET: "on the website just put a mark but no info or click thru"). No
+// range caption (the cockpit dropped it 10/13): the labelled axis replaces it; "day N" and a stale line's "line as
+// of" sit on the legend line, the provenance behind its "?". The readout under a finger or the mouse prints a row's
+// time and its two percents, and nothing about any trade.
+// ================================================================================================================
+
+// A drawn span shorter than this is not a time axis (rows written seconds apart): the x is the row index instead.
+var RG_MIN_SPAN_MS = 120000;
+// A y range under this many percent is padded evenly around its middle to it, 0% kept in it (the cockpit pads a
+// dollar range to $1, about a tenth of a percent of the money put in).
+var RG_MIN_RANGE = 0.1;
+var RG_LADDER = [1, 2, 2.5, 5];
+// The wash's opacity at the realized line's furthest point from 0% on each side, and AT 0% (the cockpit's).
+var RG_FILL_EDGE = '.22', RG_FILL_ZERO = '.04';
+// Two or more closes at one drawn point: dots 14 px apart, along the riser only when it is that tall at the phone
+// plot (140 px less its 8 px insets), else along the new level (the cockpit's).
+var RG_MARK_GAP_PX = 14, RG_MARK_PHONE_PLOT_PX = 124;
+// THE PHONE X LABELS, laid out for the narrowest card this page must fit: a 320 px screen less the .shell's 1.5rem
+// gutters is a 272 px card; its 1px border and .8rem padding a side, the 10 px after the y gutter and the 8 px right
+// inset take 46 px of that, and the y gutter more. A label is as wide as its characters at 6.6 px (the widest mono
+// face of the stack at the axis' .68rem) and stays 8 px clear of the next one; a wider screen shows the same labels
+// with more room between them.
+var RG_XL_NARROW_CARD_PX = 272, RG_XL_FRAME_PX = 46, RG_XL_CH_PX = 6.6, RG_XL_GAP_PX = 8;
+var RG_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// The Eastern wall clock of an instant, {y, mo, day, h, mi, tz}, through the IANA zone (DST by date); null when the
+// browser has no time-zone data (an unconverted time is never labelled Eastern).
+var RG_ETF = null;
+function etParts(ms) {
+  if (RG_ETF === null) {
+    try {
+      RG_ETF = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'numeric',
+        day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false, timeZoneName: 'short' });
+    } catch (e) { RG_ETF = false; }
+  }
+  if (!RG_ETF || !isNum(ms)) return null;
+  try {
+    var g = {};
+    RG_ETF.formatToParts(new Date(ms)).forEach(function (p) { g[p.type] = p.value; });
+    var o = { y: +g.year, mo: +g.month, day: +g.day, h: (+g.hour) % 24, mi: +g.minute, tz: g.timeZoneName || '' };
+    return o.y > 0 && o.mo >= 1 && o.mo <= 12 && o.day >= 1 && o.h >= 0 && o.mi >= 0 ? o : null;
+  } catch (e) { return null; }
+}
+// The zone word, as the cockpit's etfmt.zone_label: "ET", except on a wall time the November fall-back hour makes
+// ambiguous (two instants an hour apart both read it), which carries its own EDT / EST so the two stay apart.
+function zoneWord(ms) {
+  var p = etParts(ms);
+  if (!p) return '';
+  function same(q) { return !!q && q.y === p.y && q.mo === p.mo && q.day === p.day && q.h === p.h && q.mi === p.mi; }
+  return (same(etParts(ms - 3600000)) || same(etParts(ms + 3600000))) && /^E[DS]T$/.test(p.tz) ? p.tz : 'ET';
+}
+// "3 PM", "12 PM", "9:05 AM": the Eastern clock, 12-hour, no leading zero.
+function clockText(p, withMin) {
+  return (p.h % 12 || 12) + (withMin ? ':' + (p.mi < 10 ? '0' : '') + p.mi : '') + ' ' + (p.h < 12 ? 'AM' : 'PM');
+}
+// THE TIME AXIS, the cockpit's etfmt.axis_ticks: [[instant ms, label]] strictly inside (a, b], every label Eastern
+// and 12-hour. A span of 30 h or less: whole ET hours every 1, 2, 3, 4, 6 or 12 h, the smallest step giving at most
+// maxN - 1 ticks, a midnight labelled with its date ("Oct 13"), any other hour with its clock ("3 PM"), the LAST
+// clock carrying the zone ("6 PM ET"); up to 72 h: every 12 h the same way; longer: ET midnights, every k-th day so
+// at most maxN remain ("Oct 8"); no whole hour inside a short span: its two ends ("9:05 AM", "9:45 AM ET"). The walk
+// is over UTC hours read through the zone, so a DST change never doubles or drops a tick. [] when either end is not
+// a number, the span is not positive, or the browser has no time-zone data.
+function axisTicks(a, b, maxN) {
+  try {
+    if (!isNum(a) || !isNum(b) || b <= a || !etParts(a) || !etParts(b)) return [];
+    var cap = Math.max(2, Math.floor(maxN || 6)), H = 3600000, spanH = (b - a) / H, memo = {};
+    var at = function (ms) { if (!(ms in memo)) memo[ms] = etParts(ms); return memo[ms]; };
+    var hours = function (step) {
+      var got = [];
+      for (var cur = Math.floor(a / H) * H + H; cur <= b; cur += H) {
+        var le = at(cur);
+        if (!le) return null;
+        if (le.mi === 0 && le.h % step === 0) got.push([cur, le]);
+      }
+      return got;
+    };
+    var clock = function (ms, le, withMin, last) {
+      var z = zoneWord(ms);
+      return clockText(le, withMin) + (last || z !== 'ET' ? ' ' + z : '');
+    };
+    var got = [];
+    if (spanH <= 30) {
+      var steps = [1, 2, 3, 4, 6, 12];
+      for (var s = 0; s < steps.length; s++) {
+        got = hours(steps[s]);
+        if (!got) return [];
+        if (got.length <= cap - 1) break;
+      }
+    } else if (spanH <= 72) {
+      got = hours(12);
+      if (!got) return [];
+    } else {
+      var p0 = at(a), mids = [];
+      for (var k = 1; k < 5000; k++) {
+        var dd = new Date(Date.UTC(p0.y, p0.mo - 1, p0.day + k));
+        var y = dd.getUTCFullYear(), mo = dd.getUTCMonth() + 1, d = dd.getUTCDate(), mu = null;
+        for (var off = 3; off <= 6 && mu === null; off++) {     // an ET midnight is 04:00Z (EDT) or 05:00Z (EST)
+          var c = Date.UTC(y, mo - 1, d, off), q = at(c);
+          if (q && q.y === y && q.mo === mo && q.day === d && q.h === 0 && q.mi === 0) mu = c;
+        }
+        if (mu === null) return [];
+        if (mu > b) break;
+        mids.push([mu, RG_MON[mo - 1] + ' ' + d]);
+      }
+      if (mids.length) {
+        var every = Math.max(1, Math.ceil(mids.length / cap));
+        return mids.filter(function (m, i) { return i % every === 0; });
+      }
+    }
+    if (got.length) {
+      var lastClock = -1;
+      got.forEach(function (g, i) { if (g[1].h !== 0) lastClock = i; });
+      return got.map(function (g, i) {
+        return [g[0], g[1].h === 0 ? RG_MON[g[1].mo - 1] + ' ' + g[1].day : clock(g[0], g[1], false, i === lastClock)];
+      });
+    }
+    return [[a, clock(a, at(a), true, false)], [b, clock(b, at(b), true, true)]];
+  } catch (e) { return []; }
+}
+
+// THE Y SCALE, the cockpit's _nice_ticks in percent: {step, dp, ticks} over the lowest and highest values drawn
+// (both lines), 0% ALWAYS a tick. The step is the SMALLEST of 1, 2, 2.5 and 5 times a power of ten (from 0.01%, and
+// never one that would print three decimals) that covers the range in at most five intervals; the domain drawn is
+// [first tick, last tick], so every gridline is a round figure. -3.15 .. +2.14 -> step 2: -4% .. +4%.
+function niceTicks(lo, hi) {
+  lo = Math.min(lo, 0);
+  hi = Math.max(hi, 0);
+  if (hi - lo < RG_MIN_RANGE) {
+    var mid = (lo + hi) / 2;
+    lo = Math.min(lo, mid - RG_MIN_RANGE / 2, 0);
+    hi = Math.max(hi, mid + RG_MIN_RANGE / 2, 0);
+  }
+  for (var e = -2; e <= 15; e++) {
+    for (var k = 0; k < RG_LADDER.length; k++) {
+      var m = RG_LADDER[k], dp = Math.max(0, -e + (m === 2.5 ? 1 : 0));
+      if (dp > 2) continue;
+      var s = m * Math.pow(10, e);
+      var t0 = Math.floor(lo / s + 1e-9) * s, t1 = Math.ceil(hi / s - 1e-9) * s, iv = Math.round((t1 - t0) / s);
+      if (iv <= 5) {
+        var ticks = [];
+        for (var i = 0; i <= iv; i++) ticks.push(Math.round((t0 + i * s) * 1e6) / 1e6 + 0);
+        return { step: s, dp: dp, ticks: ticks };
+      }
+    }
+  }
+  return { step: 1, dp: 0, ticks: [lo, 0, hi] };
+}
+// A y-axis label: "+2%", "-4%", "0%" on a whole step; "+0.5%", "0.0%", "-0.25%" on a finer one (as many decimals as
+// the step, so the column reads evenly). The ASCII hyphen-minus, a "+" on a gain, no sign on zero.
+function axisPct(v, dp) {
+  var q = Math.round(Math.abs(v) * Math.pow(10, dp));
+  return (q === 0 ? '' : v < 0 ? '-' : '+') + (q / Math.pow(10, dp)).toFixed(dp) + '%';
+}
+
+// An x label's kind, read off axisTicks' own text: "d" a date ("Oct 13"), "z" a clock that carries a zone word
+// ("6 PM ET", the fall-back night's "1 AM EDT"), "c" a bare clock ("6 PM").
+function xlKind(lab) {
+  if (lab.indexOf(' AM') < 0 && lab.indexOf(' PM') < 0) return 'd';
+  return /\s[AP]M$/.test(lab) ? 'c' : 'z';
+}
+// THE X LABELS A NARROW CARD SHOWS, the cockpit's _xl_narrow: chosen by KIND, never by position. labs is
+// [[gx, label, align]] in axis order (gx in the plot's 0..1000 space, align "l0" / "l1" / ""), laid out plotPx
+// wide. ALL DATES: every other one from five, and never one that would crowd the date kept before it. ANY CLOCK:
+// every date (a clock is read against the date before it); then ONE clock carrying the zone, the rightmost zoned
+// label that fits, else the rightmost bare clock that fits WITH the zone word, drawn on the phone only (its "twin");
+// then bare clocks left of it, every other one from it first. A clock comes no nearer than 8 px to any kept label,
+// from five labels at most half (rounded up) are kept, and when no clock can carry the zone none is shown: the
+// dates alone, never a clock without its zone. Returns {hide: {index: true}, twin: [index, label] or null}.
+function xlNarrow(labs, plotPx) {
+  var n = labs.length, hide = {}, kinds = labs.map(function (l) { return xlKind(l[1]); });
+  if (!n) return { hide: hide, twin: null };
+  var w = Math.max(plotPx, 1), j;
+  var box = function (i, text) {
+    var c = labs[i][0] / 1000 * w, tw = text.length * RG_XL_CH_PX, al = labs[i][2];
+    return al === 'l0' ? [c, c + tw] : al === 'l1' ? [c - tw, c] : [c - tw / 2, c + tw / 2];
+  };
+  if (kinds.every(function (k) { return k === 'd'; })) {
+    var prev = null;
+    for (j = 0; j < n; j++) {
+      if (n >= 5 && j % 2) { hide[j] = true; continue; }
+      var b = box(j, labs[j][1]);
+      if (prev && b[0] < prev[1] + RG_XL_GAP_PX) { hide[j] = true; continue; }
+      prev = b;
+    }
+    return { hide: hide, twin: null };
+  }
+  var cap = n >= 5 ? Math.floor((n + 1) / 2) : n, kept = {}, keptN = 0, everyDate = true, carrier = -1, twin = null;
+  var take = function (i, text) {
+    var bx = box(i, text);
+    if (keptN >= cap) return false;
+    for (var o in kept) {
+      if (bx[0] < kept[o][1] + RG_XL_GAP_PX && kept[o][0] < bx[1] + RG_XL_GAP_PX) return false;
+    }
+    kept[i] = bx;
+    keptN++;
+    return true;
+  };
+  for (j = 0; j < n; j++) {
+    if (kinds[j] !== 'd') continue;
+    var bd = box(j, labs[j][1]), clash = false;
+    for (var o in kept) { if (bd[0] < kept[o][1] && kept[o][0] < bd[1]) clash = true; }
+    if (clash) { everyDate = false; continue; }      // it would overlap the date before it: no clock below either
+    kept[j] = bd;
+    keptN++;
+  }
+  if (everyDate) {
+    for (j = n - 1; j >= 0; j--) { if (kinds[j] === 'z' && take(j, labs[j][1])) { carrier = j; break; } }
+    if (carrier < 0) {
+      for (j = n - 1; j >= 0; j--) {
+        if (kinds[j] === 'c' && take(j, labs[j][1] + ' ET')) { carrier = j; twin = [j, labs[j][1] + ' ET']; break; }
+      }
+    }
+  }
+  if (carrier >= 0) {
+    var order = [];
+    for (j = carrier - 2; j >= 0; j -= 2) order.push(j);
+    for (j = carrier - 1; j >= 0; j -= 2) order.push(j);
+    order.forEach(function (i) { if (kinds[i] !== 'd') take(i, labs[i][1]); });
+  }
+  for (j = 0; j < n; j++) { if (!kept[j]) hide[j] = true; }
+  if (twin) hide[twin[0]] = true;
+  return { hide: hide, twin: twin };
+}
+
+// A coordinate in the plot's 0..1000 space, one decimal ("-0.0" written "0.0").
+function f1(v) {
+  var s = v.toFixed(1);
+  return s === '-0.0' ? '0.0' : s;
+}
+// "calc(23.40% + 14px)": a CSS position px pixels off a percent.
+function calcPx(pct, px) {
+  return 'calc(' + pct.toFixed(2) + '% ' + (px >= 0 ? '+ ' + px : '- ' + (-px)) + 'px)';
+}
+// The runs of consecutive drawable rows (ok(i)), each at least two long: a run of one draws nothing. The dashed line
+// breaks wherever a row has no unrealized figure: a gap stays a gap, never a slope.
+function runsOf(n, ok) {
+  var runs = [], cur = [];
+  for (var i = 0; i < n; i++) {
+    if (ok(i)) { cur.push(i); continue; }
+    if (cur.length > 1) runs.push(cur);
+    cur = [];
+  }
+  if (cur.length > 1) runs.push(cur);
+  return runs;
+}
+// The realized line as a STEP-AFTER path: "M x0 y0", then "H xi V yi" only where the drawn y changes, then a final
+// "H x_last". A recorded value holds until the next recorded row; nothing diagonal is ever drawn.
+function stepD(run, xs, ys) {
+  var y = f1(ys[run[0]]), at = run[0], parts = ['M' + f1(xs[run[0]]) + ' ' + y];
+  for (var k = 1; k < run.length; k++) {
+    var yi = f1(ys[run[k]]);
+    if (yi !== y) {
+      parts.push('H' + f1(xs[run[k]]) + 'V' + yi);
+      y = yi;
+      at = run[k];
+    }
+  }
+  if (at !== run[run.length - 1]) parts.push('H' + f1(xs[run[run.length - 1]]));
+  return parts.join('');
+}
+// The wash's gradient id: a short hash of its own stops, so two different washes on one document can never borrow
+// each other's gradient (an svg id is document-wide) and the same wash always draws the same markup.
+function hashId(s) {
+  var h = 0x811c9dc5;
+  for (var i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return 'rgw' + h.toString(36);
+}
+function rgStop(y, tok, op) {
+  return "<stop offset='" + (y / 1000).toFixed(4) + "' style='stop-color:var(--" + tok + ");stop-opacity:" + op +
+    "'/>";
+}
+// The readout's colour letter for a figure, from its sign AS PRINTED: p (gain), n (loss), f (0.00%).
+function rgLetter(txt) {
+  var c = signClass(txt);
+  return c === 'up' ? 'p' : c === 'down' ? 'n' : 'f';
+}
+
+// ---- THE READOUT (the cockpit's shim.js wireReturnGraph, in percent) ------------------------------------------
+// DISPLAY ONLY. On a mouse move, a sideways touch drag or a tap: a crosshair at the nearest recorded row, a dot on the
+// realized line there, a bar the height of the unrealized gap, and a tip naming the row's time (Eastern, 12-hour),
+// its realized percent and its unrealized percent (when the row has one). Every word and figure in it was formatted
+// by renderCurve with this page's own formatters, and it is written ONLY through textContent, never as markup. No
+// trade rows and no symbols: the feed carries none. MOUSE paints on move and hides when it leaves the plot (or the
+// window). TOUCH paints on a sideways drag or a tap, never on pointerdown, so a vertical scroll that starts on the
+// graph paints nothing (the browser takes the gesture and sends pointercancel); the tip goes 2.5 s after the finger
+// lifts. Wired ONCE, on the document.
+var RG = { data: null, area: null, i: -1, timer: 0, down: null, scrub: false, wired: false };
+var RG_COL = { p: 'var(--win)', n: 'var(--loss)', f: 'var(--ink-3)', w: 'var(--win)', l: 'var(--loss)' };
+function rgNearest(xs, v) {
+  var lo = 0, hi = xs.length - 1;
+  if (hi <= 0) return 0;
+  while (hi - lo > 1) {
+    var mid = (lo + hi) >> 1;
+    if (xs[mid] < v) lo = mid; else hi = mid;
+  }
+  return (v - xs[lo] <= xs[hi] - v) ? lo : hi;
+}
+// Right of the crosshair if the tip fits inside the card, else left of it, else centred on it and clamped to the
+// card's edges: it never crosses the card, so it never leaves a phone's screen.
+function rgPlace(cross, tipW, areaW, padL, padR) {
+  if (cross + 12 + tipW <= areaW + padR) return cross + 12;
+  if (cross - 12 - tipW >= -padL) return cross - 12 - tipW;
+  return Math.max(-padL, Math.min(cross - tipW / 2, areaW + padR - tipW));
+}
+function rgHide() {
+  var a = RG.area;
+  RG.area = null;
+  RG.i = -1;
+  if (!a || !a.querySelectorAll) return;
+  var els = a.querySelectorAll('.rg-xh,.rg-gb,.rg-hd,.rg-tip');
+  for (var k = 0; k < els.length; k++) els[k].hidden = true;
+}
+function rgShow(area, clientX) {
+  var d = RG.data;
+  if (!d || !d.x || !d.x.length || !area || !area.getBoundingClientRect) return;
+  var R = area.getBoundingClientRect();
+  if (!R || !R.width) return;
+  var i = rgNearest(d.x, Math.max(0, Math.min(1000, (clientX - R.left) / R.width * 1000)));
+  if (RG.area && RG.area !== area) rgHide();
+  var xh = area.querySelector('.rg-xh'), gb = area.querySelector('.rg-gb'),
+    hd = area.querySelector('.rg-hd'), tip = area.querySelector('.rg-tip');
+  if (!xh || !gb || !hd || !tip) return;
+  if (RG.area === area && RG.i === i && !tip.hidden) return;        // nothing new to paint
+  RG.area = area;
+  RG.i = i;
+  var X = d.x[i] / 10, yr = d.yr[i], yu = d.yu[i], uc = d.uc.charAt(i);
+  xh.style.left = X + '%';
+  xh.hidden = false;
+  hd.style.left = X + '%';
+  hd.style.top = (yr / 10) + '%';
+  hd.hidden = false;
+  if (yu !== null && yu !== yr) {             // the bar IS the unrealized percent the tip prints
+    gb.style.left = X + '%';
+    gb.style.top = (Math.min(yu, yr) / 10) + '%';
+    gb.style.height = (Math.abs(yu - yr) / 10) + '%';
+    gb.style.background = RG_COL[uc] || RG_COL.f;
+    gb.hidden = false;
+  } else {
+    gb.hidden = true;
+  }
+  var el = function (tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  var row = function (key, label, val, c) {
+    var r = el('div', 'row');
+    r.appendChild(key);
+    r.appendChild(el('span', 's', label));
+    r.appendChild(el('b', c === 'p' ? 'pos' : c === 'n' ? 'neg' : 'flat', val));
+    tip.appendChild(r);
+  };
+  tip.textContent = '';
+  tip.appendChild(el('div', 't', d.t[i]));
+  var kr = el('i', 'kr');
+  kr.style.background = RG_COL[d.lc] || RG_COL.f;        // the realized LINE's own colour
+  row(kr, 'Realized', d.r[i], d.rc.charAt(i));
+  if (d.u[i] !== null) {
+    var ku = el('i', 'ku');
+    ku.style.background = RG_COL[uc] || RG_COL.f;
+    row(ku, 'Unrealized', d.u[i], uc);
+  }
+  tip.style.left = '0px';                      // measure at its natural width, then place it
+  tip.hidden = false;
+  var plot = area.parentNode, padL = area.offsetLeft || 0;
+  var padR = (plot && plot.clientWidth) ? Math.max(0, plot.clientWidth - padL - R.width) : 8;
+  tip.style.left = rgPlace(X / 100 * R.width, tip.offsetWidth || 160, R.width, padL, padR) + 'px';
+}
+function rgOnPointer(e) {
+  var type = e.type, touch = !!e.pointerType && e.pointerType !== 'mouse';
+  var t = e.target, plot = (t && t.closest) ? t.closest('.rg-plot') : null;
+  if (type === 'pointercancel') {              // the page took the gesture (a scroll): nothing stays painted
+    clearTimeout(RG.timer);
+    RG.down = null;
+    RG.scrub = false;
+    rgHide();
+    return;
+  }
+  if (type === 'pointerout') {
+    if (!touch && !e.relatedTarget) rgHide();  // the mouse left the window
+    return;
+  }
+  if (!touch) {
+    if (type !== 'pointermove' && type !== 'pointerdown') return;
+    if (!plot) { if (RG.area) rgHide(); return; }
+    clearTimeout(RG.timer);
+  } else if (type === 'pointerdown') {         // touch: remember where it started; paint nothing yet
+    clearTimeout(RG.timer);
+    RG.down = plot ? { x: e.clientX, y: e.clientY, plot: plot } : null;
+    RG.scrub = false;
+    if (!plot && RG.area) rgHide();
+    return;
+  } else if (type === 'pointermove') {
+    if (!RG.down) return;
+    if (!RG.scrub) {
+      var dx = Math.abs(e.clientX - RG.down.x), dy = Math.abs(e.clientY - RG.down.y);
+      if (dx < 6 || dx <= dy) return;          // not (yet) a sideways drag: it is the page's
+      RG.scrub = true;
+    }
+    plot = RG.down.plot;
+  } else if (type === 'pointerup') {
+    if (!RG.down) return;
+    plot = RG.down.plot;                       // a tap shows at its x; a drag ends where it lifted
+    RG.down = null;
+    RG.scrub = false;
+    clearTimeout(RG.timer);
+    RG.timer = setTimeout(rgHide, 2500);
+  } else {
+    return;
+  }
+  var area = (plot && plot.querySelector) ? plot.querySelector('.rg-area') : null;
+  if (area) rgShow(area, e.clientX);
+}
+// The pointer only. The "?" is a title and nothing more: no click listener, so no tap ever opens its words on the
+// page (review 2026-10-14: the provenance stays one hover away, as before the port, and adds no visible text).
+function rgWire() {
+  if (RG.wired || !document.addEventListener) return;    // once: document-delegated, so a repaint never stacks
+  RG.wired = true;
+  ['pointermove', 'pointerdown', 'pointerup', 'pointercancel', 'pointerout'].forEach(function (ev) {
+    document.addEventListener(ev, rgOnPointer, { passive: true });
+  });
+}
+
 function renderCurve(h, head) {
   var box = document.getElementById('liveCurve');
   if (!box) return;
@@ -513,7 +1053,7 @@ function renderCurve(h, head) {
     return;                                   // withheld: nothing at all, as on the cockpit
   }
 
-  var n = pts.length;
+  var n = pts.length, i;
   var vals = pts.map(function (p) { return round2(p.p); });
   // THE DASHED LINE (owner 2026-10-10 ~11:30 AM ET: "the website does not have the unrealized stuff"), STACKED
   // since 2026-10-11 (owner ~12:50 AM ET: "shouldnt the green line be its % above the other?"): each point is
@@ -521,97 +1061,202 @@ function renderCurve(h, head) {
   // its gap above the solid line IS the unrealized move. A `u` of null is a row the box could not measure — a
   // GAP: the line breaks there and is never bridged.
   var gaps = pts.map(function (p) { return isNum(p.u) ? p.u : null; });
-  var us = pts.map(function (p, i) { return gaps[i] === null ? null : round2(p.p + p.u); });
+  var us = pts.map(function (p, j) { return gaps[j] === null ? null : round2(p.p + p.u); });
   var uKnown = us.filter(function (v) { return v !== null; });
 
-  // Both lines share one y scale, so the stacked values widen the band too: neither leaves the frame.
-  var lo = Math.min.apply(null, vals.concat(uKnown)), hi = Math.max.apply(null, vals.concat(uKnown));
-  lo = Math.min(lo, 0); hi = Math.max(hi, 0);          // rule 1
-  var span = (hi - lo) || 1;
-  lo -= span * 0.12; hi += span * 0.12;
-  var w = 600, hh = 120;
-  var y = function (v) { return hh - (v - lo) / (hi - lo) * hh; };
-  var xAt = function (i) { return (i * w / (n - 1)).toFixed(1); };
-  var coords = vals.map(function (v, i) { return xAt(i) + ',' + y(v).toFixed(1); }).join(' ');
+  // THE Y AXIS (rule 1): round percents over everything drawn, both lines, so neither leaves the frame, and 0%
+  // always a labelled gridline.
+  var drawn = vals.concat(uKnown);
+  var sc = niceTicks(Math.min.apply(null, drawn), Math.max.apply(null, drawn));
+  var tTop = sc.ticks[sc.ticks.length - 1], tBot = sc.ticks[0];
+  var Y = function (v) { return (tTop - v) / (tTop - tBot) * 1000; };
+  var ys = vals.map(Y), yus = us.map(function (v) { return v === null ? null : Y(v); }), yz = Y(0);
 
+  // THE X AXIS IS TIME, first to last drawn row (never "now"): rows are written every few minutes while a screen is
+  // open and hourly otherwise, so an index axis would give a quiet night as much width as a busy hour. The row index
+  // stands in when the times cannot make an axis: one that will not parse, rows out of order, or a span under two
+  // minutes; no time labels are printed then.
+  var tms = pts.map(function (p) { return utcMs(p.t); });
+  var timeMode = tms.every(function (t, j) { return !isNaN(t) && (j === 0 || t >= tms[j - 1]); }) &&
+    tms[n - 1] - tms[0] >= RG_MIN_SPAN_MS;
+  var spanMs = timeMode ? tms[n - 1] - tms[0] : 0;
+  var xs = pts.map(function (p, j) { return timeMode ? (tms[j] - tms[0]) / spanMs * 1000 : j * 1000 / (n - 1); });
+
+  // rule 2: each line by where IT ends. The realized line is dim at exactly 0.00% (never a green zero); the dashed
+  // line by the headline's sign at its last measured row, dim when nothing is open there (it lies on the solid line).
   var last = vals[n - 1];
-  var col = last >= 0 ? 'var(--win)' : 'var(--loss)';          // rule 2
-  // Area fill: a FIXED light-green wash under the curve, independent of the win/loss colour above (owner,
-  // 2026-09-12: "light green like money") — closed down to the bottom edge and back to the start.
-  var areaPts = coords + ' ' + w + ',' + hh + ' 0,' + hh;
+  var lc = last > 0 ? 'w' : last < 0 ? 'l' : 'f';
+  var uRuns = runsOf(n, function (j) { return us[j] !== null; });
+  var uLastI = -1;
+  for (i = n - 1; i >= 0; i--) { if (us[i] !== null) { uLastI = i; break; } }
+  var uLast = uLastI >= 0 ? us[uLastI] : null, gapLast = uLastI >= 0 ? gaps[uLastI] : null;
+  var ucl = uLast === null || gapLast === 0 ? 'f' : uLast >= 0 ? 'w' : 'l';
 
-  // One polyline per run of measured points, so a gap stays a gap; told apart from the realized line by
-  // style — dashed, a hollow end dot — never by a third colour.
-  var uRuns = [], run = [], uLastI = -1;
-  us.forEach(function (v, i) {
-    if (v === null) { if (run.length > 1) uRuns.push(run); run = []; return; }
-    run.push(xAt(i) + ',' + y(v).toFixed(1));
-    uLastI = i;
+  // THE WASH: one path closed to the ZERO line, filled by one vertical gradient that turns from green to red exactly
+  // at 0%, deepest at the realized line's furthest point on each side (owner 2026-10-13 for the cockpit: "Green
+  // above, red below"; the always-green wash closed to the frame's bottom is gone).
+  var every = [];
+  for (i = 0; i < n; i++) every.push(i);
+  var lineD = stepD(every, xs, ys);
+  var areaD = lineD + 'V' + f1(yz) + 'H' + f1(xs[0]) + 'Z';
+  var hiV = Math.max.apply(null, vals), loV = Math.min.apply(null, vals);
+  var stops = rgStop(hiV > 0 ? Y(hiV) : 0, 'win', RG_FILL_EDGE) + rgStop(yz, 'win', RG_FILL_ZERO) +
+    rgStop(yz, 'loss', RG_FILL_ZERO) + rgStop(loV < 0 ? Y(loV) : 1000, 'loss', RG_FILL_EDGE);
+  var fid = hashId(stops);
+  var gridD = sc.ticks.filter(function (t) { return t !== 0; })
+    .map(function (t) { return 'M0 ' + f1(Y(t)) + 'H1000'; }).join('');
+
+  // THE PERCENT AXIS: a label at every gridline, 0% bright; with four or more intervals the labels an odd number of
+  // steps from 0% thin on a narrow card (0% never does; every gridline stays). The gutter is sized in ch of the
+  // axis' own face from the longest label.
+  var nIv = sc.ticks.length - 1, yLen = 1, yl = '';
+  sc.ticks.forEach(function (tk) {
+    var lab = axisPct(tk, sc.dp), k = Math.round(tk / sc.step);
+    var cls = tk === 0 ? " class='z'" : (nIv >= 4 && k % 2 ? " class='alt'" : '');
+    yl += '<span' + cls + " style='top:" + (Y(tk) / 10).toFixed(2) + "%'>" + escAttr(lab) + '</span>';
+    yLen = Math.max(yLen, lab.length);
   });
-  if (run.length > 1) uRuns.push(run);
-  var uLast = uLastI >= 0 ? us[uLastI] : null;
-  // Neutral when nothing is open there (the GAP at the dashed line's last point is zero, so it lies on the
-  // solid line), else by where the dashed line ends.
-  var gapLast = uLastI >= 0 ? gaps[uLastI] : null;
-  var uCol = uLast === null || gapLast === 0 ? 'var(--ink-3)' : uLast >= 0 ? 'var(--win)' : 'var(--loss)';
-  var dashed = uRuns.map(function (r) {
-    return "<polyline points='" + r.join(' ') + "' fill='none' stroke='" + uCol + "' stroke-width='1.6' " +
-      "stroke-dasharray='5 4' stroke-linejoin='round' vector-effect='non-scaling-stroke'/>";
-  }).join('') + (uLast === null ? '' :
-    "<circle cx='" + xAt(uLastI) + "' cy='" + y(uLast).toFixed(1) + "' r='3.2' " +
-    "fill='none' stroke='" + uCol + "' stroke-width='1.6' vector-effect='non-scaling-stroke'/>");
 
-  // THE TRADE MARKS (owner 2026-10-09: "on the website just put a mark but no info or click thru"): a short
-  // vertical line through the realized line where a position closed, placed as the cockpit places it — at
-  // the first drawn point at or after the close; a close after the last point sits on the last one; one
-  // before the first is not drawn. The feed carries the time and nothing else, so the page says nothing else.
-  var marks = Array.isArray(h.marks) ? h.marks.map(function (m) {
-    if (!m || typeof m.t !== 'string' || m.t < pts[0].t) return '';
-    var i = n - 1;                                        // closed after the last drawn point: sits on it
-    for (var k = 0; k < n; k++) {
-      if (pts[k].t >= m.t) { i = k; break; }
-    }
-    var x = xAt(i), yy = y(vals[i]);
-    return "<line x1='" + x + "' y1='" + (yy - 8).toFixed(1) + "' x2='" + x + "' y2='" +
-      (yy + 8).toFixed(1) + "' stroke='var(--ink)' stroke-width='1.6' " +
-      "vector-effect='non-scaling-stroke'/>";
-  }).join('') : '';
-
-  // THE RANGE SPANS EVERYTHING DRAWN (review 2026-10-10): the frame is scaled to both lines, so the caption
-  // prints the extremes of the drawn values (the realized line and the stacked one), never the padded band,
-  // signed as the cockpit signs them.
-  var capLo = Math.min.apply(null, vals.concat(uKnown)), capHi = Math.max.apply(null, vals.concat(uKnown));
-  // THE LINE'S AGE (the cockpit's "line as of"): when the last recorded row is more than 15 minutes older than
-  // the file's own publish time, the drawn end is older than the figures above it, and the caption says so.
-  // Measured against the LATER of this file's own time and the banner's (review 2026-10-11): the two feeds
-  // publish separately, so a fresh banner over a history.json left alone hours ago must still say its age.
-  var lineAge = '', lastMs = utcMs(pts[n - 1].t), pubMs = utcMs(h.as_of);
-  if (head && isNum(head.asOfMs) && (isNaN(pubMs) || head.asOfMs > pubMs)) pubMs = head.asOfMs;
-  if (!isNaN(lastMs) && !isNaN(pubMs) && pubMs - lastMs > 15 * 60 * 1000) {
-    var la = etText(pts[n - 1].t);
-    if (la) lineAge = ' · line as of ' + la;
+  // THE TIME AXIS: Eastern hour / 12-hour / day ticks (one faint vertical line each) and their labels under the
+  // plot, every label on a wide card; a narrow card shows the ones xlNarrow keeps, by KIND (every date, a clock that
+  // carries the zone, bare clocks that fit), the rest marked "alt"; a bare clock that carries the zone there is
+  // drawn a second time with it, that twin marked "ph" (phone only).
+  var vlinesD = '', xlHtml = '';
+  if (timeMode) {
+    var labs = [];
+    axisTicks(tms[0], tms[n - 1]).forEach(function (tk) {
+      var gx = (tk[0] - tms[0]) / spanMs * 1000;
+      if (gx < -0.5 || gx > 1000.5) return;
+      if (gx > 0.5 && gx < 999.5) vlinesD += 'M' + f1(gx) + ' 0V1000';
+      labs.push([gx, tk[1], gx < 60 ? 'l0' : gx > 940 ? 'l1' : '']);
+    });
+    var nar = xlNarrow(labs, RG_XL_NARROW_CARD_PX - RG_XL_FRAME_PX - (RG_XL_CH_PX * yLen + 2));
+    var spans = '';
+    labs.forEach(function (lb, j) {
+      var cls = (lb[2] + (nar.hide[j] ? ' alt' : '')).trim(), left = (lb[0] / 10).toFixed(2) + '%';
+      spans += '<span' + (cls ? " class='" + cls + "'" : '') + " style='left:" + left + "'>" + escAttr(lb[1]) +
+        '</span>';
+      if (nar.twin && nar.twin[0] === j) {
+        spans += "<span class='" + (lb[2] + ' ph').trim() + "' style='left:" + left + "'>" + escAttr(nar.twin[1]) +
+          '</span>';
+      }
+    });
+    if (spans) xlHtml = "<div class='rg-xl' aria-hidden='true'>" + spans + '</div>';
   }
 
-  box.innerHTML =
-    "<svg viewBox='0 0 " + w + " " + hh + "' preserveAspectRatio='none' aria-hidden='true'>" +
-      "<polygon points='" + areaPts + "' fill='var(--win)' fill-opacity='0.14' stroke='none'/>" +
-      // THE ZERO LINE IS A SOLID HAIRLINE (review 2026-10-10): dashed means the unrealized line and
-      // nothing else.
-      "<line x1='0' y1='" + y(0).toFixed(1) + "' x2='" + w + "' y2='" + y(0).toFixed(1) + "' " +
-        "stroke='var(--border-strong)' stroke-width='1' stroke-opacity='.9' " +
-        "vector-effect='non-scaling-stroke'/>" +
-      "<polyline points='" + coords + "' fill='none' stroke='" + col + "' stroke-width='2' " +
-        "stroke-linejoin='round' vector-effect='non-scaling-stroke'/>" +
-      "<circle cx='" + w + "' cy='" + y(last).toFixed(1) + "' r='3.5' fill='" + col + "'/>" +
-      dashed +                                  // over the realized line, as the cockpit draws it
-      marks +
-    "</svg>" +
-    // PROVENANCE ON THE HOVER, the range on the face (owner, 2026-09-09: the old "120 samples · 94 rebuilt"
-    // counted two different populations). The left span is empty, as on the cockpit; what the lines are
-    // lives in this hover and in the banner's own "Realized P&L" label.
-    "<div class='cap' title='" + escAttr(noDollar(provenance(h, n) + dashedLineNote(h) + marksNote(h))) + "'>" +
-      "<span></span><span>" + signedPct(capLo) + " … " + signedPct(capHi) + (day ? ' · ' + day : '') +
-      lineAge + "</span></div>";
+  // Between two rows the dashed line is a straight segment: the headline moves with prices, and its path between
+  // two recorded rows is not recorded. EXCEPT when the gap did not move: then the whole change is a realized posting,
+  // which the solid line draws as a riser at the later row, so the dashed line steps there too (nothing open
+  // therefore lies ON the step line, never cutting across a riser). A CLOSE moves the gap and realized by the same
+  // amount the other way (the headline holds): a straight, level segment, never a dip the size of the trade.
+  var upts = function (run) {
+    var out = [], prev = -1;
+    run.forEach(function (j) {
+      if (prev >= 0 && gaps[j] === gaps[prev] && f1(ys[j]) !== f1(ys[prev])) {
+        out.push(f1(xs[j]) + ',' + f1(yus[prev]));
+      }
+      out.push(f1(xs[j]) + ',' + f1(yus[j]));
+      prev = j;
+    });
+    return out.join(' ');
+  };
+  // The zero line is a solid hairline (dashes mean the unrealized line only); the dashed line is drawn UNDER the
+  // realized line, which is THE line.
+  var dashed = uRuns.map(function (run) {
+    return "<polyline class='u c" + ucl + "' points='" + upts(run) + "' vector-effect='non-scaling-stroke'/>";
+  }).join('');
+
+  // THE CLOSED POSITIONS (owner 2026-10-09: "on the website just put a mark but no info or click thru"; a dot coloured
+  // by the result's sign since the cockpit's 10/13 redesign): one 9 px dot per mark at the first drawn point at or
+  // after the close (a close after the last point sits on the last one; one before the first is not drawn), green
+  // for r "w", red for "l", dim for "e" (exactly zero), a hollow ring without r (an older feed, or an unpriced close).
+  // The feed carries the time and that sign and nothing else, so the page says nothing else: no title, no pointer,
+  // no click-through. Two or more closes at one point stay ON the drawn path, 14 px apart: along the riser when it is
+  // tall enough at the phone plot, else along the new level (leftwards at the right edge).
+  var groups = {};
+  (Array.isArray(h.marks) ? h.marks : []).forEach(function (m) {
+    if (!m || typeof m.t !== 'string') return;
+    var mt = utcMs(m.t);
+    if (isNaN(mt) || (!isNaN(tms[0]) && mt < tms[0])) return;
+    var idx = -1;
+    for (var k = 0; k < n; k++) { if (!isNaN(tms[k]) && tms[k] >= mt) { idx = k; break; } }
+    if (idx < 0) {
+      if (isNaN(tms[n - 1]) || mt <= tms[n - 1]) return;
+      idx = n - 1;
+    }
+    (groups[idx] = groups[idx] || []).push(m.r === 'w' || m.r === 'l' || m.r === 'e' ? m.r : 'u');
+  });
+  var mkHtml = '', mkSigned = false;
+  Object.keys(groups).map(Number).sort(function (a, b) { return a - b; }).forEach(function (idx) {
+    var rs = groups[idx], x = xs[idx], yc = ys[idx], yp = idx > 0 ? ys[idx - 1] : yc, cnt = rs.length;
+    var along = cnt > 1 && Math.abs(yc - yp) / 1000 * RG_MARK_PHONE_PLOT_PX >= RG_MARK_GAP_PX * (cnt - 1);
+    var back = yp > yc ? 1 : -1, fan = x > 960 ? -1 : 1;
+    rs.forEach(function (r, j) {
+      var left = (x / 10).toFixed(2) + '%', top = (yc / 10).toFixed(2) + '%';
+      if (cnt > 1 && along) top = calcPx(yc / 10, back * RG_MARK_GAP_PX * j);
+      else if (cnt > 1) left = calcPx(x / 10, fan * RG_MARK_GAP_PX * j);
+      mkHtml += "<span class='rg-mk " + r + "' style='left:" + left + ';top:' + top + "'></span>";
+      if (r !== 'u') mkSigned = true;
+    });
+  });
+
+  var svg = "<svg viewBox='0 0 1000 1000' preserveAspectRatio='none' aria-hidden='true' focusable='false'>" +
+    "<defs><linearGradient id='" + fid + "' gradientUnits='userSpaceOnUse' x1='0' y1='0' x2='0' y2='1000'>" +
+    stops + '</linearGradient></defs>' +
+    (gridD ? "<path class='g' d='" + gridD + "' vector-effect='non-scaling-stroke'/>" : '') +
+    (vlinesD ? "<path class='v' d='" + vlinesD + "' vector-effect='non-scaling-stroke'/>" : '') +
+    "<path class='a' d='" + areaD + "' fill='url(#" + fid + ")'/>" +
+    "<line class='z' x1='0' y1='" + f1(yz) + "' x2='1000' y2='" + f1(yz) + "' vector-effect='non-scaling-stroke'/>" +
+    dashed +
+    "<path class='r c" + lc + "' d='" + lineD + "' vector-effect='non-scaling-stroke'/>" +
+    '</svg>';
+
+  // THE LINE'S AGE (the cockpit's "line as of"): when the last recorded row is more than 15 minutes older than the
+  // file's own publish time, the drawn end is older than the figures above it, and the legend line says so in the
+  // warn colour. Measured against the LATER of this file's own time and the banner's (review 2026-10-11): the two
+  // feeds publish separately, so a fresh banner over a history.json left alone hours ago must still say its age.
+  var lineAge = '', lastMs = utcMs(pts[n - 1].t), pubMs = utcMs(h.as_of);
+  if (head && isNum(head.asOfMs) && (isNaN(pubMs) || head.asOfMs > pubMs)) pubMs = head.asOfMs;
+  if (!isNaN(lastMs) && !isNaN(pubMs) && pubMs - lastMs > 15 * 60 * 1000) lineAge = etText(pts[n - 1].t);
+
+  // THE LEGEND LINE: the keys, then "day N" (and a stale line's "line as of"), then the PROVENANCE behind a "?" (owner,
+  // 2026-09-09: "remove the 180 samples thing"): which points were watched happening and which were not, the dashed
+  // line's meaning and the marks' rule, a hover away and never on the face (no tap opens it on this page). The "?"
+  // is the graph's only title.
+  var keys = "<span class='rg-key'><i class='sw c" + lc + "'></i>Realized</span>";
+  if (uRuns.length) keys += "<span class='rg-key'><i class='sw u c" + ucl + "'></i>Realized + unrealized</span>";
+  if (mkHtml) keys += "<span class='rg-key'><i class='dt" + (mkSigned ? '' : ' u') + "'></i>Closed trade</span>";
+  var meta = (day || lineAge) ? "<span class='meta'>" + escAttr(day) + (lineAge ? "<span class='st'>" +
+    (day ? ' · ' : '') + 'line as of ' + escAttr(lineAge) + '</span>' : '') + '</span>' : '';
+  var legend = "<div class='rg-legend'>" + keys + "<span class='end'>" + meta +
+    "<span class='rg-q' title='" +
+    escAttr(noDollar(provenance(h, n) + dashedLineNote(h) + marksNote(h))) + "'>?</span></span></div>";
+
+  // THE READOUT'S DATA: per drawn row, its place in the plot and the words the tip prints, every figure formatted
+  // here by the page's own formatters (signedPct, etText), so the readout formats nothing.
+  var rTxt = [], uTxt = [], tTxt = [], rc = '', uc = '';
+  for (i = 0; i < n; i++) {
+    var rt = signedPct(vals[i]), ut = gaps[i] === null ? null : signedPct(gaps[i]);
+    rTxt.push(rt);
+    rc += rgLetter(rt);
+    uTxt.push(ut);
+    uc += ut === null ? '-' : rgLetter(ut);
+    tTxt.push(etText(pts[i].t));
+  }
+
+  // The banner's own hover (its title) stops at the graph (title=''): the readout and the "?" speak here instead.
+  box.innerHTML = "<div class='rg' title='' style='--rg-yw:calc(" + yLen + "ch + 2px)'>" +
+    "<div class='rg-plot'><div class='rg-area'>" + svg + mkHtml +
+    "<div class='rg-xh' hidden></div><div class='rg-gb' hidden></div>" +
+    "<span class='rg-hd' hidden></span><div class='rg-tip' aria-hidden='true' hidden></div>" +
+    "</div><div class='rg-yl' aria-hidden='true'>" + yl + '</div></div>' +
+    xlHtml + legend + '</div>';
+  RG.data = { x: xs.map(Math.round), yr: ys.map(Math.round),
+    yu: yus.map(function (v) { return v === null ? null : Math.round(v); }),
+    t: tTxt, r: rTxt, u: uTxt, rc: rc, uc: uc, lc: lc };
+  RG.area = null;
+  RG.i = -1;
+  try { rgWire(); } catch (e) { /* the readout is display-only: the curve stands without it */ }
   box.hidden = false;
 }
 
