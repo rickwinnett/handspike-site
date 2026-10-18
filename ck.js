@@ -124,6 +124,10 @@
     var guards = all('.guard');
     if(!guards.length) return;
     var counter = document.getElementById('coverCount');
+    // The real shim's timing: the lid drops again 450 ms after every throw (nothing armed hides under a lid
+    // that is open; nothing armed stays uncovered either — the LED and the state line say it), and a lifted
+    // cover that is not thrown re-locks after 12 s.
+    var CLOSE_AFTER_THROW_MS = 450, RELOCK_MS = 12000;
 
     function refreshCount(){
       if(!counter) return;
@@ -131,8 +135,8 @@
         return g.classList.contains('armed') || g.classList.contains('on');
       }).length;
       counter.textContent = live === 0
-        ? guards.length + ' covered'
-        : live + ' live / ' + (guards.length - live) + ' covered';
+        ? guards.length + ' off'
+        : live + ' armed \u00b7 ' + (guards.length - live) + ' off';
       counter.className = 'v' + (live ? ' real-c' : '');
     }
 
@@ -145,9 +149,22 @@
       var track = guard.querySelector('.switch-track');
       var st    = guard.querySelector('.g-state');
       var flag  = guard.querySelector('.g-flag');
+      var relock = null;
 
-      function flipSwitch(){
-        var on = !guard.classList.contains(onClass);
+      function isOn(){ return guard.classList.contains(onClass); }
+      function setFlag(){
+        if(!flag) return;
+        flag.textContent = guard.classList.contains('open') ? 'open'
+                         : isOn() ? (isKill ? 'engaged' : 'armed') : 'covered';
+      }
+      function drop(){ clearTimeout(relock); guard.classList.remove('open'); setFlag(); }
+      function lift(){
+        guard.classList.add('open'); setFlag();          // STEP 1: lift the cover, switch unchanged
+        clearTimeout(relock);
+        relock = setTimeout(function(){ if(guard.classList.contains('open')) drop(); }, RELOCK_MS);
+      }
+      function flipSwitch(){                             // STEP 2: tap the exposed switch to flip it
+        var on = !isOn();
         guard.classList.toggle(onClass, on);
         if(st){
           st.classList.remove('off','armed','engaged');
@@ -155,42 +172,25 @@
           var alt = st.getAttribute('data-alt');     // swap the label with its opposite state
           if(alt !== null){ st.setAttribute('data-alt', st.textContent.trim()); st.textContent = alt; }
         }
-        if(flag) flag.textContent = on ? (isKill ? 'engaged' : 'armed') : 'open';
-        // A switch turned OFF lets its cover fall shut again. An ACTIVE switch keeps its cover open:
-        // nothing dangerous is allowed to hide under a closed lid.
-        if(!on) setTimeout(function(){
-          if(!guard.classList.contains(onClass)){
-            guard.classList.remove('open');
-            if(flag) flag.textContent = 'covered';
-          }
-        }, 220);
+        clearTimeout(relock);
+        setTimeout(drop, CLOSE_AFTER_THROW_MS);
         refreshCount();
       }
 
       cover.addEventListener('click', function(e){
-        if(!guard.classList.contains('open')){
-          guard.classList.add('open');               // STEP 1: lift the cover, switch unchanged
-          if(flag) flag.textContent = 'open';
-          return;
-        }
-        if(track && e.target.closest('.switch-track')){
-          flipSwitch();                              // STEP 2: tap the exposed switch to flip it
-        } else if(!guard.classList.contains(onClass)){
-          guard.classList.remove('open');            // re-cover only while the switch is OFF
-          if(flag) flag.textContent = 'covered';
-        }
+        if(!guard.classList.contains('open')){ lift(); return; }
+        if(track && e.target.closest('.switch-track')) flipSwitch();
+        else drop();                                   // a tap beside the switch re-covers it
       });
 
       var lid = guard.querySelector('.cover-lid');   // keyboard: Enter lifts, Enter again flips
       if(lid) lid.addEventListener('keydown', function(e){
         if(e.key === 'Enter' || e.key === ' '){
           e.preventDefault();
-          if(!guard.classList.contains('open')){
-            guard.classList.add('open');
-            if(flag) flag.textContent = 'open';
-          } else { flipSwitch(); }
+          if(!guard.classList.contains('open')) lift(); else flipSwitch();
         }
       });
+      setFlag();
     });
 
     refreshCount();

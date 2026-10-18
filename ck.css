@@ -390,3 +390,102 @@ button.ck-card[aria-expanded="true"] .q{ color:var(--brand); border-color:var(--
 @media (prefers-reduced-motion: reduce){
   .ck *{ transition-duration:.01ms !important; }
 }
+
+/* ── 2026-10-17 RE-SYNC: Home as the cockpit draws it since its 10/13–10/17 builds ──────────────
+   The SOVEREIGN header with its posture chip, the dollar return graph (home.py::_return_graph: the
+   realized STEP line, the dashed stacked line, the wash, the $0 line, a dot per closed trade ON the
+   step), the four hero tiles with the per-venue Deployed grid, the P&L split, the venue-grouped
+   positions table, the Money-in pills. Ported from cockpit/handspike-cockpit.html + home.py's inline
+   CSS; the demo pages hold no cockpit CSS of their own. */
+.ck-foot{ margin-top:auto; padding:10px 12px 0; border-top:1px solid var(--border);
+          font-size:.72rem; color:var(--txt-dim); white-space:nowrap; }
+.ck-sechead{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.ck-sechead h3{ margin:0; font-size:1.05rem; font-weight:800; letter-spacing:.02em; display:flex;
+                align-items:center; gap:8px; }
+.ck-sechead h3 .q{ width:15px; height:15px; border-radius:50%; border:1px solid var(--border-strong);
+                   color:var(--txt-dim); font-size:.6rem; display:inline-flex; align-items:center;
+                   justify-content:center; font-family:var(--ui); font-weight:600; cursor:help; }
+.ck-sechead .ck-chip{ margin-left:auto; }
+.ck-sechead .meta{ margin-left:auto; font-family:var(--mono); font-size:.72rem; color:var(--txt-dim);
+                   font-variant-numeric:tabular-nums; }
+.ck-sechead .meta .win{ color:var(--win); }
+
+/* the hero row: top-aligned, centred tiles (the cockpit's .card.metric.hero) */
+.ck-hero .ck-card{ text-align:center; align-items:center; justify-content:flex-start; min-height:104px; }
+.ck-hero .ck-card .lbl{ justify-content:center; }
+.ck-hero .ck-card .q{ margin-left:0; }
+.ck-hero .ck-card .val{ font-size:clamp(1.3rem,2.1vw,1.9rem); }
+.ck-hero .ck-card .sub{ font-weight:600; font-size:.95rem; margin-top:-2px; }
+.ck-hero .ck-card .why{ font-size:.66rem; }
+.ck-dep{ display:grid; grid-template-columns:auto auto; column-gap:10px; row-gap:2px; align-items:baseline;
+         text-align:left; line-height:1.35; margin:2px 0; }
+.ck-dep .n{ font-family:var(--ui); font-size:.8rem; color:var(--txt); }
+.ck-dep .v{ font-family:var(--mono); font-size:.84rem; font-weight:700; font-variant-numeric:tabular-nums;
+            white-space:nowrap; }
+.ck-card.pill{ text-align:center; align-items:center; }
+.ck-card.pill .lbl{ justify-content:center; }
+.ck-venues .ck-card .val{ font-size:1.3rem; }
+.ck-venues .ck-card .val .dim{ font-size:.8rem; font-weight:600; }
+
+/* the graph card */
+.ck-rg{ background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+        padding:12px 14px; box-shadow:0 4px 12px rgba(0,0,0,.4); }
+.ck-rg-head{ display:flex; flex-wrap:wrap; justify-content:flex-end; align-items:baseline; gap:4px 10px;
+             font-family:var(--mono); font-size:.68rem; color:var(--txt-dim); letter-spacing:.08em;
+             text-transform:uppercase; font-variant-numeric:tabular-nums; }
+.ck-rg-head .wl{ margin-right:auto; }
+.ck-rg-head .rv{ white-space:nowrap; font-weight:700; letter-spacing:0; font-size:.8rem; }
+.ck-unreal{ display:inline-block; white-space:nowrap; border:1px solid var(--txt-dim); border-radius:4px;
+            padding:0 5px; line-height:1.5; letter-spacing:0; text-transform:none; font-size:.72rem; }
+.ck-unreal b{ font-weight:700; }
+.ck-unreal.win{ border-color:var(--win); } .ck-unreal.win b{ color:var(--win); }
+.ck-unreal.loss{ border-color:var(--loss); } .ck-unreal.loss b{ color:var(--loss); }
+.ck-rg-plot{ position:relative; height:320px; margin-top:8px; cursor:crosshair; user-select:none; }
+.ck-rg-area{ position:absolute; left:calc(var(--rg-yw) + 10px); right:8px; top:8px; bottom:8px; }
+.ck-rg-area svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; display:block; }
+.ck-rg-area svg *{ vector-effect:non-scaling-stroke; }
+.ck-rg-area .g{ fill:none; stroke:var(--border); stroke-width:1; }
+.ck-rg-area .v{ fill:none; stroke:var(--border); stroke-width:1; stroke-opacity:.45; }
+.ck-rg-area .a{ stroke:none; }
+.ck-rg-area .z{ stroke:var(--txt-dim); stroke-opacity:.7; stroke-width:1.25; }
+.ck-rg-area .u{ fill:none; stroke:var(--win); stroke-width:1.5; stroke-dasharray:5 3; stroke-opacity:.8;
+                stroke-linejoin:round; }
+.ck-rg-area .r{ fill:none; stroke:var(--win); stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+.ck-rg-yl{ position:absolute; left:0; top:8px; bottom:8px; width:var(--rg-yw); pointer-events:none;
+           font:500 11px/1 var(--mono); color:var(--txt-dim); font-variant-numeric:tabular-nums; }
+.ck-rg-yl span{ position:absolute; right:0; transform:translateY(-50%); white-space:nowrap; }
+.ck-rg-yl .z{ color:var(--txt); }
+.ck-rg-xl{ position:relative; height:16px; margin:3px 8px 0 calc(var(--rg-yw) + 10px);
+           font:500 11px/1 var(--mono); color:var(--txt-dim); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.ck-rg-xl span{ position:absolute; top:0; transform:translateX(-50%); }
+.ck-rg-mk{ position:absolute; z-index:2; width:24px; height:24px; margin:-12px 0 0 -12px; border-radius:50%;
+           display:grid; place-items:center; cursor:pointer; }
+.ck-rg-mk::before{ content:''; width:9px; height:9px; border-radius:50%; background:var(--txt-dim);
+                   box-shadow:0 0 0 2px var(--bg-card); transition:transform .12s; }
+.ck-rg-mk.win::before{ background:var(--win); } .ck-rg-mk.loss::before{ background:var(--loss); }
+.ck-rg-mk:hover::before{ transform:scale(1.45); }
+.ck-rg-legend{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 14px; margin-top:8px;
+               font-family:var(--mono); font-size:.68rem; color:var(--txt-dim); }
+.ck-rg-legend .k{ display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+.ck-rg-legend .sw{ display:inline-block; width:16px; height:0; border-top:2px solid currentColor; }
+.ck-rg-legend .sw.u{ height:2px; border-top:0;
+                     background:repeating-linear-gradient(90deg,currentColor 0 5px,transparent 5px 8px); }
+.ck-rg-legend .sw.win{ color:var(--win); }
+.ck-rg-legend i.dt{ display:inline-block; width:7px; height:7px; border-radius:50%;
+                    background:linear-gradient(90deg,var(--win) 50%,var(--loss) 50%); }
+.ck-rg-legend .end{ margin-left:auto; display:inline-flex; align-items:center; gap:8px; white-space:nowrap; }
+.ck-rg-legend .meta{ font-variant-numeric:tabular-nums; }
+.ck-rg-legend .q{ display:inline-grid; place-items:center; width:15px; height:15px; border-radius:50%;
+                  border:1px solid var(--border-strong); color:var(--txt-dim); font:600 .6rem/1 var(--ui);
+                  cursor:help; }
+.ck-rg-legend .q:hover{ color:var(--brand); border-color:var(--brand); }
+
+/* the positions table: venue group rows, the second-line headers */
+.ck-tbl thead th .u2{ display:block; font-size:.62rem; color:var(--txt-dim); letter-spacing:.04em; }
+.ck-tbl tr.grp td{ border-top:3px solid var(--border-strong); background:var(--border); color:var(--txt);
+                   font-family:var(--mono); font-size:.66rem; font-weight:700; letter-spacing:.06em;
+                   text-align:left; padding:5px 14px; box-shadow:none; cursor:default; }
+.ck-tbl tbody tr.grp:first-child td{ border-top:0; }
+.ck-tbl tr.grp .hp-venue{ color:var(--txt-dim); font-weight:400; letter-spacing:0; }
+.ck-tbl.pos td:nth-child(n+2){ font-family:var(--mono); font-size:.86rem; font-variant-numeric:tabular-nums; }
+.ck-tbl.pos .sym{ font-size:.88rem; }
