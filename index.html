@@ -577,7 +577,7 @@ function dashedLineNote(h) {
     ? ' Every point is a percent of today’s money put in, so a deposit or withdrawal never steps the lines.'
     : ' Both lines are drawn as a percent of money put in at each point, so a deposit or withdrawal can step them.');
 }
-var MARKS_NOTE = ' Marks: one per closed position; an event forecast that settled without a position is not marked.';
+var MARKS_NOTE = ' Marks: one per closed position, and one per partial sale that left contracts held (its own realized dollars; counted in wins vs losses when the bet finishes); an event forecast that settled without a position is not marked.';
 function marksNote(h) {
   if (h.marks_ok !== true) return '';
   var f = isNum(h.n_settled_unheld) ? h.n_settled_unheld : 0;
