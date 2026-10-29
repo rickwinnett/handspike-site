@@ -118,11 +118,28 @@
   /* THE PLOT. ONE svg (0..1000 x 0..1000, stretched, every stroke non-scaling) holds the strokes and the wash; the
      axis labels, the dots and the readout are HTML over the same box, placed in percent, so nothing round or textual
      is ever stretched. The y gutter is sized in ch of the axis' own mono face (--rg-yw, set per render from the
-     longest label), so it fits whatever face and size the reader's browser resolves. */
+     longest label), so it fits whatever face and size the reader's browser resolves.
+     THE SIDEWAYS SCROLL (the cockpit's since 2026-10-15, owner: "double the height of the graph so the green and red
+     dots are easier to see. make it horizontally scrollable if need be"; owner 2026-10-29 for this page: "get it
+     looking and working like the one in the app"): the plot is 320 px tall (280 on a narrow card) and, when two
+     closed-trade dots would sit under 14 px apart (rgMinWidth), wider than the card: it scrolls sideways inside
+     .rg-sc under a sticky y gutter (.rg-ys), opens at the newest end, fades in beside the gutter and says "‹ earlier"
+     on the legend line while older history is out of view (.cl), and fades its right edge while the newest rows are
+     (.cr). The scroller is the card's own: the page itself never scrolls sideways. */
   #live .rg [hidden]{ display:none !important; }
-  #live .rg-plot{ position:relative; height:160px; margin-top:.75rem; touch-action:pan-y pinch-zoom; cursor:crosshair;
+  #live .rg-sc{ overflow-x:auto; overflow-y:hidden; min-width:0; max-width:100%; margin-top:.25rem;
+                overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+                scroll-padding-left:calc(var(--rg-yw, 3rem) + 12px);
+                scrollbar-width:thin; scrollbar-color:var(--border-strong) transparent; }
+  /* a widened plot is a tab stop (tabindex, only then), so Safari and Firefox can arrow it too */
+  #live .rg-sc:focus-visible{ outline:1px solid var(--brass-dim); outline-offset:2px; }
+  /* clip, not hidden: hidden would make this the scroll container and untie the sticky gutter from .rg-sc */
+  #live .rg-in{ padding-top:8px; overflow:clip; }
+  #live .rg-plot{ position:relative; height:320px; touch-action:pan-y pinch-zoom; cursor:crosshair;
                   user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent;
                   font:500 .68rem/1 var(--mono); font-variant-numeric:tabular-nums; }
+  /* a plot wider than its card (.ov, rgPut): a sideways touch drag PANS it (the browser's), never a scrub */
+  #live .rg-sc.ov .rg-plot{ touch-action:pan-x pan-y pinch-zoom; }
   #live .rg-area{ position:absolute; left:calc(var(--rg-yw, 3rem) + 10px); right:8px; top:8px; bottom:8px; }
   #live .rg-area svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; display:block; }
   #live .rg-area svg *{ vector-effect:non-scaling-stroke; }
@@ -134,10 +151,21 @@
   #live .rg-area .r{ fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
   #live .rg-area .cw{ stroke:var(--win); } #live .rg-area .cl{ stroke:var(--loss); }
   #live .rg-area .cf{ stroke:var(--ink-3); }
+  /* THE STICKY Y GUTTER: in flow after the area, stuck to the scroller's left edge while the plot slides under it (it
+     paints over the dots and lines that pass beneath); its fade (::after) shows only while older history is out of
+     view to the left, and the scroller's right edge fades while the newest rows are out of view to the right. */
+  #live .rg-ys{ position:sticky; left:0; z-index:2; width:calc(var(--rg-yw, 3rem) + 2px); height:100%;
+                background:var(--panel); pointer-events:auto; }
+  #live .rg-ys::after{ content:''; position:absolute; top:0; bottom:0; left:100%; width:16px; pointer-events:none;
+                       background:linear-gradient(90deg,var(--panel),transparent); opacity:0; transition:opacity .15s; }
+  #live .rg.cl .rg-ys::after{ opacity:1; }
+  #live .rg.cr .rg-sc{ -webkit-mask-image:linear-gradient(90deg,black calc(100% - 20px),rgba(0,0,0,.35));
+                       mask-image:linear-gradient(90deg,black calc(100% - 20px),rgba(0,0,0,.35)); }
   #live .rg-yl{ position:absolute; left:0; top:8px; bottom:8px; width:var(--rg-yw, 3rem); pointer-events:none;
                 color:var(--ink-3); }
   #live .rg-yl span{ position:absolute; right:0; transform:translateY(-50%); white-space:nowrap; }
   #live .rg-yl .z{ color:var(--ink); }
+  /* the x labels sit inside the scroller, under the plot, and slide with it */
   #live .rg-xl{ position:relative; height:1.1rem; margin:5px 8px 0 calc(var(--rg-yw, 3rem) + 10px);
                 font:500 .68rem/1 var(--mono); color:var(--ink-3); white-space:nowrap;
                 font-variant-numeric:tabular-nums; }
@@ -151,16 +179,11 @@
                 background:var(--ink-3); box-shadow:0 0 0 2px var(--panel); pointer-events:none; }
   #live .rg-mk.w{ background:var(--win); } #live .rg-mk.l{ background:var(--loss); }
   #live .rg-mk.u{ background:var(--panel); box-shadow:inset 0 0 0 1.5px var(--ink-3), 0 0 0 2px var(--panel); }
-  /* AN EVENT BAND (owner 10/20 "put a mark on the graph noting the outage"; the cockpit's .hsv-rg-area .ev /
-     .hsv-rg-ev): a translucent band in the dim ink across the plot (a fill-only closed path, never a rect: the
-     stretched SVG's element rule), under everything drawn, never the win/loss colours (it is not a result); its label
-     a small see-through chip near the top of the band so a line peaking there still shows through. A mark and nothing
-     more: no title, no pointer, no click-through. */
+  /* AN EVENT BAND (owner 10/20 "put a mark on the graph noting the outage"; the cockpit's .hsv-rg-area .ev): a
+     translucent band in the dim ink across the plot (a fill-only closed path, never a rect: the stretched SVG's
+     element rule), under everything drawn, never the win/loss colours (it is not a result). It is keyed on the legend
+     line only: no chip over the plot, no title, no pointer, no click-through (owner 10/09: a mark and nothing more). */
   #live .rg-area .ev{ fill:var(--ink-3); fill-opacity:.12; stroke:none; }
-  #live .rg-ev{ position:absolute; top:4px; z-index:1; margin-left:4px; padding:2px 5px; border-radius:3px;
-                font:500 .6rem/1.2 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3);
-                background:color-mix(in srgb, var(--panel) 55%, transparent); border:1px solid var(--rule);
-                white-space:nowrap; pointer-events:none; }
   #live .rg-key .ev{ display:inline-block; width:9px; height:9px; border-radius:2px; background:var(--ink-3); opacity:.35; }
   /* THE READOUT: the crosshair, the realized line's dot, the unrealized gap's bar, the tip. */
   #live .rg-xh{ position:absolute; top:0; bottom:0; width:0; border-left:1px solid var(--ink-3); opacity:.6;
@@ -169,9 +192,10 @@
   #live .rg-hd{ position:absolute; z-index:1; width:7px; height:7px; margin:-3.5px 0 0 -3.5px; border-radius:50%;
                 background:var(--ink); box-shadow:0 0 0 2px var(--panel); pointer-events:none; }
   #live .rg-tip{ position:absolute; top:0; z-index:3; min-width:9.75rem; max-width:15rem; pointer-events:none;
+                 max-height:calc(100% + 8px); overflow:hidden;
                  background:var(--mono-bg); border:1px solid var(--border-strong); border-radius:4px;
                  padding:.4rem .55rem; font:400 .7rem/1.55 var(--mono); color:var(--ink-2);
-                 font-variant-numeric:tabular-nums; }
+                 font-variant-numeric:tabular-nums; box-shadow:0 6px 18px rgba(0,0,0,.45); }
   #live .rg-tip .t{ color:var(--ink-3); white-space:nowrap; }
   #live .rg-tip .row{ display:flex; align-items:center; gap:6px; white-space:nowrap; }
   #live .rg-tip .row b{ margin-left:auto; padding-left:12px; font-weight:700; color:var(--ink); }
@@ -179,10 +203,20 @@
   #live .rg-tip i{ display:inline-block; flex:none; }
   #live .rg-tip i.kr{ width:14px; height:2px; border-radius:1px; }
   #live .rg-tip i.ku{ width:2px; height:10px; margin:0 6px; border-radius:1px; }
-  /* THE LEGEND LINE: the keys, then "day N" (and a stale line's "line as of", in the warn colour) and the "?" as one
-     group at the right edge that wraps as a unit. */
+  /* THE LEGEND LINE: "‹ earlier" (only while older history is scrolled out of view), the keys, then "day N" (and a
+     stale line's "line as of", in the warn colour) and the "?" as one group at the right edge that wraps as a unit. */
   #live .rg-legend{ display:flex; flex-wrap:wrap; align-items:center; gap:.35rem 1.1rem; margin-top:.6rem;
                     font:400 .68rem/1.4 var(--mono); color:var(--ink-3); }
+  #live .rg-legend .ear{ display:none; white-space:nowrap; }
+  #live .rg.cl .rg-legend .ear{ display:inline; }
+  /* "newer ›" (the cockpit's .hsv-rg-new): the one way back to the newest end after a swipe into history, shown only
+     while the newest rows are out of view (.cr). It scrolls the plot and nothing more: no info, no click-through. */
+  #live .rg-new{ display:none; align-items:center; min-height:40px; margin:-12px 0; padding:6px 2px; border:0;
+                 background:none; font:inherit; color:var(--brass); cursor:pointer; white-space:nowrap;
+                 text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px;
+                 -webkit-tap-highlight-color:transparent; }
+  #live .rg-new:focus-visible{ outline:1px solid var(--brass-dim); outline-offset:2px; border-radius:3px; }
+  #live .rg.cr .rg-legend .rg-new{ display:inline-flex; }
   #live .rg-key{ display:inline-flex; align-items:center; gap:.45rem; white-space:nowrap; }
   #live .rg-key .sw{ display:inline-block; width:16px; height:2px; border-radius:1px; background:currentColor; }
   #live .rg-key .sw.u{ border-radius:0; background:repeating-linear-gradient(90deg,currentColor 0 5px,transparent 5px 8px); }
@@ -207,7 +241,7 @@
      odd steps from 0% leave out marked .alt (every date stays, the zone word stays on the last clock shown). */
   @media (max-width:568px){
     #live{ padding:.8rem; }
-    #live .rg-plot{ height:140px; }
+    #live .rg-plot{ height:280px; }
     #live .rg-xl .alt, #live .rg-yl .alt{ display:none; }
     #live .rg-xl .ph{ display:block; }
   }
@@ -623,12 +657,20 @@ var RG_MIN_RANGE = 0.1;
 var RG_LADDER = [1, 2, 2.5, 5];
 // The wash's opacity at the realized line's furthest point from 0% on each side, and AT 0% (the cockpit's).
 var RG_FILL_EDGE = '.22', RG_FILL_ZERO = '.04';
-// Two or more closes at one drawn point: dots 14 px apart, along the riser only when it is that tall at the phone
-// plot (140 px less its 8 px insets), else along the new level (the cockpit's).
-var RG_MARK_GAP_PX = 14, RG_MARK_PHONE_PLOT_PX = 124;
+// Two closed-trade dots need this many px between centres IN 2D, measured at the PHONE plot's height (280 px less its
+// 8 px insets: the shortest, so the closest the dots ever sit vertically); when the card cannot give it, the plot is
+// widened to scroll sideways (rgMinWidth, the cockpit's _graph_min_width).
+var RG_MARK_GAP_PX = 14, RG_MARK_PHONE_PLOT_PX = 264;
 // THE CASCADE (owner 2026-10-20 ~11:35 AM ET "if they have to stack have them over lap the one before it by half and so
-// on"; the cockpit's _MARK_STACK_PX / _PLOT_SIDES_PX): half a 9 px dot, and the plot's side inset (.rg-area right:8px).
-var RG_MARK_STACK_PX = 4.5, RG_PLOT_SIDE_PX = 8;
+// on"; the cockpit's _MARK_STACK_PX / _PLOT_SIDES_PX): half a 9 px dot, and the plot's side insets (10 px after the y
+// gutter and the 8 px right inset) for the width maths, and the RIGHT inset alone for the fan's turn at the right
+// edge: the area clips there (.rg-area right:8px under .rg-in overflow:clip), so a run that would pass it turns left
+// and the newest closes stay whole (review 2026-10-29; the cockpit's _mark_layout still turns at 18 and clips).
+var RG_MARK_STACK_PX = 4.5, RG_PLOT_SIDE_PX = 18, RG_PLOT_RIGHT_PX = 8;
+// THE WIDENED PLOT (the cockpit's _MK_MAX_PLOT_PX / _MK_SCROLL_FLOOR_PX): never wider than this, and never widened at
+// all unless the dots need more than the narrowest card's own inner width (a 272 px card less its border and padding);
+// its x axis is ticked about one label per RG_XL_WIDE_PX, an end label aligned inward within RG_XL_EDGE_PX of an edge.
+var RG_MK_MAX_PLOT_PX = 3200, RG_MK_SCROLL_FLOOR_PX = 244, RG_XL_WIDE_PX = 90, RG_XL_EDGE_PX = 48;
 // THE PHONE X LABELS, laid out for the narrowest card this page must fit: a 320 px screen less the .shell's 1.5rem
 // gutters is a 272 px card; its 1px border and .8rem padding a side, the 10 px after the y gutter and the 8 px right
 // inset take 46 px of that, and the y gutter more. A label is as wide as its characters at 6.6 px (the widest mono
@@ -673,7 +715,9 @@ function clockText(p, withMin) {
 // clock carrying the zone ("6 PM ET"); up to 72 h: every 12 h the same way; longer: ET midnights, every k-th day so
 // at most maxN remain ("Oct 8"); no whole hour inside a short span: its two ends ("9:05 AM", "9:45 AM ET"). The walk
 // is over UTC hours read through the zone, so a DST change never doubles or drops a tick. [] when either end is not
-// a number, the span is not positive, or the browser has no time-zone data.
+// a number, the span is not positive, or the browser has no time-zone data. A caller asking for MORE than the card's
+// six (maxN > 6: a plot widened to scroll sideways) gets the 1-12 h ladder on ANY span when one of its steps keeps at
+// most maxN - 1 ticks (midnights still dates, the last clock still zoned), and the bands above only past it.
 function axisTicks(a, b, maxN) {
   try {
     if (!isNum(a) || !isNum(b) || b <= a || !etParts(a) || !etParts(b)) return [];
@@ -693,17 +737,20 @@ function axisTicks(a, b, maxN) {
       return clockText(le, withMin) + (last || z !== 'ET' ? ' ' + z : '');
     };
     var got = [];
-    if (spanH <= 30) {
+    if (spanH <= 30 || cap > 6) {
       var steps = [1, 2, 3, 4, 6, 12];
       for (var s = 0; s < steps.length; s++) {
+        if (spanH > 30 && spanH / steps[s] - 2 > cap - 1) continue;   // plainly too many: no walk
         got = hours(steps[s]);
         if (!got) return [];
         if (got.length <= cap - 1) break;
       }
-    } else if (spanH <= 72) {
+      if (spanH > 30 && got.length > cap - 1) got = [];               // no whole-hour step fits: the bands below
+    }
+    if (!got.length && spanH > 30 && spanH <= 72) {
       got = hours(12);
       if (!got) return [];
-    } else {
+    } else if (!got.length && spanH > 72) {
       var p0 = at(a), mids = [];
       for (var k = 1; k < 5000; k++) {
         var dd = new Date(Date.UTC(p0.y, p0.mo - 1, p0.day + k));
@@ -780,7 +827,10 @@ function xlKind(lab) {
 // then bare clocks left of it, every other one from it first. A clock comes no nearer than 8 px to any kept label,
 // from five labels at most half (rounded up) are kept, and when no clock can carry the zone none is shown: the
 // dates alone, never a clock without its zone. Returns {hide: {index: true}, twin: [index, label] or null}.
-function xlNarrow(labs, plotPx) {
+// `wide` (the cockpit's _xl_narrow(wide=True)): the labels of a plot rgMinWidth widened, ticked for that width (one
+// per RG_XL_WIDE_PX or more apart): the every-other and at-most-half counts are dropped, only the gap and overlap rules
+// stay, so a scrolled phone view keeps a label every ~100 px instead of dates alone across half the plot.
+function xlNarrow(labs, plotPx, wide) {
   var n = labs.length, hide = {}, kinds = labs.map(function (l) { return xlKind(l[1]); });
   if (!n) return { hide: hide, twin: null };
   var w = Math.max(plotPx, 1), j;
@@ -791,14 +841,15 @@ function xlNarrow(labs, plotPx) {
   if (kinds.every(function (k) { return k === 'd'; })) {
     var prev = null;
     for (j = 0; j < n; j++) {
-      if (n >= 5 && j % 2) { hide[j] = true; continue; }
+      if (n >= 5 && j % 2 && !wide) { hide[j] = true; continue; }
       var b = box(j, labs[j][1]);
       if (prev && b[0] < prev[1] + RG_XL_GAP_PX) { hide[j] = true; continue; }
       prev = b;
     }
     return { hide: hide, twin: null };
   }
-  var cap = n >= 5 ? Math.floor((n + 1) / 2) : n, kept = {}, keptN = 0, everyDate = true, carrier = -1, twin = null;
+  var cap = (n >= 5 && !wide) ? Math.floor((n + 1) / 2) : n, kept = {}, keptN = 0, everyDate = true, carrier = -1,
+    twin = null;
   var take = function (i, text) {
     var bx = box(i, text);
     if (keptN >= cap) return false;
@@ -872,6 +923,53 @@ function stepD(run, xs, ys) {
   if (at !== run[run.length - 1]) parts.push('H' + f1(xs[run[run.length - 1]]));
   return parts.join('');
 }
+// THE PLOT'S MIN WIDTH IN PX, or null (the cockpit's _graph_min_width; owner 2026-10-15: "double the height of the
+// graph so the green and red dots are easier to see. make it horizontally scrollable if need be"). dotted is
+// [[x, y, count, fan]] per drawn point that carries closed-trade dots (fan +1 rightwards, -1 leftwards at the right
+// edge). Any two dots need RG_MARK_GAP_PX between centres IN 2D at the PHONE plot's height: two on levels that far
+// apart need no width at all, nearer ones only the sideways rest of it (sqrt(14² - dy²)), more when a cascade reaches
+// toward the other (a cascade's dots sit half a dot apart in px, whatever the width). The pair that needs most sets
+// the area's width (its px over its share of the plot), plus the insets and the y gutter (yw, in px). Every pair
+// counts, not only x neighbours, scanned only as far as a pair could still need more; two points at one x never part
+// at any width and are skipped. Capped at RG_MK_MAX_PLOT_PX; null at or under RG_MK_SCROLL_FLOOR_PX (it could not
+// scroll any card) or without two dotted points. Never throws.
+function rgMinWidth(dotted, yw) {
+  try {
+    var ph = RG_MARK_PHONE_PLOT_PX / 1000, gapPx = RG_MARK_GAP_PX, groups = [];
+    dotted.slice().sort(function (p, q) { return p[0] - q[0]; }).forEach(function (g) {
+      var reach = RG_MARK_STACK_PX * (g[2] - 1), y0 = g[1] * ph;
+      groups.push([g[0], y0, y0, g[3] > 0 ? reach : 0, g[3] < 0 ? reach : 0]);
+    });
+    var floorArea = RG_MK_SCROLL_FLOOR_PX - yw - RG_PLOT_SIDE_PX, capArea = RG_MK_MAX_PLOT_PX - yw - RG_PLOT_SIDE_PX;
+    var maxLeft = 0;
+    groups.forEach(function (g) { maxLeft = Math.max(maxLeft, g[4]); });
+    var need0 = Math.max(floorArea, 0), need = need0;
+    for (var a = 0; a < groups.length; a++) {
+      var xa = groups[a][0], loA = groups[a][1], hiA = groups[a][2], rightA = groups[a][3];
+      for (var b = a + 1; b < groups.length; b++) {
+        var gap = groups[b][0] - xa;
+        if (gap <= 0) continue;
+        if ((rightA + maxLeft + gapPx) * 1000 / gap <= need) break;    // every pair further right needs less
+        var dy = Math.max(0, groups[b][1] - hiA, loA - groups[b][2]);
+        if (dy >= gapPx) continue;                                       // a level apart: no width needed
+        var dx = rightA + groups[b][4] + Math.sqrt(gapPx * gapPx - dy * dy);
+        need = Math.max(need, dx * 1000 / gap);
+      }
+      if (need >= capArea) break;
+    }
+    if (need <= need0) return null;
+    var px = Math.min(Math.ceil(need) + yw + RG_PLOT_SIDE_PX, RG_MK_MAX_PLOT_PX);
+    return px > RG_MK_SCROLL_FLOOR_PX ? px : null;
+  } catch (e) { return null; }
+}
+// AN EVENT BAND'S PUBLIC LABEL: the feed's words less any venue name (this page names no venue, owner 2026-10-11 /
+// 10-29: percents only, no venue names), separators tidied; a label left empty, or one carrying a '$', is "event".
+function publicLabel(s) {
+  var t = noDollar(String(s == null ? '' : s))
+    .replace(/\b(alpaca|coinbase|cfm|e[\s*\-]?trade|kalshi)(['\u2019]s)?\b/gi, ' ')
+    .replace(/\s+/g, ' ').replace(/^[\s·:,\-–—]+|[\s·:,\-–—]+$/g, '').trim();
+  return t || 'event';
+}
 // The wash's gradient id: a short hash of its own stops, so two different washes on one document can never borrow
 // each other's gradient (an svg id is document-wide) and the same wash always draws the same markup.
 function hashId(s) {
@@ -901,7 +999,16 @@ function rgLetter(txt) {
 // window). TOUCH paints on a sideways drag or a tap, never on pointerdown, so a vertical scroll that starts on the
 // graph paints nothing (the browser takes the gesture and sends pointercancel); the tip goes 2.5 s after the finger
 // lifts. Wired ONCE, on the document.
-var RG = { data: null, area: null, i: -1, timer: 0, down: null, scrub: false, wired: false };
+// THE SIDEWAYS SCROLL (the cockpit's, 2026-10-15/16): when rgMinWidth makes the plot wider than its card, .rg-sc
+// scrolls it under the sticky y gutter. A scroller that overflows is marked .ov (a sideways touch drag there is the
+// browser's pan, never a scrub; a tap still reads out), opened at the NEWEST end on its first paint, and put back
+// where the reader wants it after a resize: the newest end unless HE scrolled back in this page session (rgNote,
+// inside his own gesture only, so a browser reset is never taken for his choice; a nudge within RG_SNAP_PX of the
+// end is not a choice to stop short of the newest rows). Scrolled off the oldest end the card is marked .cl (a fade
+// beside the gutter, the legend's "‹ earlier"); off the newest end .cr (a right-edge fade). The tip stays inside what
+// the scroller shows, right of the sticky gutter when it fits there; the plot sliding under a resting mouse re-reads.
+var RG = { data: null, area: null, i: -1, timer: 0, down: null, scrub: false, wired: false, x: null, y: null,
+           want: null, ro: null, observed: [] };
 var RG_COL = { p: 'var(--win)', n: 'var(--loss)', f: 'var(--ink-3)', w: 'var(--win)', l: 'var(--loss)' };
 function rgNearest(xs, v) {
   var lo = 0, hi = xs.length - 1;
@@ -912,12 +1019,13 @@ function rgNearest(xs, v) {
   }
   return (v - xs[lo] <= xs[hi] - v) ? lo : hi;
 }
-// Right of the crosshair if the tip fits inside the card, else left of it, else centred on it and clamped to the
-// card's edges: it never crosses the card, so it never leaves a phone's screen.
+// Right of the crosshair if the tip fits inside the card, else left of it, else centred on it; every answer clamped
+// to the card's edges (on a plot wider than its card, the edges of what the scroller shows): it never crosses them,
+// so it never leaves a phone's screen, and a row that snapped just outside the view still puts its tip inside it.
 function rgPlace(cross, tipW, areaW, padL, padR) {
-  if (cross + 12 + tipW <= areaW + padR) return cross + 12;
-  if (cross - 12 - tipW >= -padL) return cross - 12 - tipW;
-  return Math.max(-padL, Math.min(cross - tipW / 2, areaW + padR - tipW));
+  var x = (cross + 12 + tipW <= areaW + padR) ? cross + 12
+    : (cross - 12 - tipW >= -padL) ? cross - 12 - tipW : cross - tipW / 2;
+  return Math.max(-padL, Math.min(x, areaW + padR - tipW));
 }
 function rgHide() {
   var a = RG.area;
@@ -982,37 +1090,62 @@ function rgShow(area, clientX) {
   tip.hidden = false;
   var plot = area.parentNode, padL = area.offsetLeft || 0;
   var padR = (plot && plot.clientWidth) ? Math.max(0, plot.clientWidth - padL - R.width) : 8;
-  tip.style.left = rgPlace(X / 100 * R.width, tip.offsetWidth || 160, R.width, padL, padR) + 'px';
+  var tipW = tip.offsetWidth || 160;
+  // a plot wider than its card: inside what the scroller SHOWS, not the whole plot (rects: scroll-safe)...
+  var sc = (plot && plot.closest) ? plot.closest('.rg-sc') : null;
+  var V = (sc && sc.getBoundingClientRect) ? sc.getBoundingClientRect() : null;
+  if (V && V.width) {
+    padL = R.left - V.left;
+    padR = V.right - R.right;
+    // ...and on a scrolled plot (.ov) right of the sticky y gutter, never over its labels, whenever the tip still fits
+    // beside it; a phone card too narrow for that keeps the tip inside the card
+    var ys = (sc.classList && sc.classList.contains('ov') && plot.querySelector) ? plot.querySelector('.rg-ys') : null;
+    var G = (ys && ys.getBoundingClientRect) ? ys.getBoundingClientRect() : null;
+    if (G && G.width && R.width + padR + (R.left - G.right) >= tipW) padL = R.left - G.right;
+  }
+  var cross = X / 100 * R.width;
+  tip.style.left = rgPlace(cross, tipW, R.width, padL, padR) + 'px';
+  // placed over the crosshair (neither side had room) on a row in the plot's top band, the tip would cover the
+  // very point it reads: it sits at the plot's foot instead; otherwise at its head, as always (reset every paint)
+  var centred = !(cross + 12 + tipW <= R.width + padR) && !(cross - 12 - tipW >= -padL);
+  var foot = centred && yr < 400;
+  tip.style.top = foot ? 'auto' : '0px';
+  tip.style.bottom = foot ? '0px' : 'auto';
 }
 function rgOnPointer(e) {
   var type = e.type, touch = !!e.pointerType && e.pointerType !== 'mouse';
   var t = e.target, plot = (t && t.closest) ? t.closest('.rg-plot') : null;
+  if (plot && t.closest('.rg-ys')) plot = null;   // the sticky y gutter: a row under it has no anchor to show
   if (type === 'pointercancel') {              // the page took the gesture (a scroll): nothing stays painted
     clearTimeout(RG.timer);
     RG.down = null;
     RG.scrub = false;
+    RG.x = null;
     rgHide();
     return;
   }
   if (type === 'pointerout') {
-    if (!touch && !e.relatedTarget) rgHide();  // the mouse left the window
+    if (!touch && !e.relatedTarget) { rgHide(); RG.x = null; }   // the mouse left the window
     return;
   }
   if (!touch) {
     if (type !== 'pointermove' && type !== 'pointerdown') return;
-    if (!plot) { if (RG.area) rgHide(); return; }
+    if (!plot) { if (RG.area) rgHide(); RG.x = null; return; }
     clearTimeout(RG.timer);
   } else if (type === 'pointerdown') {         // touch: remember where it started; paint nothing yet
     clearTimeout(RG.timer);
     RG.down = plot ? { x: e.clientX, y: e.clientY, plot: plot } : null;
     RG.scrub = false;
-    if (!plot && RG.area) rgHide();
+    if (!plot && RG.area) { rgHide(); RG.x = null; }
     return;
   } else if (type === 'pointermove') {
     if (!RG.down) return;
     if (!RG.scrub) {
       var dx = Math.abs(e.clientX - RG.down.x), dy = Math.abs(e.clientY - RG.down.y);
       if (dx < 6 || dx <= dy) return;          // not (yet) a sideways drag: it is the page's
+      // a plot whose scroller overflows (.ov): the sideways drag is the browser's pan, never a scrub
+      var dsc = RG.down.plot.closest ? RG.down.plot.closest('.rg-sc') : null;
+      if (dsc && dsc.classList && dsc.classList.contains('ov')) { RG.down = null; return; }
       RG.scrub = true;
     }
     plot = RG.down.plot;
@@ -1022,21 +1155,162 @@ function rgOnPointer(e) {
     RG.down = null;
     RG.scrub = false;
     clearTimeout(RG.timer);
-    RG.timer = setTimeout(rgHide, 2500);
+    RG.timer = setTimeout(function () { rgHide(); RG.x = null; }, 2500);
   } else {
     return;
   }
   var area = (plot && plot.querySelector) ? plot.querySelector('.rg-area') : null;
-  if (area) rgShow(area, e.clientX);
+  if (!area) return;
+  RG.x = e.clientX;
+  RG.y = e.clientY;
+  rgShow(area, e.clientX);
 }
-// The pointer only. The "?" is a title and nothing more: no click listener, so no tap ever opens its words on the
-// page (review 2026-10-14: the provenance stays one hover away, as before the port, and adds no visible text).
+// HIS INTENT snaps to "the newest end" within this many px of it (or 6% of the card, if wider): a trackpad drift or a
+// diagonal swipe of a few px must never pin him short of the end for the whole page session.
+var RG_SNAP_PX = 32;
+// his last input on the graph's scroller (ms), a press held on one, and whether his last press anywhere was on one
+var RG_IN = { at: 0, down: false, here: false };
+var RG_USER_MS = 1500;                         // a scroll this soon after his input (or after his last scroll) is his
+var RG_HOLD_MS = 15000;                        // a press with no input for this long no longer counts as held (a lost lift)
+function rgHis() {
+  // HIS GESTURE IS LIVE: a press held on the graph, or his last input on it (or his last scroll of it, so a fling's
+  // glide counts) under RG_USER_MS ago. Nothing re-asserts the graph while it is, and only then is a scroll his.
+  var age = Date.now() - RG_IN.at;
+  return (RG_IN.down && age < RG_HOLD_MS) || age <= RG_USER_MS;
+}
+function rgOnInput(e) {
+  // window, capture, passive: his presses, wheels, keys and focus INSIDE the graph's scroller; a lift anywhere ends a
+  // press (a touch pointercancel is the browser taking the pan, so the finger is still down until touchend). A key
+  // on the bare page counts after a press on the plot: that is where the browser sends the arrow keys.
+  var type = e.type, t = e.target;
+  if (type === 'pointerup' || type === 'touchend' || type === 'touchcancel' ||
+      (type === 'pointercancel' && e.pointerType !== 'touch')) {
+    if (RG_IN.down) { RG_IN.down = false; RG_IN.at = Date.now(); }
+    return;
+  }
+  var sc = (t && t.closest) ? t.closest('.rg-sc') : null;
+  if (type === 'pointerdown' || type === 'touchstart') {
+    RG_IN.here = !!sc;
+    if (!sc) { RG_IN.down = false; return; }   // a press anywhere else ends a press whose lift was lost
+    RG_IN.down = true;
+  } else if (!sc && !(type === 'keydown' && RG_IN.here && (t === document.body || t === document.documentElement))) {
+    return;
+  }
+  RG_IN.at = Date.now();
+}
+function rgNote(sc) {
+  // A SCROLL IS HIS ONLY INSIDE HIS OWN GESTURE (rgHis): a browser reset, a restore and every scroll this code makes
+  // happen outside one, so none is ever taken for his choice. Scrolled back within the SNAP of the newest end, his
+  // place is the end again (it follows new rows).
+  if (!rgHis()) return;
+  var max = sc.scrollWidth - sc.clientWidth;
+  if (!(max > 1)) return;
+  var snap = Math.max(RG_SNAP_PX, Math.round((sc.clientWidth || 0) * 0.06));
+  RG.want = (sc.scrollLeft >= max - snap) ? null : sc.scrollLeft;
+  RG_IN.at = Date.now();
+}
+function rgMarkClip(sc) {
+  // THE EDGE CUES: scrolled off the oldest end the card is marked .cl (a fade beside the y gutter and the legend's
+  // "‹ earlier"), so the left edge in view is never read as the start of the series; off the NEWEST end .cr (a
+  // right-edge fade), so the right edge in view is never read as the latest rows. At an end (or a plot that fits)
+  // the mark clears.
+  var card = sc.closest ? sc.closest('.rg') : null;
+  if (!card || !card.classList) return;
+  var left = sc.scrollLeft || 0, max = sc.scrollWidth - sc.clientWidth;
+  card.classList.toggle('cl', left > 1);
+  card.classList.toggle('cr', max > 1 && left < max - 1);
+}
+function rgPut(sc, anyway) {
+  // WHERE HE WANTS IT (RG.want): the newest end, or the place he scrolled to, clamped to this plot; marked .ov while it
+  // overflows. Never mid-gesture (rgHis) unless anyway: a plot that has just started to overflow has nothing to fight.
+  var max = sc.scrollWidth - sc.clientWidth, ov = max > 1;
+  if (sc.classList) sc.classList.toggle('ov', ov);
+  if (ov && (anyway || !rgHis())) {
+    var x = (RG.want === null) ? max : Math.min(RG.want, max);
+    if (Math.abs((sc.scrollLeft || 0) - x) > 1) sc.scrollLeft = x;
+  }
+  rgMarkClip(sc);
+}
+function rgRemark(sc) {
+  // the scroller's size changed (fonts settled, the phone turned): re-mark .ov and put it where he wants it, never
+  // mid-gesture; one that has JUST started to overflow is placed even then
+  rgPut(sc, !(sc.classList && sc.classList.contains('ov')));
+}
+function rgWatch(sc) {
+  // ONE ResizeObserver over the graph's scroller: one that measured 0 at settle (a layout not final yet) is marked
+  // when it gets its size, so a phone can always pan it. Where there is no ResizeObserver the window resize handler
+  // is the fallback.
+  if (typeof ResizeObserver === 'undefined') return;
+  if (!RG.ro) {
+    RG.ro = new ResizeObserver(function (ents) {
+      for (var k = 0; k < ents.length; k++) rgRemark(ents[k].target);
+    });
+  }
+  RG.observed = RG.observed.filter(function (o) {
+    if (o !== sc && o.isConnected === false) { RG.ro.unobserve(o); return false; }
+    return true;
+  });
+  if (RG.observed.indexOf(sc) < 0) { RG.ro.observe(sc); RG.observed.push(sc); }
+}
+function rgOnResize() {
+  clearTimeout(rgOnResize._t);
+  rgOnResize._t = setTimeout(function () {
+    var scs = document.querySelectorAll ? document.querySelectorAll('.rg-sc') : [];
+    for (var k = 0; k < scs.length; k++) rgRemark(scs[k]);
+  }, 150);
+}
+function rgOnNewer(e) {
+  // "newer ›": his place is the newest end again, and the plot goes there now (anyway: his own tap asked for it)
+  var t = e && e.target, card = (t && t.closest) ? t.closest('.rg') : null;
+  var sc = (card && card.querySelector) ? card.querySelector('.rg-sc') : null;
+  if (!sc) return;
+  RG.want = null;
+  rgPut(sc, true);
+}
+function rgOnScroll(e) {
+  // his own scroll is his place (rgNote); the edge cues follow the scroll; and the plot slid under a resting mouse (a
+  // wheel or the scrollbar): the readout follows the row now under it
+  var sc = e.target;
+  if (!sc || !sc.classList || !sc.classList.contains('rg-sc')) return;
+  rgNote(sc);
+  rgMarkClip(sc);
+  if (!RG.area || RG.x === null || !sc.contains(RG.area)) return;
+  var area = RG.area;
+  RG.i = -1;
+  rgShow(area, RG.x);
+}
+// AFTER THE PAINT: the scroller watched and put at the newest end (the first paint: anyway), marked .ov / .cl / .cr.
+// The banner is already shown (renderBanner ran first), so the layout is live to measure. Nothing where the browser
+// cannot measure a scroller (no size yet, or no such element): the plot stands unscrolled.
+function rgSettle(box) {
+  var sc = (box && box.querySelector) ? box.querySelector('.rg-sc') : null;
+  if (!sc || !sc.classList || !isNum(sc.scrollWidth) || !isNum(sc.clientWidth)) return;
+  rgWatch(sc);
+  rgPut(sc, true);
+  // the legend's "newer ›" (emitted only with a widened plot) listens on ITSELF, the page's one click handler: the
+  // dots and the "?" have none and the document-delegated listeners stay the pointer's five
+  var btn = box.querySelector('.rg-new');
+  if (btn && typeof btn.addEventListener === 'function') btn.addEventListener('click', rgOnNewer);
+}
+// The pointer only (the one click listener on the page sits on the legend's "newer" button itself, rgSettle). The "?"
+// is a title and nothing more: no click listener, so no tap ever opens its words on the page (review 2026-10-14: the
+// provenance stays one hover away, as before the port, and adds no visible text). The
+// scroller's listeners sit on the window (its scroll, in capture, since a scroll never bubbles; the inputs that make a
+// scroll his; a resize), where there is one.
 function rgWire() {
   if (RG.wired || !document.addEventListener) return;    // once: document-delegated, so a repaint never stacks
   RG.wired = true;
   ['pointermove', 'pointerdown', 'pointerup', 'pointercancel', 'pointerout'].forEach(function (ev) {
     document.addEventListener(ev, rgOnPointer, { passive: true });
   });
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('scroll', rgOnScroll, { capture: true, passive: true });   // the graph's own scroller
+    window.addEventListener('resize', rgOnResize);
+    ['pointerdown', 'pointerup', 'pointercancel', 'touchstart', 'touchend', 'touchcancel', 'wheel', 'keydown',
+      'focusin'].forEach(function (ev) {
+      window.addEventListener(ev, rgOnInput, { capture: true, passive: true });
+    });
+  }
 }
 
 function renderCurve(h, head) {
@@ -1131,20 +1405,68 @@ function renderCurve(h, head) {
     yLen = Math.max(yLen, lab.length);
   });
 
+  // THE CLOSED POSITIONS (owner 2026-10-09: "on the website just put a mark but no info or click thru"; a dot coloured
+  // by the result's sign since the cockpit's 10/13 redesign): one 9 px dot per mark at the first drawn point at or
+  // after the close (a close after the last point sits on the last one; one before the first is not drawn), green
+  // for r "w", red for "l", dim for "e" (exactly zero), a hollow ring without r (an older feed, or an unpriced close).
+  // The feed carries the time and that sign and nothing else, so the page says nothing else: no title, no pointer,
+  // no click-through. Two or more closes at one point CASCADE along the new level (owner 2026-10-20 ~11:35 AM ET "if
+  // they have to stack have them over lap the one before it by half and so on"; the cockpit's _mark_layout): each
+  // later close sits half a dot (RG_MARK_STACK_PX) further along and is drawn over the one before it, in time order;
+  // nothing climbs a riser any more; leftwards only at the right edge when the run would leave the plot's inset. The
+  // dots are placed FIRST: they set the plot's width (rgMinWidth), and the x axis is ticked for that width.
+  var groups = {};
+  (Array.isArray(h.marks) ? h.marks : []).forEach(function (m) {
+    if (!m || typeof m.t !== 'string') return;
+    var mt = utcMs(m.t);
+    if (isNaN(mt) || (!isNaN(tms[0]) && mt < tms[0])) return;
+    var idx = -1;
+    for (var k = 0; k < n; k++) { if (!isNaN(tms[k]) && tms[k] >= mt) { idx = k; break; } }
+    if (idx < 0) {
+      if (isNaN(tms[n - 1]) || mt <= tms[n - 1]) return;
+      idx = n - 1;
+    }
+    (groups[idx] = groups[idx] || []).push(m.r === 'w' || m.r === 'l' || m.r === 'e' ? m.r : 'u');
+  });
+  var mkHtml = '', mkSigned = false, dotted = [];
+  Object.keys(groups).map(Number).sort(function (a, b) { return a - b; }).forEach(function (idx) {
+    var rs = groups[idx], x = xs[idx], yc = ys[idx], cnt = rs.length;
+    var run = RG_MARK_STACK_PX * (cnt - 1), fan = (x > 960 && run > RG_PLOT_RIGHT_PX - RG_MARK_STACK_PX) ? -1 : 1;
+    dotted.push([x, yc, cnt, fan]);
+    rs.forEach(function (r, j) {
+      var left = (x / 10).toFixed(2) + '%', top = (yc / 10).toFixed(2) + '%';
+      if (cnt > 1) left = calcPx(x / 10, fan * RG_MARK_STACK_PX * j);
+      mkHtml += "<span class='rg-mk " + r + "' style='left:" + left + ';top:' + top + "'></span>";
+      if (r !== 'u') mkSigned = true;
+    });
+  });
+
+  // THE SIDEWAYS SCROLL (the cockpit's since 2026-10-15): the plot's min width in px when the dots need more room than
+  // the narrowest card gives (rgMinWidth, with the y gutter in px as the x-label layout already estimates it), else
+  // null and the plot is the card's own width. wideArea is the widened plot area's width, the x ticks' measure.
+  var ywPx = Math.round(RG_XL_CH_PX * yLen + 2);
+  var minW = rgMinWidth(dotted, ywPx);
+  var wideArea = minW ? minW - ywPx - RG_PLOT_SIDE_PX : 0;
+
   // THE TIME AXIS: Eastern hour / 12-hour / day ticks (one faint vertical line each) and their labels under the
   // plot, every label on a wide card; a narrow card shows the ones xlNarrow keeps, by KIND (every date, a clock that
   // carries the zone, bare clocks that fit), the rest marked "alt"; a bare clock that carries the zone there is
-  // drawn a second time with it, that twin marked "ph" (phone only).
+  // drawn a second time with it, that twin marked "ph" (phone only). A widened plot gets ticks for ITS width (about
+  // one per RG_XL_WIDE_PX), its end labels aligned inward only within RG_XL_EDGE_PX of an edge, laid out for the phone
+  // at that width (xlNarrow's wide rule), so a scrolled view is never left without a time label or a gridline.
   var vlinesD = '', xlHtml = '';
   if (timeMode) {
     var labs = [];
-    axisTicks(tms[0], tms[n - 1]).forEach(function (tk) {
+    var maxN = minW ? Math.max(6, Math.floor(wideArea / RG_XL_WIDE_PX)) : 6;
+    var edge = minW ? Math.min(60, RG_XL_EDGE_PX * 1000 / wideArea) : 60;
+    axisTicks(tms[0], tms[n - 1], maxN).forEach(function (tk) {
       var gx = (tk[0] - tms[0]) / spanMs * 1000;
       if (gx < -0.5 || gx > 1000.5) return;
       if (gx > 0.5 && gx < 999.5) vlinesD += 'M' + f1(gx) + ' 0V1000';
-      labs.push([gx, tk[1], gx < 60 ? 'l0' : gx > 940 ? 'l1' : '']);
+      labs.push([gx, tk[1], gx < edge ? 'l0' : gx > 1000 - edge ? 'l1' : '']);
     });
-    var nar = xlNarrow(labs, RG_XL_NARROW_CARD_PX - RG_XL_FRAME_PX - (RG_XL_CH_PX * yLen + 2));
+    var nar = minW ? xlNarrow(labs, wideArea, true)
+      : xlNarrow(labs, RG_XL_NARROW_CARD_PX - RG_XL_FRAME_PX - (RG_XL_CH_PX * yLen + 2));
     var spans = '';
     labs.forEach(function (lb, j) {
       var cls = (lb[2] + (nar.hide[j] ? ' alt' : '')).trim(), left = (lb[0] / 10).toFixed(2) + '%';
@@ -1180,46 +1502,13 @@ function renderCurve(h, head) {
     return "<polyline class='u c" + ucl + "' points='" + upts(run) + "' vector-effect='non-scaling-stroke'/>";
   }).join('');
 
-  // THE CLOSED POSITIONS (owner 2026-10-09: "on the website just put a mark but no info or click thru"; a dot coloured
-  // by the result's sign since the cockpit's 10/13 redesign): one 9 px dot per mark at the first drawn point at or
-  // after the close (a close after the last point sits on the last one; one before the first is not drawn), green
-  // for r "w", red for "l", dim for "e" (exactly zero), a hollow ring without r (an older feed, or an unpriced close).
-  // The feed carries the time and that sign and nothing else, so the page says nothing else: no title, no pointer,
-  // no click-through. Two or more closes at one point CASCADE along the new level (owner 2026-10-20 ~11:35 AM ET "if
-  // they have to stack have them over lap the one before it by half and so on"; the cockpit's _mark_layout): each
-  // later close sits half a dot (RG_MARK_STACK_PX) further along and is drawn over the one before it, in time order;
-  // nothing climbs a riser any more; leftwards only at the right edge when the run would leave the plot.
-  var groups = {};
-  (Array.isArray(h.marks) ? h.marks : []).forEach(function (m) {
-    if (!m || typeof m.t !== 'string') return;
-    var mt = utcMs(m.t);
-    if (isNaN(mt) || (!isNaN(tms[0]) && mt < tms[0])) return;
-    var idx = -1;
-    for (var k = 0; k < n; k++) { if (!isNaN(tms[k]) && tms[k] >= mt) { idx = k; break; } }
-    if (idx < 0) {
-      if (isNaN(tms[n - 1]) || mt <= tms[n - 1]) return;
-      idx = n - 1;
-    }
-    (groups[idx] = groups[idx] || []).push(m.r === 'w' || m.r === 'l' || m.r === 'e' ? m.r : 'u');
-  });
-  var mkHtml = '', mkSigned = false;
-  Object.keys(groups).map(Number).sort(function (a, b) { return a - b; }).forEach(function (idx) {
-    var rs = groups[idx], x = xs[idx], yc = ys[idx], cnt = rs.length;
-    var run = RG_MARK_STACK_PX * (cnt - 1), fan = (x > 960 && run > RG_PLOT_SIDE_PX - RG_MARK_STACK_PX) ? -1 : 1;
-    rs.forEach(function (r, j) {
-      var left = (x / 10).toFixed(2) + '%', top = (yc / 10).toFixed(2) + '%';
-      if (cnt > 1) left = calcPx(x / 10, fan * RG_MARK_STACK_PX * j);
-      mkHtml += "<span class='rg-mk " + r + "' style='left:" + left + ';top:' + top + "'></span>";
-      if (r !== 'u') mkSigned = true;
-    });
-  });
-
   // THE EVENT BANDS (owner 2026-10-20 ~12:55 PM ET: "put a mark on the graph noting the outage"): each window of
   // history.json's `events` (start, end, label; the note never travels) that overlaps the drawn span, in time mode
   // only, a translucent fill-only closed path under everything drawn (never a rect: the stretched SVG's rule), clipped
-  // to the span, its label a chip near the top of the band; one legend key per label. The cockpit's
-  // home._event_bands_html, in the site's own look.
-  var evSvg = '', evHtml = '', evKeys = [];
+  // to the span; keyed on the legend line only, one key per distinct public label (publicLabel: the feed's words less
+  // any venue name), no chip over the plot (a mark and nothing more). The cockpit's home._event_bands_html, in the
+  // site's own look.
+  var evSvg = '', evKeys = [];
   if (timeMode) {
     (Array.isArray(h.events) ? h.events : []).forEach(function (ev) {
       if (!ev || typeof ev.start !== 'string' || typeof ev.end !== 'string' || typeof ev.label !== 'string') return;
@@ -1227,9 +1516,8 @@ function renderCurve(h, head) {
       if (isNaN(a) || isNaN(b) || b <= a || b <= tms[0] || a >= tms[n - 1]) return;
       var x0 = Math.max(0, (a - tms[0]) / spanMs * 1000), x1 = Math.min(1000, (b - tms[0]) / spanMs * 1000);
       if (x1 - x0 <= 0) return;
-      var label = ev.label.trim() || 'event';
+      var label = publicLabel(ev.label);
       evSvg += "<path class='ev' d='M" + f1(x0) + ' 0H' + f1(x1) + 'V1000H' + f1(x0) + "Z' vector-effect='non-scaling-stroke'/>";
-      evHtml += "<span class='rg-ev' style='left:" + (x0 / 10).toFixed(2) + "%'>" + escAttr(label) + '</span>';
       if (evKeys.indexOf(label) < 0) evKeys.push(label);
     });
   }
@@ -1253,17 +1541,21 @@ function renderCurve(h, head) {
   if (head && isNum(head.asOfMs) && (isNaN(pubMs) || head.asOfMs > pubMs)) pubMs = head.asOfMs;
   if (!isNaN(lastMs) && !isNaN(pubMs) && pubMs - lastMs > 15 * 60 * 1000) lineAge = etText(pts[n - 1].t);
 
-  // THE LEGEND LINE: the keys, then "day N" (and a stale line's "line as of"), then the PROVENANCE behind a "?" (owner,
-  // 2026-09-09: "remove the 180 samples thing"): which points were watched happening and which were not, the dashed
-  // line's meaning and the marks' rule, a hover away and never on the face (no tap opens it on this page). The "?"
-  // is the graph's only title.
-  var keys = "<span class='rg-key'><i class='sw c" + lc + "'></i>Realized</span>";
+  // THE LEGEND LINE: a widened plot's "‹ earlier" (shown only while the plot is scrolled off its oldest end, so the
+  // left edge in view is never read as the start of the series), the keys, then a widened plot's "newer ›" (shown
+  // only while the newest rows are scrolled out of view: the one way back from twelve phone screens of history), then
+  // "day N" (and a stale line's "line as of"), then the PROVENANCE behind a "?" (owner, 2026-09-09: "remove the 180 samples thing"): which points were
+  // watched happening and which were not, the dashed line's meaning and the marks' rule, a hover away and never on
+  // the face (no tap opens it on this page). The "?" is the graph's only title.
+  var keys = (minW ? "<span class='ear'>&#8249; earlier</span>" : '') +
+    "<span class='rg-key'><i class='sw c" + lc + "'></i>Realized</span>";
   if (uRuns.length) keys += "<span class='rg-key'><i class='sw u c" + ucl + "'></i>Realized + unrealized</span>";
   if (mkHtml) keys += "<span class='rg-key'><i class='dt" + (mkSigned ? '' : ' u') + "'></i>Closed trade</span>";
   evKeys.forEach(function (k) { keys += "<span class='rg-key'><i class='ev'></i>" + escAttr(k) + '</span>'; });
   var meta = (day || lineAge) ? "<span class='meta'>" + escAttr(day) + (lineAge ? "<span class='st'>" +
     (day ? ' · ' : '') + 'line as of ' + escAttr(lineAge) + '</span>' : '') + '</span>' : '';
-  var legend = "<div class='rg-legend'>" + keys + "<span class='end'>" + meta +
+  var newer = minW ? "<button type='button' class='rg-new' aria-label='Show the newest rows'>newer &#8250;</button>" : '';
+  var legend = "<div class='rg-legend'>" + keys + "<span class='end'>" + newer + meta +
     "<span class='rg-q' title='" +
     escAttr(noDollar(provenance(h, n) + dashedLineNote(h) + marksNote(h))) + "'>?</span></span></div>";
 
@@ -1279,13 +1571,17 @@ function renderCurve(h, head) {
     tTxt.push(etText(pts[i].t));
   }
 
-  // The banner's own hover (its title) stops at the graph (title=''): the readout and the "?" speak here instead.
+  // The banner's own hover (its title) stops at the graph (title=''): the readout and the "?" speak here instead. The
+  // plot and its x labels sit in one scroller (.rg-sc), the y gutter sticky inside the plot, after the area in the
+  // DOM so it paints over what slides under it; the min width only when the dots need it.
   box.innerHTML = "<div class='rg' title='' style='--rg-yw:calc(" + yLen + "ch + 2px)'>" +
-    "<div class='rg-plot'><div class='rg-area'>" + svg + evHtml + mkHtml +
+    "<div class='rg-sc'" + (minW ? " tabindex='0'" : '') + "><div class='rg-in'" +
+    (minW ? " style='min-width:" + minW + "px'" : '') + '>' +
+    "<div class='rg-plot'><div class='rg-area'>" + svg + mkHtml +
     "<div class='rg-xh' hidden></div><div class='rg-gb' hidden></div>" +
     "<span class='rg-hd' hidden></span><div class='rg-tip' aria-hidden='true' hidden></div>" +
-    "</div><div class='rg-yl' aria-hidden='true'>" + yl + '</div></div>' +
-    xlHtml + legend + '</div>';
+    "</div><div class='rg-ys'><div class='rg-yl' aria-hidden='true'>" + yl + '</div></div></div>' +
+    xlHtml + '</div></div>' + legend + '</div>';
   RG.data = { x: xs.map(Math.round), yr: ys.map(Math.round),
     yu: yus.map(function (v) { return v === null ? null : Math.round(v); }),
     t: tTxt, r: rTxt, u: uTxt, rc: rc, uc: uc, lc: lc };
@@ -1293,6 +1589,8 @@ function renderCurve(h, head) {
   RG.i = -1;
   try { rgWire(); } catch (e) { /* the readout is display-only: the curve stands without it */ }
   box.hidden = false;
+  // the scroller opens at the newest end (the plot is in the layout now: the banner is already shown)
+  try { rgSettle(box); } catch (e) { /* an unscrolled plot still stands */ }
 }
 
 (function () {
