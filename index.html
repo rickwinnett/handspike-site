@@ -74,14 +74,14 @@
   .own .v{ font-family:"Segoe UI",system-ui,sans-serif; font-size:.92rem; color:var(--ink); margin:0; }
 
   /* ---- live status banner ---- */
-  /* THE COCKPIT'S HOME GRAPH, IN PERCENTS, IN THE SITE'S OWN DRESS (owner 2026-10-14 ~1:40 AM ET: "public can have
+  /* THE BRIDGE'S HOME GRAPH, IN PERCENTS, IN THE SITE'S OWN DRESS (owner 2026-10-14 ~1:40 AM ET: "public can have
      it. %'s only", then "make it look right on the page"; standing since 2026-10-11 ~7:50 PM ET: "the web graph
      never show dollar amount. on %'s", then "other than that, two should look and function the same"). The block is
-     laid out as home.py::_return_graph draws it since the cockpit's 10/13 redesign: one header row (the wins-vs-losses
+     laid out as home.py::_return_graph draws it since the Bridge's 10/13 redesign: one header row (the wins-vs-losses
      record on the left; on the right the realized figure, a dot, and the unrealized figure in its thin rectangle),
      then the plot (a round-percent axis with 0% always labelled, an Eastern time axis, the realized steps, the dashed
      line, the wash, a dot per closed position, the readout), then the legend line. The one public-only addition is
-     the "Realized P&L · founder's account" label above it. The colours are the SITE's palette under the cockpit's
+     the "Realized P&L · founder's account" label above it. The colours are the SITE's palette under the Bridge's
      token names (--win, --loss, --border-strong, --warn); the type is the site's own mono and the card, rules and
      ink the site's own, so the graph reads as part of this page rather than a pasted instrument. */
   #live{ display:none; margin:0 0 2.2rem; border:1px solid var(--rule); border-radius:6px;
@@ -99,7 +99,7 @@
   #live .pct{ font-weight:700; }
   #live .pct.up{ color:var(--win); } #live .pct.down{ color:var(--loss); }
   #live .sep[hidden]{ display:none; }
-  /* The unrealized figure and its word inside a thin rectangle in the figure's own colour (the cockpit's
+  /* The unrealized figure and its word inside a thin rectangle in the figure's own colour (the Bridge's
      _unrealized_box). It never breaks inside itself; on a phone the whole box wraps instead. */
   #live .unreal{ display:inline-block; white-space:nowrap; border:1px solid var(--ink-3); border-radius:4px;
                  padding:0 5px; line-height:1.5; }
@@ -109,7 +109,7 @@
   #live .unreal[hidden]{ display:none; }
   #live .curve{ display:block; }
   #live .curve[hidden]{ display:none; }
-  /* Fewer than three points since the reset: said plainly, as the cockpit says it, never a two-point "trend". */
+  /* Fewer than three points since the reset: said plainly, as the Bridge says it, never a two-point "trend". */
   #live .curve .collect{ border:1px dashed var(--border-strong); border-radius:6px; padding:14px 16px;
                          font-family:ui-monospace,Consolas,monospace; font-size:.7rem; color:var(--ink-3); }
   #live .curve .collect .wl{ letter-spacing:.08em; text-transform:uppercase; font-weight:700; margin-bottom:4px; }
@@ -119,7 +119,7 @@
      axis labels, the dots and the readout are HTML over the same box, placed in percent, so nothing round or textual
      is ever stretched. The y gutter is sized in ch of the axis' own mono face (--rg-yw, set per render from the
      longest label), so it fits whatever face and size the reader's browser resolves.
-     THE SIDEWAYS SCROLL (the cockpit's since 2026-10-15, owner: "double the height of the graph so the green and red
+     THE SIDEWAYS SCROLL (the Bridge's since 2026-10-15, owner: "double the height of the graph so the green and red
      dots are easier to see. make it horizontally scrollable if need be"; owner 2026-10-29 for this page: "get it
      looking and working like the one in the app"): the plot is 320 px tall (280 on a narrow card) and, when two
      closed-trade dots would sit under 14 px apart (rgMinWidth), wider than the card: it scrolls sideways inside
@@ -179,7 +179,7 @@
                 background:var(--ink-3); box-shadow:0 0 0 2px var(--panel); pointer-events:none; }
   #live .rg-mk.w{ background:var(--win); } #live .rg-mk.l{ background:var(--loss); }
   #live .rg-mk.u{ background:var(--panel); box-shadow:inset 0 0 0 1.5px var(--ink-3), 0 0 0 2px var(--panel); }
-  /* AN EVENT BAND (owner 10/20 "put a mark on the graph noting the outage"; the cockpit's .hsv-rg-area .ev): a
+  /* AN EVENT BAND (owner 10/20 "put a mark on the graph noting the outage"; the Bridge's .hsv-rg-area .ev): a
      translucent band in the dim ink across the plot (a fill-only closed path, never a rect: the stretched SVG's
      element rule), under everything drawn, never the win/loss colours (it is not a result). It is keyed on the legend
      line only: no chip over the plot, no title, no pointer, no click-through (owner 10/09: a mark and nothing more). */
@@ -209,7 +209,7 @@
                     font:400 .68rem/1.4 var(--mono); color:var(--ink-3); }
   #live .rg-legend .ear{ display:none; white-space:nowrap; }
   #live .rg.cl .rg-legend .ear{ display:inline; }
-  /* "newer ›" (the cockpit's .hsv-rg-new): the one way back to the newest end after a swipe into history, shown only
+  /* "newer ›" (the Bridge's .hsv-rg-new): the one way back to the newest end after a swipe into history, shown only
      while the newest rows are out of view (.cr). It scrolls the plot and nothing more: no info, no click-through. */
   #live .rg-new{ display:none; align-items:center; min-height:40px; margin:-12px 0; padding:6px 2px; border:0;
                  background:none; font:inherit; color:var(--brass); cursor:pointer; white-space:nowrap;
@@ -229,7 +229,7 @@
                          align-items:center; gap:.3rem .6rem; }
   #live .rg-legend .meta{ font-variant-numeric:tabular-nums; }
   #live .rg-legend .st{ color:var(--warn); white-space:nowrap; }
-  /* The "?" (a span, as the cockpit's own): the provenance as its TITLE and nothing more. A mouse sees it on hover;
+  /* The "?" (a span, as the Bridge's own): the provenance as its TITLE and nothing more. A mouse sees it on hover;
      no tap opens its words on this page (review 2026-10-14: the site adds no visible text about how anything works,
      owner 2026-10-11), so it is not a control. */
   #live .rg-q{ display:inline-grid; place-items:center; flex:none; width:1.15rem; height:1.15rem;
@@ -270,7 +270,7 @@
   <span class="bar"></span>
   <nav>
     <a href="/" aria-current="page" class="cur">Sovereign</a>
-    <a href="/demo/cockpit.html">Cockpit</a>
+    <a href="/demo/bridge.html">Bridge</a>
     <a href="/eleven-failures.html">Memo</a>
     <a href="/about.html">About</a>
     <a href="/contact.html">Contact</a>
@@ -338,7 +338,7 @@ something far too heavy by hand, with precision. That is the whole company in on
   <h2>See it work</h2>
   <p class="big">A window into a running system.</p>
   <div class="tour">
-    <a href="/demo/cockpit.html"><p class="k">The cockpit</p>
+    <a href="/demo/bridge.html"><p class="k">The Bridge</p>
       <p class="v">What you would see: every position, what it is protected by, and what Sovereign is
       doing, at a glance. Simulated display.</p></a>
   </div>
@@ -404,10 +404,10 @@ something far too heavy by hand, with precision. That is the whole company in on
 // unrealized_usd, d, ud, lo_d,
 // hi_d, ud_last or scale even if a feed carries them (the publisher's PUBLISH_DOLLARS switch is off; this is
 // the second, page-side guard). No feed string is put on the page or in a hover: every word here is the
-// page's own. Everything else is the cockpit's Home graph (home.py::_return_graph) with each dollar figure
+// page's own. Everything else is the Bridge's Home graph (home.py::_return_graph) with each dollar figure
 // replaced by its percent of money put in: the same header, the same axes, the same two lines, the same
 // dots and legend line (since 2026-10-14, owner ~1:40 AM ET: "public can have it. %'s only", then "make it
-// look right on the page": the cockpit's 10/13 redesign, in the site's own type and rules). A mark's r is the
+// look right on the page": the Bridge's 10/13 redesign, in the site's own type and rules). A mark's r is the
 // sign of that close's result and nothing more; no symbol, size or amount of any trade reaches this page.
 
 // Python's round(a, 2) for a >= 0, as an integer count of hundredths. toFixed rounds the exact binary value
@@ -420,13 +420,13 @@ function pyRound2(a) {
   }
   return Math.round(Number(a.toFixed(2)) * 100);
 }
-// round(v, 2) + 0.0, as the cockpit rounds a stacked value (no -0).
+// round(v, 2) + 0.0, as the Bridge rounds a stacked value (no -0).
 function round2(v) {
   var c = pyRound2(Math.abs(v));
   return c === 0 ? 0 : (v < 0 ? -c : c) / 100;
 }
 function isNum(v) { return typeof v === 'number' && isFinite(v); }
-// A signed percent exactly as the cockpit prints one (handspike.webui.money_fmt.signed_pct_from_percent(v, 2)):
+// A signed percent exactly as the Bridge prints one (handspike.webui.money_fmt.signed_pct_from_percent(v, 2)):
 // '+2.28%' / '-1.61%' / '0.00%'. The ASCII hyphen-minus, never U+2212 (the house glyph law: what a reader
 // copies must match the logs); always two decimals; the sign decided from the ROUNDED value, so a residual
 // that prints 0.00% is never '+0.00%' or '-0.00%'. '' for a non-number.
@@ -450,7 +450,7 @@ function pyRound0(a) {
   }
   return Number(a.toFixed(0));
 }
-// The header's words, as the cockpit's _win_loss_label: "2 wins · 1 loss · 67%", "—%" before any trade has
+// The header's words, as the Bridge's _win_loss_label: "2 wins · 1 loss · 67%", "—%" before any trade has
 // closed (never a made-up 0%), "wins vs losses unread" when the feed does not carry the record (the
 // publisher leaves the record out exactly when the box could not read it).
 function winLossLabel(d) {
@@ -461,7 +461,7 @@ function winLossLabel(d) {
 }
 // A stored stamp as milliseconds. A NAIVE value (history.json's point times) is UTC by house rule, so it
 // gets its 'Z' before parsing; without it Date.parse would read it as the VIEWER's local time. Only an ISO
-// date WITH a clock is an instant: a date alone is NaN (the cockpit's etfmt.parse_utc refuses one too;
+// date WITH a clock is an instant: a date alone is NaN (the Bridge's etfmt.parse_utc refuses one too;
 // Date.parse would make it a midnight nobody recorded).
 function utcMs(v) {
   if (typeof v !== 'string' || !v) return NaN;
@@ -470,8 +470,8 @@ function utcMs(v) {
   var z = !m[3] || m[3] === 'z' ? 'Z' : m[3].length === 5 ? m[3].slice(0, 3) + ':' + m[3].slice(3) : m[3];
   return Date.parse(m[1] + 'T' + m[2].replace(/(\.\d{3})\d+$/, '$1') + z);
 }
-// 'Oct 11 · 7:48 PM ET', as the cockpit's etfmt.when_et(v, zone=True): Eastern, 12-hour, the zone word zoneWord's
-// (the cockpit's zone_label): "ET", except inside the November fall-back hour, where two instants an hour apart read
+// 'Oct 11 · 7:48 PM ET', as the Bridge's etfmt.when_et(v, zone=True): Eastern, 12-hour, the zone word zoneWord's
+// (the Bridge's zone_label): "ET", except inside the November fall-back hour, where two instants an hour apart read
 // the same wall time and each carries its own ('Nov 1 · 1:30 AM EDT', then 'Nov 1 · 1:30 AM EST'). '' when the stamp
 // will not parse or the browser has no time-zone data (withhold rather than approximate).
 function etText(v) {
@@ -494,10 +494,10 @@ function escAttr(s) {
 // The last guard on every hover this page writes: anything carrying a '$' is dropped, never shown.
 function noDollar(s) { return /\$/.test(s) ? '' : s; }
 
-// THE HEADER: the realized figure since the reset, as the cockpit's graph header prints it, in percent.
+// THE HEADER: the realized figure since the reset, as the Bridge's graph header prints it, in percent.
 // Returns what the curve below needs from status.json (day N, the record), or null when nothing is shown.
 function renderBanner(el, d) {
-  // REALIZED P&L, AS THE COCKPIT SHOWS IT (owner 2026-10-07 "make the web match"): the headline is
+  // REALIZED P&L, AS THE BRIDGE SHOWS IT (owner 2026-10-07 "make the web match"): the headline is
   // realized since the reset. A feed without it shows nothing; the all-in figure is never shown under
   // the realized name.
   if (!d || !isNum(d.realized_pct)) return null;
@@ -510,7 +510,7 @@ function renderBanner(el, d) {
     ageH < 48 ? 'updated ' + Math.round(ageH) + 'h ago' :
     'updated ' + Math.round(ageH / 24) + ' days ago';
   if (ageH !== null && ageH > 6) el.classList.add('stale');
-  // The realized figure, coloured as the cockpit colours it since its 10/13 redesign (home.py: the house
+  // The realized figure, coloured as the Bridge colours it since its 10/13 redesign (home.py: the house
   // money_fmt.pnl_color of the figure as printed: win-green above zero, loss-red below, dim at exactly
   // 0.00%, never a green zero, like the solid line it heads), and, once the file is older than the hourly
   // publish allows, " · as of <time>" in the same span, on the FACE (a phone cannot hover).
@@ -549,14 +549,14 @@ function renderBanner(el, d) {
     (isNum(upct) ? ' · unrealized: the open positions’ move since the reset, on the same money put in' : '') +
     (when ? ' · ' + when : '') + ' · historical and unaudited, not indicative of future results'));
   el.classList.add('on');
-  // "DAY N" IS THE HOUSE CONVENTION, ON EVERY SURFACE: days_elapsed + 1, as the cockpit renders it. It is how
+  // "DAY N" IS THE HOUSE CONVENTION, ON EVERY SURFACE: days_elapsed + 1, as the Bridge renders it. It is how
   // long the CURRENT measurement has run (since the reset), NOT how long Sovereign has been live — do not
-  // relabel it "N days active". It prints on the graph's legend line, as on the cockpit.
+  // relabel it "N days active". It prints on the graph's legend line, as on the Bridge.
   return { days: Number.isInteger(d.days_elapsed) && d.days_elapsed >= 0 ? d.days_elapsed : null, label: label,
            asOfMs: utcMs(d.as_of) };
 }
 
-// THE "?" ON THE LEGEND LINE (its title, and nothing on the face), as the cockpit's _curve_provenance +
+// THE "?" ON THE LEGEND LINE (its title, and nothing on the face), as the Bridge's _curve_provenance +
 // _DASHED_LINE_NOTE + _marks_note, in percent.
 // Which points were watched happening and which were not; "every one recorded live" is said out loud, because
 // "no reconstructed points" and "nobody checked" are different claims and silence reads as the second one.
@@ -573,7 +573,7 @@ function provenance(h, n) {
       'moves it (it lands in Unrealized); an open position counts at what it cost until it closes. ';
   }
   // A point skipped because it is KNOWN WRONG is said out loud, never silently. (Its reason stays on the
-  // box: the cockpit's free text can name amounts.)
+  // box: the Bridge's free text can name amounts.)
   var tail = withheld ? ' ' + withheld + ' recorded points are WITHHELD, not drawn.' : '';
   if (!recon) {
     if (head) {
@@ -596,7 +596,7 @@ function provenance(h, n) {
     'Note the two counts describe different sets: the drawn points are thinned, the ' + recon +
     ' is counted over the whole record.' + tail;
 }
-// The dashed line's sentence, the cockpit's _DASHED_LINE_NOTE in PERCENT, and honest about it: in dollars a
+// The dashed line's sentence, the Bridge's _DASHED_LINE_NOTE in PERCENT, and honest about it: in dollars a
 // deposit or withdrawal never steps the lines; in percent it CAN, because it changes the base the percent is
 // taken on.
 var DASHED_LINE_NOTE = ' The dashed line is the headline return on money put in since the reset (realized ' +
@@ -604,7 +604,7 @@ var DASHED_LINE_NOTE = ' The dashed line is the headline return on money put in 
   'rectangle, from the same recorded rows; a row without it is a gap, never a bridged slope. Each line is ' +
   'coloured by where it ends.';
 // ONE BASE (2026-10-11 ~8:40 PM ET): since the publisher sends `pct_of: "today"`, every point is a percent of
-// TODAY's money put in, the cockpit's dollar curve scaled by one constant, so a deposit or withdrawal never
+// TODAY's money put in, the Bridge's dollar curve scaled by one constant, so a deposit or withdrawal never
 // steps the lines. An older feed (per-row percents) says that it can.
 function dashedLineNote(h) {
   return DASHED_LINE_NOTE + (h && h.pct_of === 'today'
@@ -620,10 +620,10 @@ function marksNote(h) {
 }
 
 // ================================================================================================================
-// THE ERA CURVE, drawn from /history.json — the SAME recorded series the cockpit plots, so the public shape and the
+// THE ERA CURVE, drawn from /history.json — the SAME recorded series the Bridge plots, so the public shape and the
 // operator's shape cannot diverge. Since 2026-10-14 (owner ~1:40 AM ET: "public can have it. %'s only", then "make
-// it look right on the page") it is the cockpit's REDESIGNED Home graph (home.py::_return_graph, 10/13) in percent.
-// Three rules carried over verbatim from the cockpit, because they are what make a return curve honest rather than
+// it look right on the page") it is the Bridge's REDESIGNED Home graph (home.py::_return_graph, 10/13) in percent.
+// Three rules carried over verbatim from the Bridge, because they are what make a return curve honest rather than
 // decorative:
 //   1. ZERO IS FORCED INTO THE BAND AND DRAWN. A curve auto-scaled to its own min/max can put a book that never
 //      once broke even at the top of the frame and read as a rally. The y axis is round percents and 0% is always
@@ -635,39 +635,39 @@ function marksNote(h) {
 // The series is RECORDED, never reconstructed: fewer than three points is said plainly ("Recording since the
 // reset"), never drawn as a two-point "trend"; a series the box withheld is not drawn at all.
 //
-// THE LOOK, as the cockpit draws it: ONE svg in a 0..1000 x 0..1000 space, stretched to the plot, holds the strokes
+// THE LOOK, as the Bridge draws it: ONE svg in a 0..1000 x 0..1000 space, stretched to the plot, holds the strokes
 // and the wash only (every stroke non-scaling); the axis labels, the closed-trade dots and the readout are HTML laid
 // over the same box in percent, so nothing round or textual is ever stretched. x is TIME, first to last drawn row,
-// with Eastern labels (axisTicks, the cockpit's etfmt.axis_ticks); the row index, with no labels, when the rows'
+// with Eastern labels (axisTicks, the Bridge's etfmt.axis_ticks); the row index, with no labels, when the rows'
 // times cannot make an axis. The realized line is a STEP line: a recorded value holds until the next recorded row,
 // and no slope is drawn that the money did not make. The wash between the line and 0% is green above 0% and red
 // below. A small dot sits where each position closed, green a win and red a loss by the sign of its result (the
 // feed's r), a hollow ring when the feed does not say; on this page a dot is a mark ONLY, no trade details and no
 // click-through (owner 2026-10-09 ~11:30 PM ET: "on the website just put a mark but no info or click thru"). No
-// range caption (the cockpit dropped it 10/13): the labelled axis replaces it; "day N" and a stale line's "line as
+// range caption (the Bridge dropped it 10/13): the labelled axis replaces it; "day N" and a stale line's "line as
 // of" sit on the legend line, the provenance behind its "?". The readout under a finger or the mouse prints a row's
 // time and its two percents, and nothing about any trade.
 // ================================================================================================================
 
 // A drawn span shorter than this is not a time axis (rows written seconds apart): the x is the row index instead.
 var RG_MIN_SPAN_MS = 120000;
-// A y range under this many percent is padded evenly around its middle to it, 0% kept in it (the cockpit pads a
+// A y range under this many percent is padded evenly around its middle to it, 0% kept in it (the Bridge pads a
 // dollar range to $1, about a tenth of a percent of the money put in).
 var RG_MIN_RANGE = 0.1;
 var RG_LADDER = [1, 2, 2.5, 5];
-// The wash's opacity at the realized line's furthest point from 0% on each side, and AT 0% (the cockpit's).
+// The wash's opacity at the realized line's furthest point from 0% on each side, and AT 0% (the Bridge's).
 var RG_FILL_EDGE = '.22', RG_FILL_ZERO = '.04';
 // Two closed-trade dots need this many px between centres IN 2D, measured at the PHONE plot's height (280 px less its
 // 8 px insets: the shortest, so the closest the dots ever sit vertically); when the card cannot give it, the plot is
-// widened to scroll sideways (rgMinWidth, the cockpit's _graph_min_width).
+// widened to scroll sideways (rgMinWidth, the Bridge's _graph_min_width).
 var RG_MARK_GAP_PX = 14, RG_MARK_PHONE_PLOT_PX = 264;
 // THE CASCADE (owner 2026-10-20 ~11:35 AM ET "if they have to stack have them over lap the one before it by half and so
-// on"; the cockpit's _MARK_STACK_PX / _PLOT_SIDES_PX): half a 9 px dot, and the plot's side insets (10 px after the y
+// on"; the Bridge's _MARK_STACK_PX / _PLOT_SIDES_PX): half a 9 px dot, and the plot's side insets (10 px after the y
 // gutter and the 8 px right inset) for the width maths, and the RIGHT inset alone for the fan's turn at the right
 // edge: the area clips there (.rg-area right:8px under .rg-in overflow:clip), so a run that would pass it turns left
-// and the newest closes stay whole (review 2026-10-29; the cockpit's _mark_layout still turns at 18 and clips).
+// and the newest closes stay whole (review 2026-10-29; the Bridge's _mark_layout still turns at 18 and clips).
 var RG_MARK_STACK_PX = 4.5, RG_PLOT_SIDE_PX = 18, RG_PLOT_RIGHT_PX = 8;
-// THE WIDENED PLOT (the cockpit's _MK_MAX_PLOT_PX / _MK_SCROLL_FLOOR_PX): never wider than this, and never widened at
+// THE WIDENED PLOT (the Bridge's _MK_MAX_PLOT_PX / _MK_SCROLL_FLOOR_PX): never wider than this, and never widened at
 // all unless the dots need more than the narrowest card's own inner width (a 272 px card less its border and padding);
 // its x axis is ticked about one label per RG_XL_WIDE_PX, an end label aligned inward within RG_XL_EDGE_PX of an edge.
 var RG_MK_MAX_PLOT_PX = 3200, RG_MK_SCROLL_FLOOR_PX = 244, RG_XL_WIDE_PX = 90, RG_XL_EDGE_PX = 48;
@@ -697,7 +697,7 @@ function etParts(ms) {
     return o.y > 0 && o.mo >= 1 && o.mo <= 12 && o.day >= 1 && o.h >= 0 && o.mi >= 0 ? o : null;
   } catch (e) { return null; }
 }
-// The zone word, as the cockpit's etfmt.zone_label: "ET", except on a wall time the November fall-back hour makes
+// The zone word, as the Bridge's etfmt.zone_label: "ET", except on a wall time the November fall-back hour makes
 // ambiguous (two instants an hour apart both read it), which carries its own EDT / EST so the two stay apart.
 function zoneWord(ms) {
   var p = etParts(ms);
@@ -709,7 +709,7 @@ function zoneWord(ms) {
 function clockText(p, withMin) {
   return (p.h % 12 || 12) + (withMin ? ':' + (p.mi < 10 ? '0' : '') + p.mi : '') + ' ' + (p.h < 12 ? 'AM' : 'PM');
 }
-// THE TIME AXIS, the cockpit's etfmt.axis_ticks: [[instant ms, label]] strictly inside (a, b], every label Eastern
+// THE TIME AXIS, the Bridge's etfmt.axis_ticks: [[instant ms, label]] strictly inside (a, b], every label Eastern
 // and 12-hour. A span of 30 h or less: whole ET hours every 1, 2, 3, 4, 6 or 12 h, the smallest step giving at most
 // maxN - 1 ticks, a midnight labelled with its date ("Oct 13"), any other hour with its clock ("3 PM"), the LAST
 // clock carrying the zone ("6 PM ET"); up to 72 h: every 12 h the same way; longer: ET midnights, every k-th day so
@@ -779,7 +779,7 @@ function axisTicks(a, b, maxN) {
   } catch (e) { return []; }
 }
 
-// THE Y SCALE, the cockpit's _nice_ticks in percent: {step, dp, ticks} over the lowest and highest values drawn
+// THE Y SCALE, the Bridge's _nice_ticks in percent: {step, dp, ticks} over the lowest and highest values drawn
 // (both lines), 0% ALWAYS a tick. The step is the SMALLEST of 1, 2, 2.5 and 5 times a power of ten (from 0.01%, and
 // never one that would print three decimals) that covers the range in at most five intervals; the domain drawn is
 // [first tick, last tick], so every gridline is a round figure. -3.15 .. +2.14 -> step 2: -4% .. +4%.
@@ -819,7 +819,7 @@ function xlKind(lab) {
   if (lab.indexOf(' AM') < 0 && lab.indexOf(' PM') < 0) return 'd';
   return /\s[AP]M$/.test(lab) ? 'c' : 'z';
 }
-// THE X LABELS A NARROW CARD SHOWS, the cockpit's _xl_narrow: chosen by KIND, never by position. labs is
+// THE X LABELS A NARROW CARD SHOWS, the Bridge's _xl_narrow: chosen by KIND, never by position. labs is
 // [[gx, label, align]] in axis order (gx in the plot's 0..1000 space, align "l0" / "l1" / ""), laid out plotPx
 // wide. ALL DATES: every other one from five, and never one that would crowd the date kept before it. ANY CLOCK:
 // every date (a clock is read against the date before it); then ONE clock carrying the zone, the rightmost zoned
@@ -827,7 +827,7 @@ function xlKind(lab) {
 // then bare clocks left of it, every other one from it first. A clock comes no nearer than 8 px to any kept label,
 // from five labels at most half (rounded up) are kept, and when no clock can carry the zone none is shown: the
 // dates alone, never a clock without its zone. Returns {hide: {index: true}, twin: [index, label] or null}.
-// `wide` (the cockpit's _xl_narrow(wide=True)): the labels of a plot rgMinWidth widened, ticked for that width (one
+// `wide` (the Bridge's _xl_narrow(wide=True)): the labels of a plot rgMinWidth widened, ticked for that width (one
 // per RG_XL_WIDE_PX or more apart): the every-other and at-most-half counts are dropped, only the gap and overlap rules
 // stay, so a scrolled phone view keeps a label every ~100 px instead of dates alone across half the plot.
 function xlNarrow(labs, plotPx, wide) {
@@ -923,7 +923,7 @@ function stepD(run, xs, ys) {
   if (at !== run[run.length - 1]) parts.push('H' + f1(xs[run[run.length - 1]]));
   return parts.join('');
 }
-// THE PLOT'S MIN WIDTH IN PX, or null (the cockpit's _graph_min_width; owner 2026-10-15: "double the height of the
+// THE PLOT'S MIN WIDTH IN PX, or null (the Bridge's _graph_min_width; owner 2026-10-15: "double the height of the
 // graph so the green and red dots are easier to see. make it horizontally scrollable if need be"). dotted is
 // [[x, y, count, fan]] per drawn point that carries closed-trade dots (fan +1 rightwards, -1 leftwards at the right
 // edge). Any two dots need RG_MARK_GAP_PX between centres IN 2D at the PHONE plot's height: two on levels that far
@@ -990,7 +990,7 @@ function rgLetter(txt) {
   return c === 'up' ? 'p' : c === 'down' ? 'n' : 'f';
 }
 
-// ---- THE READOUT (the cockpit's shim.js wireReturnGraph, in percent) ------------------------------------------
+// ---- THE READOUT (the Bridge's shim.js wireReturnGraph, in percent) ------------------------------------------
 // DISPLAY ONLY. On a mouse move, a sideways touch drag or a tap: a crosshair at the nearest recorded row, a dot on the
 // realized line there, a bar the height of the unrealized gap, and a tip naming the row's time (Eastern, 12-hour),
 // its realized percent and its unrealized percent (when the row has one). Every word and figure in it was formatted
@@ -999,7 +999,7 @@ function rgLetter(txt) {
 // window). TOUCH paints on a sideways drag or a tap, never on pointerdown, so a vertical scroll that starts on the
 // graph paints nothing (the browser takes the gesture and sends pointercancel); the tip goes 2.5 s after the finger
 // lifts. Wired ONCE, on the document.
-// THE SIDEWAYS SCROLL (the cockpit's, 2026-10-15/16): when rgMinWidth makes the plot wider than its card, .rg-sc
+// THE SIDEWAYS SCROLL (the Bridge's, 2026-10-15/16): when rgMinWidth makes the plot wider than its card, .rg-sc
 // scrolls it under the sticky y gutter. A scroller that overflows is marked .ov (a sideways touch drag there is the
 // browser's pan, never a scrub; a tap still reads out), opened at the NEWEST end on its first paint, and put back
 // where the reader wants it after a resize: the newest end unless HE scrolled back in this page session (rgNote,
@@ -1321,9 +1321,9 @@ function renderCurve(h, head) {
     return p && typeof p.t === 'string' && isNum(p.p);
   }) : [];
   if (pts.length < 3) {
-    // COLLECTING (fewer than three points since the reset), as the cockpit says it: a dashed box with the
+    // COLLECTING (fewer than three points since the reset), as the Bridge says it: a dashed box with the
     // record and "Recording since the reset · N of 3 points so far." The record moves off the header into the
-    // box, as on the cockpit. A WITHHELD series (any other note) draws nothing, as on the cockpit.
+    // box, as on the Bridge. A WITHHELD series (any other note) draws nothing, as on the Bridge.
     if (h && typeof h.note === 'string' && h.note.indexOf('collecting') === 0) {
       var cn = Number.isInteger(h.n) && h.n >= 0 ? h.n : 0;
       var wl = document.getElementById('liveWL');
@@ -1338,14 +1338,14 @@ function renderCurve(h, head) {
       box.hidden = false;
       return;
     }
-    return;                                   // withheld: nothing at all, as on the cockpit
+    return;                                   // withheld: nothing at all, as on the Bridge
   }
 
   var n = pts.length, i;
   var vals = pts.map(function (p) { return round2(p.p); });
   // THE DASHED LINE (owner 2026-10-10 ~11:30 AM ET: "the website does not have the unrealized stuff"), STACKED
   // since 2026-10-11 (owner ~12:50 AM ET: "shouldnt the green line be its % above the other?"): each point is
-  // p + u rounded to two decimals (the cockpit's round(v + u, 2) + 0.0), the headline return at that row, so
+  // p + u rounded to two decimals (the Bridge's round(v + u, 2) + 0.0), the headline return at that row, so
   // its gap above the solid line IS the unrealized move. A `u` of null is a row the box could not measure — a
   // GAP: the line breaks there and is never bridged.
   var gaps = pts.map(function (p) { return isNum(p.u) ? p.u : null; });
@@ -1381,7 +1381,7 @@ function renderCurve(h, head) {
   var ucl = uLast === null || gapLast === 0 ? 'f' : uLast >= 0 ? 'w' : 'l';
 
   // THE WASH: one path closed to the ZERO line, filled by one vertical gradient that turns from green to red exactly
-  // at 0%, deepest at the realized line's furthest point on each side (owner 2026-10-13 for the cockpit: "Green
+  // at 0%, deepest at the realized line's furthest point on each side (owner 2026-10-13 for the Bridge: "Green
   // above, red below"; the always-green wash closed to the frame's bottom is gone).
   var every = [];
   for (i = 0; i < n; i++) every.push(i);
@@ -1406,12 +1406,12 @@ function renderCurve(h, head) {
   });
 
   // THE CLOSED POSITIONS (owner 2026-10-09: "on the website just put a mark but no info or click thru"; a dot coloured
-  // by the result's sign since the cockpit's 10/13 redesign): one 9 px dot per mark at the first drawn point at or
+  // by the result's sign since the Bridge's 10/13 redesign): one 9 px dot per mark at the first drawn point at or
   // after the close (a close after the last point sits on the last one; one before the first is not drawn), green
   // for r "w", red for "l", dim for "e" (exactly zero), a hollow ring without r (an older feed, or an unpriced close).
   // The feed carries the time and that sign and nothing else, so the page says nothing else: no title, no pointer,
   // no click-through. Two or more closes at one point CASCADE along the new level (owner 2026-10-20 ~11:35 AM ET "if
-  // they have to stack have them over lap the one before it by half and so on"; the cockpit's _mark_layout): each
+  // they have to stack have them over lap the one before it by half and so on"; the Bridge's _mark_layout): each
   // later close sits half a dot (RG_MARK_STACK_PX) further along and is drawn over the one before it, in time order;
   // nothing climbs a riser any more; leftwards only at the right edge when the run would leave the plot's inset. The
   // dots are placed FIRST: they set the plot's width (rgMinWidth), and the x axis is ticked for that width.
@@ -1441,7 +1441,7 @@ function renderCurve(h, head) {
     });
   });
 
-  // THE SIDEWAYS SCROLL (the cockpit's since 2026-10-15): the plot's min width in px when the dots need more room than
+  // THE SIDEWAYS SCROLL (the Bridge's since 2026-10-15): the plot's min width in px when the dots need more room than
   // the narrowest card gives (rgMinWidth, with the y gutter in px as the x-label layout already estimates it), else
   // null and the plot is the card's own width. wideArea is the widened plot area's width, the x ticks' measure.
   var ywPx = Math.round(RG_XL_CH_PX * yLen + 2);
@@ -1506,7 +1506,7 @@ function renderCurve(h, head) {
   // history.json's `events` (start, end, label; the note never travels) that overlaps the drawn span, in time mode
   // only, a translucent fill-only closed path under everything drawn (never a rect: the stretched SVG's rule), clipped
   // to the span; keyed on the legend line only, one key per distinct public label (publicLabel: the feed's words less
-  // any venue name), no chip over the plot (a mark and nothing more). The cockpit's home._event_bands_html, in the
+  // any venue name), no chip over the plot (a mark and nothing more). The Bridge's home._event_bands_html, in the
   // site's own look.
   var evSvg = '', evKeys = [];
   if (timeMode) {
@@ -1533,7 +1533,7 @@ function renderCurve(h, head) {
     "<path class='r c" + lc + "' d='" + lineD + "' vector-effect='non-scaling-stroke'/>" +
     '</svg>';
 
-  // THE LINE'S AGE (the cockpit's "line as of"): when the last recorded row is more than 15 minutes older than the
+  // THE LINE'S AGE (the Bridge's "line as of"): when the last recorded row is more than 15 minutes older than the
   // file's own publish time, the drawn end is older than the figures above it, and the legend line says so in the
   // warn colour. Measured against the LATER of this file's own time and the banner's (review 2026-10-11): the two
   // feeds publish separately, so a fresh banner over a history.json left alone hours ago must still say its age.

@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════
-   COCKPIT BEHAVIOUR — one copy, linked by every demo page.
+   BRIDGE BEHAVIOUR — one copy, linked by every demo page.
 
-   Companion to ck.css. The missile-cover state machine here is ported from the real cockpit's shim
-   (cockpit/handspike-cockpit.html) rather than reinvented, because the two-step is the single most
+   Companion to ck.css. The missile-cover state machine here is ported from the real Bridge's shim
+   (bridge/handspike-bridge.html) rather than reinvented, because the two-step is the single most
    important thing these pages demonstrate and a plausible-looking imitation of it would be worse
    than no demo at all.
 
@@ -15,7 +15,7 @@
   function all(sel, root){ return [].slice.call((root || document).querySelectorAll(sel)); }
 
   /* ---- view switching -------------------------------------------------------------------------
-     The sidebar drives which section is mounted, exactly as the real cockpit does. The breadcrumb
+     The sidebar drives which section is mounted, exactly as the real Bridge does. The breadcrumb
      and the page title FOLLOW the nav rather than being set independently, so they cannot drift
      apart from what is actually on screen. */
   function initViews(){
@@ -38,7 +38,7 @@
   }
 
   /* ---- metric drill-downs ---------------------------------------------------------------------
-     Every metric tile in the real cockpit opens to show its derivation. aria-expanded carries the
+     Every metric tile in the real Bridge opens to show its derivation. aria-expanded carries the
      state so the control is honest to a screen reader, not only to the eye. */
   function initDrills(){
     all('button.ck-card.drill').forEach(function(card){

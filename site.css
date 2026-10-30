@@ -24,7 +24,7 @@
 /* --------------------------------------------------------------------------------------------------
    THE GROUND IS BLACK — one palette, no light variant, no prefers-color-scheme flip. The site used to
    carry a cream light theme wired to the READER's OS setting, so the owner's own machine served him a
-   cream page while the cockpit and every screenshot were dark. There is now exactly one look.
+   cream page while the Bridge and every screenshot were dark. There is now exactly one look.
 
    `color-scheme:dark` is load-bearing, not decoration: without it a light-mode browser paints a WHITE
    scrollbar track and light form-control internals down the side of a pure-black page.
@@ -34,8 +34,8 @@
    dropping the ground to black without lifting them would have buried the footer, the smallprint and
    every uppercase label. Everything below clears 4.5:1 on black; --ink-2 clears 10:1.
 
-   --panel is the COCKPIT's own ground (#0e1117) on purpose: a card on this site is the colour of the
-   instrument it describes, and on the demo pages the embedded cockpit sits flush with the chrome
+   --panel is the BRIDGE's own ground (#0e1117) on purpose: a card on this site is the colour of the
+   instrument it describes, and on the demo pages the embedded Bridge sits flush with the chrome
    around it instead of floating on a different dark.
    -------------------------------------------------------------------------------------------------- */
 :root{

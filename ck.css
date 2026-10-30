@@ -1,14 +1,14 @@
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════
-   THE COCKPIT DESIGN SYSTEM — one copy, linked by every demo page.
+   THE BRIDGE DESIGN SYSTEM — one copy, linked by every demo page.
 
    WHY THIS FILE EXISTS. The demo pages were first built in the website's brass-and-serif language,
    which made them look nothing like the product they were demonstrating. The fix was to port the
-   real cockpit's tokens and geometry — and the moment that happened for one page, the same block
+   real Bridge's tokens and geometry — and the moment that happened for one page, the same block
    was about to be pasted into three. Pasted blocks drift; this site has already been bitten twice
    by exactly that (the masthead, twice in one night). One file, linked everywhere.
 
-   SOURCE OF TRUTH is the product: cockpit/handspike-cockpit.html in the Handspike repo. When the
-   cockpit changes, this file is what gets re-synced — the pages themselves hold no cockpit CSS.
+   SOURCE OF TRUTH is the product: bridge/handspike-bridge.html in the Handspike repo. When the
+   Bridge changes, this file is what gets re-synced — the pages themselves hold no Bridge CSS.
 
    TWO CONVENTIONS ARE LOAD-BEARING, NOT DECORATIVE:
      ORANGE (#ff7a18) means REAL MONEY, and is used for nothing else. Amber (#ffb300) means paper.
@@ -41,7 +41,7 @@
 .ck :focus-visible{ outline:none; box-shadow:var(--focus-ring); border-radius:6px; }
 .ck-scroll{ overflow-x:auto; }
 /* A fixed-width instrument. Below its natural width it scrolls INSIDE its own frame rather than
-   crushing the columns — a cockpit that reflows is not the cockpit. */
+   crushing the columns — a Bridge that reflows is not the Bridge. */
 .ck-app{ display:grid; grid-template-columns:232px 1fr; min-width:1060px; }
 .ck-app.solo{ grid-template-columns:1fr; min-width:720px; }
 
@@ -167,7 +167,7 @@
 .ck .win{ color:var(--win); } .ck .loss{ color:var(--loss); } .ck .dim{ color:var(--txt-dim); }
 .ck .real-c{ color:var(--real); } .ck .brand-c{ color:var(--brand); } .ck .papr-c{ color:var(--paper); }
 
-/* drill-downs: every metric in the real cockpit opens to show its derivation */
+/* drill-downs: every metric in the real Bridge opens to show its derivation */
 button.ck-card{ text-align:left; font-family:inherit; cursor:pointer;
   transition:background .12s, border-color .12s; }
 button.ck-card:hover{ background:var(--bg-raised); border-color:var(--border-strong); }
@@ -307,7 +307,7 @@ button.ck-card[aria-expanded="true"] .q{ color:var(--brand); border-color:var(--
   color:var(--win); display:block; margin-bottom:3px;
 }
 
-/* ── missile covers — geometry and mechanics ported from the real cockpit ────────────────────── */
+/* ── missile covers — geometry and mechanics ported from the real Bridge ────────────────────── */
 .ck-guards{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
 .guard{
   background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
@@ -391,12 +391,12 @@ button.ck-card[aria-expanded="true"] .q{ color:var(--brand); border-color:var(--
   .ck *{ transition-duration:.01ms !important; }
 }
 
-/* ── 2026-10-17 RE-SYNC: Home as the cockpit draws it since its 10/13–10/17 builds ──────────────
+/* ── 2026-10-17 RE-SYNC: Home as the Bridge draws it since its 10/13–10/17 builds ──────────────
    The SOVEREIGN header with its posture chip, the dollar return graph (home.py::_return_graph: the
    realized STEP line, the dashed stacked line, the wash, the $0 line, a dot per closed trade ON the
    step), the four hero tiles with the per-venue Deployed grid, the P&L split, the venue-grouped
-   positions table, the Money-in pills. Ported from cockpit/handspike-cockpit.html + home.py's inline
-   CSS; the demo pages hold no cockpit CSS of their own. */
+   positions table, the Money-in pills. Ported from bridge/handspike-bridge.html + home.py's inline
+   CSS; the demo pages hold no Bridge CSS of their own. */
 .ck-foot{ margin-top:auto; padding:10px 12px 0; border-top:1px solid var(--border);
           font-size:.72rem; color:var(--txt-dim); white-space:nowrap; }
 .ck-sechead{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
@@ -410,7 +410,7 @@ button.ck-card[aria-expanded="true"] .q{ color:var(--brand); border-color:var(--
                    font-variant-numeric:tabular-nums; }
 .ck-sechead .meta .win{ color:var(--win); }
 
-/* the hero row: top-aligned, centred tiles (the cockpit's .card.metric.hero) */
+/* the hero row: top-aligned, centred tiles (the Bridge's .card.metric.hero) */
 .ck-hero .ck-card{ text-align:center; align-items:center; justify-content:flex-start; min-height:104px; }
 .ck-hero .ck-card .lbl{ justify-content:center; }
 .ck-hero .ck-card .q{ margin-left:0; }

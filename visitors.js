@@ -11,7 +11,7 @@
    happened to land on a page with a footer" — someone arriving at /eleven-failures.html from a link
    would be invisible. That is a small lie of exactly the kind the rest of this site works to avoid.
    The number is DISPLAYED wherever a #visitors element exists; it is COUNTED wherever this file
-   loads. login.html carries neither: it is the operator's door to the cockpit, not site traffic.
+   loads. login.html carries neither: it is the operator's door to the Bridge, not site traffic.
 
    THE THREE BEHAVIOURS ARE THE ONES THE LIVE RETURN BADGE FOLLOWS, deliberately:
 
