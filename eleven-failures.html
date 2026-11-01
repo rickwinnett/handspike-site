@@ -119,8 +119,7 @@
                       
   /* THE MEMO PREDATES THE BRASS TOKEN. It was written with --signal/--signal-dim before the site
      had a design system, so every `var(--brass)` rule in the shared masthead resolved to nothing
-     here — the current-page link rendered as plain ink instead of brass, and the login pill lost
-     its border colour. Aliasing rather than restyling keeps this page's own typography untouched
+     here — the current-page link rendered as plain ink instead of brass. Aliasing rather than restyling keeps this page's own typography untouched
      while letting it share one header with the rest of the site. Both themes are covered because
      the aliases inherit whichever --signal is in force. */
   :root{ --brass:var(--signal); --brass-dim:var(--signal-dim); }
@@ -139,7 +138,6 @@
     <a href="/eleven-failures.html" aria-current="page" class="cur">Memo</a>
     <a href="/about.html">About</a>
     <a href="/contact.html">Contact</a>
-    <a class="op" href="/login.html">Operator&nbsp;login</a>
   </nav>
 </header>
 

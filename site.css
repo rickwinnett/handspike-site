@@ -12,9 +12,9 @@
 
    THE RULE THIS FILE ESTABLISHES: chrome lives here, page-specific styling stays inline. This is
    linked BEFORE each page's own <style>, so anything a page genuinely needs to differ on it simply
-   restates — no !important, no specificity games. Three pages legitimately differ and do exactly
-   that: login re-centres <body> as a grid and re-sizes .fine, and eleven-failures.html carries its
-   own accent (--signal) and a taller .shell.
+   restates — no !important, no specificity games. eleven-failures.html legitimately differs and does
+   exactly that: it carries its own accent (--signal) and a taller .shell. (The login page that
+   re-centred <body> was removed with the site's login access, owner 2026-11-01.)
 
    WHAT MUST NOT HAPPEN AGAIN: do not paste a masthead into a page. If the header needs to change, it
    changes HERE, once. A rule in this file that a page overrides is fine and visible; a second copy of
@@ -86,9 +86,6 @@ header.mast nav{ display:flex; gap:.95rem; flex-wrap:wrap; align-items:baseline;
    middle of itself. */
 header.mast nav a{ color:var(--ink-3); text-decoration:none; white-space:nowrap; }
 header.mast nav a:hover{ color:var(--brass); }
-header.mast nav a.op{ color:var(--brass); border:1px solid var(--rule);
-  padding:.4em .75em; border-radius:3px; }
-header.mast nav a.op:hover{ border-color:var(--brass-dim); }
 /* THE CURRENT PAGE STAYS IN THE NAV, MARKED. Both selectors, because some pages carry the class and
    some carry only the attribute. */
 header.mast nav a.cur,
