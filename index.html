@@ -1735,7 +1735,7 @@ function renderCurve(h, head) {
   if (hasDots) keys += "<span class='rg-key kd'><i class='dt" + (mkSigned ? '' : ' u') + "'></i>Closed trade</span>";
   // the buys' keys (owner Sat 2026-11-21: "... fix the legend ..."), each only when that kind is drawn, in plain words
   // what each colour is; hidden in the overview with the triangles, as the dots' key is (.kd)
-  if (trKinds.b) keys += "<span class='rg-key kd'><i class='tr b'></i>Buy / Yes</span>";
+  if (trKinds.b) keys += "<span class='rg-key kd'><i class='tr b'></i>Long / Yes</span>";
   if (trKinds.s) keys += "<span class='rg-key kd'><i class='tr s'></i>Short / No</span>";
   // WITHHELD IS SAID, NEVER AN EMPTY LAYER (the Bridge's "Buys not shown", review 2026-11-01): history.json's
   // buys_withheld is the Bridge's own decision; a dim key in both views (not .kd: it is not a mark's key), and one
