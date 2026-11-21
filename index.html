@@ -87,6 +87,7 @@
   #live{ display:none; margin:0 0 2.2rem; border:1px solid var(--rule); border-radius:6px;
          background:var(--panel); padding:.9rem 1.1rem;
          --win:#4fa96a; --loss:#c96a5a; --border-strong:#4b545d; --warn:#e3b341;
+         --mk-buy:#4d9fff; --mk-short:#ffd60a;
          --mono:ui-monospace,Consolas,"Cascadia Mono",monospace; }
   #live.on{ display:block; }
   #live .k{ display:block; margin:0 0 .5rem; font-family:ui-monospace,Consolas,"Cascadia Mono",monospace;
@@ -179,6 +180,19 @@
                 background:var(--ink-3); box-shadow:0 0 0 2px var(--panel); pointer-events:none; }
   #live .rg-mk.w{ background:var(--win); } #live .rg-mk.l{ background:var(--loss); }
   #live .rg-mk.u{ background:var(--panel); box-shadow:inset 0 0 0 1.5px var(--ink-3), 0 0 0 2px var(--panel); }
+  /* A BUY (owner Sat 2026-11-21: "on the graph buys and yes's are blue and shorts and no's are yellow. fix the legend
+     and the graph on the web and the app plz"; the Bridge's .hsv-rg-tr): a 9 x 8 px triangle on the dashed line, blue
+     pointing up a buy or a YES bought (.b, --mk-buy), yellow pointing down a short or a NO bought (.s, --mk-short), in
+     the Bridge's own colours, haloed in the card's ground like the dots and centred on its centroid. A mark and nothing
+     more: no pointer, no focus, no title (the feed carries its time and colour only). */
+  #live .rg-tr{ position:absolute; z-index:2; width:9px; height:9px; margin:-4.5px 0 0 -4.5px; display:grid;
+                place-items:center; pointer-events:none; }
+  #live .rg-tr::before{ content:''; width:1px; height:0; border-left:4px solid transparent;
+                        border-right:4px solid transparent; filter:drop-shadow(1.5px 0 0 var(--panel))
+                        drop-shadow(-1.5px 0 0 var(--panel)) drop-shadow(0 1.5px 0 var(--panel))
+                        drop-shadow(0 -1.5px 0 var(--panel)); }
+  #live .rg-tr.b::before{ border-bottom:8px solid var(--mk-buy); translate:0 -1.33px; }
+  #live .rg-tr.s::before{ border-top:8px solid var(--mk-short); translate:0 1.33px; }
   /* AN EVENT BAND (owner 10/20 "put a mark on the graph noting the outage"; the Bridge's .hsv-rg-area .ev): a
      translucent band in the dim ink across the plot (a fill-only closed path, never a rect: the stretched SVG's
      element rule), under everything drawn, never the win/loss colours (it is not a result). It is keyed on the legend
@@ -236,6 +250,7 @@
   #live .rg:not(.fit) .rg-xl.f, #live .rg.fit .rg-xl:not(.f){ display:none; }
   #live .rg:not(.fit) .rg-area .v.f, #live .rg.fit .rg-area .v:not(.f){ display:none; }
   #live .rg.fit .rg-mk{ display:none; }
+  #live .rg.fit .rg-tr{ display:none; }
   #live .rg.fit .rg-legend .rg-key.kd{ display:none; }
   #live .rg-key{ display:inline-flex; align-items:center; gap:.45rem; white-space:nowrap; }
   #live .rg-key .sw{ display:inline-block; width:16px; height:2px; border-radius:1px; background:currentColor; }
@@ -245,6 +260,13 @@
                      background:linear-gradient(90deg,var(--win) 50%,var(--loss) 50%); }
   /* a feed whose marks carry no sign (one published before r) draws only rings, so its key is a ring too */
   #live .rg-key .dt.u{ background:transparent; box-shadow:inset 0 0 0 1.5px var(--ink-3); }
+  /* a buy's key (2026-11-21): 8 px wide and 7 px tall like the 7 px dot, the Bridge's i.tr */
+  #live .rg-key .tr{ display:inline-block; flex:none; width:0; height:0; border-left:4px solid transparent;
+                     border-right:4px solid transparent; }
+  #live .rg-key .tr.b{ border-bottom:7px solid var(--mk-buy); }
+  #live .rg-key .tr.s{ border-top:7px solid var(--mk-short); }
+  /* "Buys not shown" (the Bridge's i.tr.nb): a dim, faded triangle, never the warning amber */
+  #live .rg-key .tr.nb{ border-bottom:7px solid var(--ink-3); opacity:.55; }
   #live .rg-legend .end{ margin-left:auto; display:inline-flex; flex-wrap:wrap; justify-content:flex-end;
                          align-items:center; gap:.3rem .6rem; }
   #live .rg-legend .meta{ font-variant-numeric:tabular-nums; }
@@ -637,6 +659,12 @@ function marksNote(h) {
   return MARKS_NOTE + (f > 0 ? ' ' + f + ' event forecast' + (f === 1 ? '' : 's') + ' settled without a ' +
     'position ' + (f === 1 ? 'is' : 'are') + ' not marked.' : '');
 }
+// The buys' sentence (2026-11-21), on the "?" only when a triangle is drawn: the Bridge's _ENTRY_MARKS_NOTE in short,
+// with no venue named (this page names none).
+var BUYS_NOTE = ' Triangles are buys since the reset, on the dashed line where it first counts them: blue pointing ' +
+  'up a buy or a YES bought, yellow pointing down a short or a NO bought.';
+// ...and when the Bridge withheld them (history.json buys_withheld, 2026-11-21): said, never an empty layer
+var BUYS_OFF_NOTE = ' Buys are not marked right now: the Bridge is withholding them until its read is whole.';
 
 // ================================================================================================================
 // THE ERA CURVE, drawn from /history.json — the SAME recorded series the Bridge plots, so the public shape and the
@@ -952,13 +980,20 @@ function stepD(run, xs, ys) {
 // counts, not only x neighbours, scanned only as far as a pair could still need more; two points at one x never part
 // at any width and are skipped. Capped at RG_MK_MAX_PLOT_PX; null at or under RG_MK_SCROLL_FLOOR_PX (it could not
 // scroll any card) or without two dotted points. Never throws.
-function rgMinWidth(dotted, yw) {
+// THE BUY TRIANGLES KEEP THEIR ROOM TOO (2026-11-21, the Bridge's _graph_min_width `tri`): tri is [[x, y, right reach
+// px, left reach px]] per point that carries triangles, each a glyph like a dot, held apart from every other group by
+// the same 14 px in 2D; no tri (or an empty one) leaves the width exactly what the dots alone set.
+function rgMinWidth(dotted, yw, tri) {
   try {
     var ph = RG_MARK_PHONE_PLOT_PX / 1000, gapPx = RG_MARK_GAP_PX, groups = [];
     dotted.slice().sort(function (p, q) { return p[0] - q[0]; }).forEach(function (g) {
       var reach = RG_MARK_STACK_PX * (g[2] - 1), y0 = g[1] * ph;
       groups.push([g[0], y0, y0, g[3] > 0 ? reach : 0, g[3] < 0 ? reach : 0]);
     });
+    if (tri && tri.length) {
+      tri.forEach(function (g) { var y0 = g[1] * ph; groups.push([g[0], y0, y0, g[2], g[3]]); });
+      groups.sort(function (p, q) { return p[0] - q[0]; });
+    }
     var floorArea = RG_MK_SCROLL_FLOOR_PX - yw - RG_PLOT_SIDE_PX, capArea = RG_MK_MAX_PLOT_PX - yw - RG_PLOT_SIDE_PX;
     var maxLeft = 0;
     groups.forEach(function (g) { maxLeft = Math.max(maxLeft, g[4]); });
@@ -1488,24 +1523,103 @@ function renderCurve(h, head) {
     }
     (groups[idx] = groups[idx] || []).push(m.r === 'w' || m.r === 'l' || m.r === 'e' ? m.r : 'u');
   });
-  var mkHtml = '', mkSigned = false, dotted = [];
+  var mkHtml = '', mkSigned = false, dotted = [], dotAt = {};
   Object.keys(groups).map(Number).sort(function (a, b) { return a - b; }).forEach(function (idx) {
     var rs = groups[idx], x = xs[idx], yc = ys[idx], cnt = rs.length;
     var run = RG_MARK_STACK_PX * (cnt - 1), fan = (x > 960 && run > RG_PLOT_RIGHT_PX - RG_MARK_STACK_PX) ? -1 : 1;
     dotted.push([x, yc, cnt, fan]);
+    dotAt[idx] = { n: cnt, html: '' };
     rs.forEach(function (r, j) {
       var left = (x / 10).toFixed(2) + '%', top = (yc / 10).toFixed(2) + '%';
       if (cnt > 1) left = calcPx(x / 10, fan * RG_MARK_STACK_PX * j);
-      mkHtml += "<span class='rg-mk " + r + "' style='left:" + left + ';top:' + top + "'></span>";
+      var s = "<span class='rg-mk " + r + "' style='left:" + left + ';top:' + top + "'></span>";
+      mkHtml += s;
+      dotAt[idx].html += s;
       if (r !== 'u') mkSigned = true;
     });
   });
+
+  // THE BUYS (owner Sat 2026-11-21, verbatim: "on the graph buys and yes's are blue and shorts and no's are yellow. fix
+  // the legend and the graph on the web and the app plz"; the Bridge's home._entry_marks_html, in the site's own look):
+  // one triangle per entry of history.json's `buys` (its placed time t and its colour c, nothing else), on the DASHED
+  // line at the first drawn point at or after t (a buy after the last point sits on the last one, one before the first
+  // is not drawn: the dots' rule); across a gap in the dashed line, at its next drawn point; with no dashed point at or
+  // after it, on the SOLID line at its own point (the Bridge's gap rule, so the two draw the same buys). Blue pointing
+  // up for c "b" (a buy, a YES bought), yellow pointing down for c "s" (a short, a NO bought). THE CASCADE is the
+  // dots': two or more at one point sit half a glyph apart along the level, in time order, the later over the
+  // earlier; at a point that also carries dots, triangles nearer the dots' level than a glyph (9 px at the phone plot)
+  // CONTINUE the dots' run, else (the run would leave the plot) leftwards one full glyph clear of the first dot. A
+  // triangles' run turns left at the right edge (the dots' rule) and ALSO wherever, in the right half, it would pass
+  // the right inset on the NARROWEST card (rgTriFan, 2026-11-21: the Kalshi desk buys many in one hour, and a run
+  // past the inset is clipped by .rg-in; the Bridge's _entry_fan). A mark and nothing more: no title, no pointer, no
+  // click-through. A feed without `buys` (an older file) draws exactly what it drew before.
+  var rgFan = function (x, cnt) {
+    return (x > 960 && RG_MARK_STACK_PX * (cnt - 1) > RG_PLOT_RIGHT_PX - RG_MARK_STACK_PX) ? -1 : 1;
+  };
+  var rgTriArea = RG_MK_SCROLL_FLOOR_PX - Math.round(RG_XL_CH_PX * yLen + 2) - RG_PLOT_SIDE_PX;
+  var rgTriFan = function (x, cnt) {
+    var run = RG_MARK_STACK_PX * (cnt - 1);
+    if (rgFan(x, cnt) < 0) return -1;
+    return (x >= 500 && rgTriArea > 0 &&
+            run > (1000 - x) / 1000 * rgTriArea + RG_PLOT_RIGHT_PX - RG_MARK_STACK_PX) ? -1 : 1;
+  };
+  var bGroups = {}, onDash = {};
+  uRuns.forEach(function (run) { run.forEach(function (j) { onDash[j] = true; }); });   // a run of one draws nothing
+  (Array.isArray(h.buys) ? h.buys : []).forEach(function (b) {
+    if (!b || typeof b.t !== 'string' || (b.c !== 'b' && b.c !== 's')) return;
+    var bt = utcMs(b.t);
+    if (isNaN(bt) || (!isNaN(tms[0]) && bt < tms[0])) return;
+    var idx = -1, k;
+    for (k = 0; k < n; k++) { if (!isNaN(tms[k]) && tms[k] >= bt) { idx = k; break; } }
+    if (idx < 0) {
+      if (isNaN(tms[n - 1]) || bt <= tms[n - 1]) return;
+      idx = n - 1;
+    }
+    for (k = idx; k < n && !onDash[k]; k++) { /* the gap rule: the dashed line's next drawn point */ }
+    if (k >= n) k = idx;                              // none after it: on the solid line at its own point
+    (bGroups[k] = bGroups[k] || []).push(b.c);
+  });
+  var trAt = {}, trHtml = '', trKinds = {}, triGroups = [], RG_ENTRY_SHARE_PX = 9;
+  Object.keys(bGroups).map(Number).sort(function (a, b) { return a - b; }).forEach(function (idx) {
+    var ds = bGroups[idx], x = xs[idx], cnt = ds.length, offs = [], k;
+    var y = (onDash[idx] && yus[idx] !== null) ? yus[idx] : ys[idx];
+    var nd = dotAt[idx] ? dotAt[idx].n : 0;
+    var shared = nd > 0 && Math.abs(y - ys[idx]) * (RG_MARK_PHONE_PLOT_PX / 1000) < RG_ENTRY_SHARE_PX;
+    if (shared) {
+      var fanD = rgFan(x, nd), fanAll = rgTriFan(x, nd + cnt);
+      for (k = 0; k < cnt; k++) {
+        offs.push(fanD < 0 || fanAll > 0 ? fanD * RG_MARK_STACK_PX * (nd + k) : -RG_MARK_STACK_PX * (k + 2));
+      }
+    } else {
+      var fan = rgTriFan(x, cnt);
+      for (k = 0; k < cnt; k++) offs.push(fan * RG_MARK_STACK_PX * k);
+    }
+    var right = 0, leftR = 0;
+    offs.forEach(function (o) { if (o > 0) right = Math.max(right, o); if (o < 0) leftR = Math.max(leftR, -o); });
+    triGroups.push([x, y, right, leftR]);
+    trAt[idx] = '';
+    ds.forEach(function (d, j) {
+      var left = (cnt === 1 && !shared) ? (x / 10).toFixed(2) + '%' : calcPx(x / 10, offs[j]);
+      var s = "<span class='rg-tr " + d + "' style='left:" + left + ';top:' + (y / 10).toFixed(2) + "%'></span>";
+      trAt[idx] += s;
+      trHtml += s;
+      trKinds[d] = true;
+    });
+  });
+  // ONE TIME ORDER (the Bridge's _marks_in_point_order): point by point, each point's dots then its triangles, so a
+  // later point's mark paints over an earlier one's. The dots' markup alone, exactly, when no triangle is drawn.
+  var hasDots = !!mkHtml;
+  if (trHtml) {
+    var allAt = Object.keys(dotAt).concat(Object.keys(trAt)).map(Number)
+      .filter(function (v, j, a) { return a.indexOf(v) === j; }).sort(function (a, b) { return a - b; });
+    mkHtml = allAt.map(function (idx) { return (dotAt[idx] ? dotAt[idx].html : '') + (trAt[idx] || ''); }).join('');
+  }
 
   // THE SIDEWAYS SCROLL (the Bridge's since 2026-10-15): the plot's min width in px when the dots need more room than
   // the narrowest card gives (rgMinWidth, with the y gutter in px as the x-label layout already estimates it), else
   // null and the plot is the card's own width. wideArea is the widened plot area's width, the x ticks' measure.
   var ywPx = Math.round(RG_XL_CH_PX * yLen + 2);
-  var minW = rgMinWidth(dotted, ywPx);
+  var minW = rgMinWidth(dotted, ywPx, triGroups);
   var wideArea = minW ? minW - ywPx - RG_PLOT_SIDE_PX : 0;
 
   // THE TIME AXIS: Eastern hour / 12-hour / day ticks (one faint vertical line each) and their labels under the
@@ -1618,7 +1732,16 @@ function renderCurve(h, head) {
   var keys = (minW ? "<span class='ear'>&#8249; earlier</span>" : '') +
     "<span class='rg-key'><i class='sw c" + lc + "'></i>Realized</span>";
   if (uRuns.length) keys += "<span class='rg-key'><i class='sw u c" + ucl + "'></i>Realized + unrealized</span>";
-  if (mkHtml) keys += "<span class='rg-key kd'><i class='dt" + (mkSigned ? '' : ' u') + "'></i>Closed trade</span>";
+  if (hasDots) keys += "<span class='rg-key kd'><i class='dt" + (mkSigned ? '' : ' u') + "'></i>Closed trade</span>";
+  // the buys' keys (owner Sat 2026-11-21: "... fix the legend ..."), each only when that kind is drawn, in plain words
+  // what each colour is; hidden in the overview with the triangles, as the dots' key is (.kd)
+  if (trKinds.b) keys += "<span class='rg-key kd'><i class='tr b'></i>Buy / Yes</span>";
+  if (trKinds.s) keys += "<span class='rg-key kd'><i class='tr s'></i>Short / No</span>";
+  // WITHHELD IS SAID, NEVER AN EMPTY LAYER (the Bridge's "Buys not shown", review 2026-11-01): history.json's
+  // buys_withheld is the Bridge's own decision; a dim key in both views (not .kd: it is not a mark's key), and one
+  // sentence on the "?" (the reason stays on the Bridge: it can name a venue, and this page names none)
+  var buysOff = h.buys_withheld === true && !trHtml;
+  if (buysOff) keys += "<span class='rg-key nb'><i class='tr nb'></i>Buys not shown</span>";
   evKeys.forEach(function (k) { keys += "<span class='rg-key'><i class='ev'></i>" + escAttr(k) + '</span>'; });
   var meta = (day || lineAge) ? "<span class='meta'>" + escAttr(day) + (lineAge ? "<span class='st'>" +
     (day ? ' · ' : '') + 'line as of ' + escAttr(lineAge) + '</span>' : '') + '</span>' : '';
@@ -1627,7 +1750,9 @@ function renderCurve(h, head) {
     "'>" + RG_FIT_WORDS[0][0] + '</button>' : '';
   var legend = "<div class='rg-legend'>" + keys + "<span class='end'>" + newer + fitBtn + meta +
     "<span class='rg-q' title='" +
-    escAttr(noDollar(provenance(h, n) + dashedLineNote(h) + marksNote(h))) + "'>?</span></span></div>";
+    escAttr(noDollar(provenance(h, n) + dashedLineNote(h) + marksNote(h) + (trHtml ? BUYS_NOTE : '') +
+      (buysOff ? BUYS_OFF_NOTE : ''))) +
+    "'>?</span></span></div>";
 
   // THE READOUT'S DATA: per drawn row, its place in the plot and the words the tip prints, every figure formatted
   // here by the page's own formatters (signedPct, etText), so the readout formats nothing.
